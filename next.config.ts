@@ -2,6 +2,14 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
     output: 'export',
+    async rewrites() {
+        return [
+            {
+                source: '/about-me',
+                destination: 'https://sok-chetra.me/about-me.html',
+            }
+        ]
+    },
     images: {
         unoptimized: true,
         remotePatterns: [

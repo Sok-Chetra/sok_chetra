@@ -18,7 +18,6 @@ export const metadata: Metadata = {
     description: 'Portfolio of Sok Chetra, Full Stack Web Developer',
 }
 
-
 export default function RootLayout({
     children,
 }: Readonly<{
