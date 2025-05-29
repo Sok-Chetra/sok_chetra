@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { useRef, useState } from 'react'
 import ReCAPTCHA from "react-google-recaptcha";
 
-const SITE_KEY = process.env.RECAPTCHA_SITE_KEY || ''
+const SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || '6LePtUkrAAAAANWRvGn5QcAuWmHwAsqIoVC_NrfZ'
 
 export default function ContactForm() {
     const [formData, setFormData] = useState({ name: '', email: '', message: '' })

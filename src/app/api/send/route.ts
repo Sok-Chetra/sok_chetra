@@ -6,7 +6,7 @@ async function verifyCaptcha(token: string | null): Promise<boolean> {
     if (!token) return false
 
     // Get secret key from environment variables (not public)
-    const secretKey = process.env.SECRET_KEY
+    const secretKey = process.env.NEXT_PUBLIC_SECRET_KEY || '6LePtUkrAAAAAGMCiYVuyHf9cfPXFQJy9uNtE4Mb'
     if (!secretKey) {
         console.error('reCAPTCHA secret key is not configured.')
         return false
