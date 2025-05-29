@@ -34,8 +34,7 @@ export default function ContactForm() {
         }
 
         try {
-            // https://sok-chetra.me/send
-            const response = await fetch('/api/send', {
+            const response = await fetch('https://sok-chetra.me/send', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
                 body: JSON.stringify({ ...formData, captcha: captchaToken }),
