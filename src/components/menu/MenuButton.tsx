@@ -26,7 +26,7 @@ export default function MenuButton({ item, isActive, isMounted }: MenuButtonProp
                         transition={{ type: "spring", stiffness: 300, damping: 27 }}
                     />
                 )}
-                <span className={`relative z-10 ${isActive ? "text-white" : "text-slate-800 dark:text-white"}`}>
+                <span className={`relative z-10 ${isActive ? "text-white" : "text-slate-800 dark:text-dark"}`}>
                     {item.label}
                 </span>
             </motion.span>

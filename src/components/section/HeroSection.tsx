@@ -6,23 +6,23 @@ import Link from 'next/link'
 
 export default function HeroSection() {
     return (
-        <section className="relative h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50 opacity-70 dark:from-gray-800 dark:to-gray-900 dark:opacity-90 transition-all duration-500"></div>
+        <section className="relative h-auto min-[321px]:h-screen  flex items-center justify-center py-30 min-[321px]:py-0 px-4 min-[321px]:px-6 lg:px-8  bg-gradient-to-br from-blue-50 to-purple-50 opacity-70 dark:from-gray-800 dark:to-gray-900 dark:opacity-90 transition-all duration-500">
 
-            <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+
+            <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
                 <motion.div
                     initial={{ opacity: 0, x: -50 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.8 }}
                     className="order-2 md:order-1"
                 >
-                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 dark:text-white">
-                        Sok Chetra — <span className="text-blue-600 dark:text-blue-400">Full Stack</span> Developer 1
+                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 dark:text-white text-center md:text-start">
+                        Sok Chetra — <span className="text-blue-600 dark:text-blue-400">Full Stack</span> Developer
                     </h1>
-                    <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-lg">
+                    <p className="text-lg sm:text-xl text-gray-600 text-center md:text-start dark:text-gray-300 mb-8 max-w-lg">
                         Available for freelance &amp; work — let&apos;s build something amazing.
                     </p>
-                    <div>
+                    <div className='justify-self-center md:justify-self-start'>
                         <motion.div
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
@@ -47,7 +47,7 @@ export default function HeroSection() {
                 >
                     <div className="relative w-64 h-64 sm:w-80 sm:h-80 rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-xl dark:shadow-gray-800/20">
                         <Image
-                            src="/profile.jpg"
+                            src="/image/my-profile.jpeg"
                             alt="Sok Chetra"
                             fill
                             className="object-cover"
@@ -63,20 +63,24 @@ export default function HeroSection() {
                     animate={{ y: [0, 10, 0] }}
                     transition={{ repeat: Infinity, duration: 2 }}
                 >
-                    <svg
-                        className="w-6 h-6 text-gray-600 dark:text-gray-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
+                    <Link
+                        href="#projects"
                     >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M19 14l-7 7m0 0l-7-7m7 7V3"
-                        />
-                    </svg>
+                        <svg
+                            className="w-6 h-6 text-gray-600 dark:text-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                            />
+                        </svg>
+                    </Link>
                 </motion.div>
             </div>
         </section>

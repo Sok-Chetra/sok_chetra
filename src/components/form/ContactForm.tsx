@@ -155,11 +155,14 @@ export default function ContactForm() {
                             </div>
 
                             {/* reCAPTCHA widget */}
+
                             <ReCAPTCHA
                                 sitekey={SITE_KEY}
                                 onChange={handleCaptchaChange}
+                                size='normal'
 
                             />
+
 
                             <div className="pt-2">
                                 <button

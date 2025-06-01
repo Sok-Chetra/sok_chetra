@@ -25,13 +25,13 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                     src={project.image}
                     alt={project.title}
                     fill
-                    className="object-cover"
+                    className="object-cover object-top"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
             </div>
             <div className="p-6">
                 <h3 className="text-xl font-semibold mb-2 dark:text-white">{project.title}</h3>
-                <div className="flex flex-wrap gap-2 mb-4">
+                <div className="flex flex-wrap gap-1 mb-4">
                     {project.tags.map((tag) => (
                         <span
                             key={tag}

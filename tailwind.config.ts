@@ -1,5 +1,6 @@
 // tailwind.config.ts
 import type { Config } from "tailwindcss";
+const defaultTheme = require("tailwindcss/defaultTheme")
 
 const config: Config = {
     content: [
@@ -9,7 +10,7 @@ const config: Config = {
     theme: {
         extend: {},
     },
-    darkMode: false,
+    darkMode: 'class',
     plugins: [],
 };
 

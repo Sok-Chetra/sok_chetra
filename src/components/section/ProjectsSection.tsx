@@ -1,17 +1,75 @@
 'use client'
 
 import { motion, useInView } from 'framer-motion'
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import ProjectCard from './ProjectCard'
 import { projects, ProjectsSectionProps } from '@/lib/mock/projects'
 
+type ResponsiveItemsPerView = {
+    base?: number
+    sm?: number
+    md?: number
+    lg?: number
+    xl?: number
+}
+
+type UpdatedProjectsSectionProps = Omit<ProjectsSectionProps, 'itemsPerView'> & {
+    itemsPerView?: number | ResponsiveItemsPerView
+}
+
 export default function ProjectsSection({
-    itemsPerView = 3,
+    itemsPerView = { base: 1, sm: 1, md: 2, lg: 3, xl: 3 },
     overflowBehavior = 'slide',
     rows = 1
-}: ProjectsSectionProps) {
+}: UpdatedProjectsSectionProps) {
     const ref = useRef(null)
     const isInView = useInView(ref, { once: true, margin: '-100px' })
+    const [currentPage, setCurrentPage] = useState(1)
+    const [currentItemsPerView, setCurrentItemsPerView] = useState(1) // Start with smallest value
+
+    const calculateItemsPerView = () => {
+        if (typeof itemsPerView === 'number') {
+            return itemsPerView
+        }
+
+        const width = window.innerWidth
+        if (width >= 1280) return itemsPerView.xl || itemsPerView.lg || itemsPerView.md || itemsPerView.sm || itemsPerView.base || 3
+        if (width >= 1024) return itemsPerView.lg || itemsPerView.md || itemsPerView.sm || itemsPerView.base || 3
+        if (width >= 768) return itemsPerView.md || itemsPerView.sm || itemsPerView.base || 2
+        if (width >= 640) return itemsPerView.sm || itemsPerView.base || 1
+        return itemsPerView.base || 1
+    }
+
+    useEffect(() => {
+        const handleResize = () => {
+            setCurrentItemsPerView(calculateItemsPerView())
+        }
+
+        // Initialize on mount
+        handleResize()
+
+        // Add event listener
+        window.addEventListener('resize', handleResize)
+
+        // Clean up
+        return () => window.removeEventListener('resize', handleResize)
+    }, [itemsPerView])
+
+    const totalItems = currentItemsPerView * rows
+    const totalPages = Math.ceil(projects.length / totalItems)
+    const startIndex = (currentPage - 1) * totalItems
+    const visibleProjects = projects.slice(startIndex, startIndex + totalItems)
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page)
+    }
+
+    const gridCols = {
+        1: 'grid-cols-1',
+        2: 'grid-cols-1 md:grid-cols-2',
+        3: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
+        4: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
+    }[currentItemsPerView] || 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
 
     return (
         <section id="projects" className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-800 transition-colors duration-300">
@@ -26,16 +84,13 @@ export default function ProjectsSection({
                     My Projects
                 </motion.h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {projects.slice(0, itemsPerView * rows).map((project, index) => (
+                <div className={`grid ${gridCols} gap-8`}>
+                    {visibleProjects.map((project, index) => (
                         <motion.div
                             key={project.id}
                             initial={{ opacity: 0, y: 50 }}
                             animate={isInView ? { opacity: 1, y: 0 } : {}}
                             transition={{ duration: 0.5, delay: index * 0.1 }}
-                            style={{
-                                transform: `translateX(${index % 2 === 0 ? '-' : ''}${(index % 3) * 10}px) translateY(${(index % 3) * 10}px)`
-                            }}
                             className="relative"
                         >
                             <ProjectCard project={project} />
@@ -43,13 +98,17 @@ export default function ProjectsSection({
                     ))}
                 </div>
 
-                {overflowBehavior === 'pagination_number' && projects.length > itemsPerView * rows && (
+                {overflowBehavior === 'pagination_number' && totalPages > 1 && (
                     <div className="flex justify-center mt-12">
                         <div className="flex space-x-2">
-                            {Array.from({ length: Math.ceil(projects.length / (itemsPerView * rows)) }).map((_, i) => (
+                            {Array.from({ length: totalPages }).map((_, i) => (
                                 <button
                                     key={i}
-                                    className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 flex items-center justify-center transition-colors"
+                                    onClick={() => handlePageChange(i + 1)}
+                                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${currentPage === i + 1
+                                            ? 'bg-blue-500 text-white'
+                                            : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600'
+                                        }`}
                                 >
                                     {i + 1}
                                 </button>
