@@ -19,10 +19,10 @@ export default function HeroSection() {
                     <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 dark:text-white text-center md:text-start">
                         Sok Chetra — <span className="text-blue-600 dark:text-blue-400">Full Stack</span> Developer
                     </h1>
-                    <p className="text-lg sm:text-xl text-gray-600 text-center md:text-start dark:text-gray-300 mb-8 max-w-lg">
+                    <p className="text-lg sm:text-xl text-gray-600 text-center md:text-start dark:text-gray-300 mb-8">
                         Available for freelance &amp; work — let&apos;s build something amazing.
                     </p>
-                    <div className='justify-self-center md:justify-self-start'>
+                    <div className='md:block flex justify-center'>
                         <motion.div
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
