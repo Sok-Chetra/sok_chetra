@@ -6,7 +6,7 @@ import Link from 'next/link'
 
 export default function HeroSection() {
     return (
-        <section className="relative h-auto min-[321px]:h-screen  flex items-center justify-center py-30 min-[321px]:py-0 px-4 min-[321px]:px-6 lg:px-8  bg-gradient-to-br from-blue-50 to-purple-50 opacity-70 dark:from-gray-800 dark:to-gray-900 dark:opacity-90 transition-all duration-500">
+        <section className="relative h-auto min-[321px]:h-[100dvh]  flex items-center justify-center py-30 min-[321px]:py-0 px-4 min-[321px]:px-6 lg:px-8  bg-gradient-to-br from-blue-50 to-purple-50 opacity-70 dark:from-gray-800 dark:to-gray-900 dark:opacity-90 transition-all duration-500">
 
 
             <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
