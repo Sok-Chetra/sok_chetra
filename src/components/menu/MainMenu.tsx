@@ -13,7 +13,7 @@ export default function Menu() {
     useEffect(() => setIsMounted(true), []);
 
     return (
-        <div className="hidden md:flex justify-center items-center mt-5 absolute w-full gap-5 z-20">
+        <div className="flex justify-center items-center mt-5 absolute w-full gap-5 z-20">
             <Image
                 src={'https://i.pinimg.com/736x/28/32/25/2832251f86248ec7c38490ffaff30a44.jpg'}
                 alt="Profile"

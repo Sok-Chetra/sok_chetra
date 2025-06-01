@@ -10,7 +10,7 @@ export const metadata = {
 
 export default function AboutMe() {
     return (
-        <main className="min-h-[100dvh] bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900">
+        <main className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900">
             <HeroSection />
 
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 space-y-20">
