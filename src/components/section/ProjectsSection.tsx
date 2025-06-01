@@ -4,6 +4,7 @@ import { motion, useInView } from 'framer-motion'
 import { useRef, useState, useEffect } from 'react'
 import ProjectCard from './ProjectCard'
 import { projects, ProjectsSectionProps } from '@/lib/mock/projects'
+import { useRouter } from 'next/navigation'
 
 type ResponsiveItemsPerView = {
     base?: number
@@ -23,6 +24,7 @@ export default function ProjectsSection({
     rows = 1
 }: UpdatedProjectsSectionProps) {
     const ref = useRef(null)
+    const router = useRouter()
     const isInView = useInView(ref, { once: true, margin: '-100px' })
     const [currentPage, setCurrentPage] = useState(1)
     const [currentItemsPerView, setCurrentItemsPerView] = useState(1) // Start with smallest value
@@ -62,6 +64,7 @@ export default function ProjectsSection({
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page)
+        router.push('#projects')
     }
 
     const gridCols = {
@@ -106,8 +109,8 @@ export default function ProjectsSection({
                                     key={i}
                                     onClick={() => handlePageChange(i + 1)}
                                     className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${currentPage === i + 1
-                                            ? 'bg-blue-500 text-white'
-                                            : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600'
+                                        ? 'bg-blue-500 text-white'
+                                        : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600'
                                         }`}
                                 >
                                     {i + 1}
