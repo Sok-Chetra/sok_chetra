@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 export default function HeroSection() {
     return (
-        <section className="relative h-[90vh] flex items-center justify-center overflow-hidden px-4">
+        <section className="relative h-[90vh] flex items-center justify-center px-4">
             {/* Floating shapes (background) */}
             <motion.div
                 animate={{
