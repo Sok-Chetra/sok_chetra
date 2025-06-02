@@ -3,33 +3,7 @@ import { motion } from 'framer-motion';
 
 export default function HeroSection() {
     return (
-        <section className="relative h-[90vh] flex items-center justify-center px-4">
-            {/* Floating shapes (background) */}
-            <motion.div
-                animate={{
-                    y: [0, -15, 0],
-                    rotate: [0, 5, 0]
-                }}
-                transition={{
-                    duration: 8,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                }}
-                className="absolute -left-20 top-1/4 w-40 h-40 rounded-full bg-purple-400/10 blur-xl"
-            />
-            <motion.div
-                animate={{
-                    y: [0, 20, 0],
-                    x: [0, -10, 0]
-                }}
-                transition={{
-                    duration: 10,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 1
-                }}
-                className="absolute -right-20 bottom-1/4 w-60 h-60 rounded-full bg-blue-400/10 blur-xl"
-            />
+        <section className="relative h-[90vh] flex items-center justify-center px-4 inset-0  transition-all duration-500">
 
             {/* Content */}
             <div className="text-center max-w-3xl relative z-10">
