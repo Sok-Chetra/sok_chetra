@@ -30,7 +30,7 @@ const itemVariants = {
 export default function HeroSection() {
     return (
         <motion.section
-            className="pb-20 pt-48 px-4 sm:px-6 lg:px-8 text-center bg-white dark:bg-gray-900 transition-colors duration-300"
+            className="pb-20 pt-48 px-4 sm:px-6 lg:px-8 text-center transition-colors duration-300"
             initial="hidden"
             animate="visible"
             variants={containerVariants}

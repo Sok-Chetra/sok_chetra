@@ -32,7 +32,7 @@ const itemVariants = {
 export default function HeroSection() {
     return (
         <motion.section
-            className="pb-20 pt-48 px-4 sm:px-6 lg:px-8 text-center  dark:bg-gray-900"
+            className="pb-20 pt-48 px-4 sm:px-6 lg:px-8 text-center "
             initial="hidden"
             whileInView="visible"
             variants={containerVariants}

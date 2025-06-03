@@ -12,7 +12,7 @@ export default function Portfolio() {
 
     return (
 
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 overflow-hidden">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 overflow-hidden">
             {/* Hero Section */}
             <HeroSection />
 
