@@ -65,7 +65,7 @@ export default function ContactForm() {
     }
 
     return (
-        <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+        <section className="py-20 px-2.5 xs:px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
             <div className="max-w-4xl mx-auto">
                 <motion.h2
                     ref={ref}
@@ -83,7 +83,7 @@ export default function ContactForm() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.2 }}
                     viewport={{ once: true, margin: '-100px' }}
-                    className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 sm:p-8 transition-colors duration-300"
+                    className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 xs:p-6 sm:p-8 transition-colors duration-300"
                 >
                     {submitStatus.status === 'success' ? (
                         <div className="text-center py-8">

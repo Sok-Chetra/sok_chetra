@@ -57,7 +57,7 @@ export default function ProjectsSection({
 
         // Clean up
         return () => window.removeEventListener('resize', handleResize)
-    }, [itemsPerView])
+    }, [itemsPerView, calculateItemsPerView])
 
     const totalItems = currentItemsPerView * rows
     const totalPages = Math.ceil(projects.length / totalItems)

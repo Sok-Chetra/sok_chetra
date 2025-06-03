@@ -2,19 +2,12 @@
 
 import React from 'react'
 
-type Props = {}
-
-function ButtonCV({ }: Props) {
+function ButtonCV() {
     const handleDownloadCV = () => {
-        // Replace with the actual path to your CV file in the public folder
-        const cvUrl = '/Sok Chetra.pdf'; // or '/cv.docx' depending on your file type
-
-        // Create a temporary anchor element to trigger the download
+        const cvUrl = '/Sok Chetra.pdf';
         const link = document.createElement('a');
         link.href = cvUrl;
 
-        // This assumes your CV file is named "yourname-cv.pdf"
-        // Change the download attribute to set the filename users will see
         link.download = 'Sok Chetra.pdf';
 
         document.body.appendChild(link);

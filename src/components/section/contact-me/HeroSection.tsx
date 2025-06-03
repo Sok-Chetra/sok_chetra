@@ -13,7 +13,7 @@ const containerVariants = {
 };
 
 const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
+    hidden: { y: 50, opacity: 0 },
     visible: {
         y: 0,
         opacity: 1,
@@ -33,13 +33,13 @@ export default function HeroSection() {
         >
             <motion.div className="max-w-3xl mx-auto" variants={itemVariants}>
                 <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-                    Let's <span className="text-indigo-600 dark:text-indigo-400">Connect</span>
+                    Let&apos;s <span className="text-indigo-600 dark:text-indigo-400">Connect</span>
                 </h1>
                 <motion.p
                     className="text-xl text-gray-600 dark:text-gray-300 mb-8"
                     variants={itemVariants}
                 >
-                    I'd love to hear from you! Whether you have a project in mind or just want to say hello, feel free to reach out through any of these channels.
+                    I would love to hear from you! Whether you have a project in mind or just want to say hello, feel free to reach out through any of these channels.
                 </motion.p>
             </motion.div>
         </motion.section>

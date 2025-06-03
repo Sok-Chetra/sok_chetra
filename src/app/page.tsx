@@ -1,6 +1,5 @@
 import HeroSection from '@/components/section/home/HeroSection'
 import ProjectsSection from '@/components/section/home/ProjectsSection'
-import ContactForm from '@/components/form/ContactForm'
 import ContactFormSection from '@/components/section/contact-me/ContactFormSection'
 
 export default function Home() {

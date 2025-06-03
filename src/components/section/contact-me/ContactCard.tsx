@@ -1,11 +1,10 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import Image from 'next/image';
 import QrModal from './QrModal';
 
 const cardVariants = {
     offscreen: {
-        y: 50,
+        y: 100,
         opacity: 0,
     },
     onscreen: {
@@ -14,7 +13,7 @@ const cardVariants = {
         transition: {
             type: "spring",
             bounce: 0.4,
-            duration: 0.8
+            duration: 1
         }
     }
 };

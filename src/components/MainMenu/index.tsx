@@ -65,12 +65,12 @@ export const MainMenu = () => {
         updateHighlight(activeId);
         const timer = setTimeout(() => setHasMounted(true), 50);
         return () => clearTimeout(timer);
-    }, []);
+    }, [activeId]);
 
     useEffect(() => {
         updateHighlight(activeId);
         setIsMobileMenuOpen(false);
-    }, [pathname]);
+    }, [activeId]);
 
     useEffect(() => {
         const handleResize = () => updateHighlight(activeId);
