@@ -1,5 +1,6 @@
 'use client';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 export default function HeroSection() {
     return (
@@ -37,6 +38,20 @@ export default function HeroSection() {
                         Building digital experiences with <span className="font-medium text-purple-600">Next.js</span>,{' '}
                         <span className="font-medium text-blue-500">React Native</span>, and modern web technologies.
                     </p>
+                </motion.div>
+
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.9, duration: 0.8 }}
+                    className="mt-8 flex justify-center"
+                >
+                    <Link
+                        href="/" // or change to "/about-me", "/" etc.
+                        className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-500 text-white font-semibold rounded-lg shadow-lg hover:scale-105 transition-transform duration-300"
+                    >
+                        Take Me Home
+                    </Link>
                 </motion.div>
             </div>
         </section>

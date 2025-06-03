@@ -40,7 +40,7 @@ export default function ContactFormSection() {
             variants={containerVariants}
         >
             <div className="max-w-4xl mx-auto ">
-                <motion.div className="text-center mb-12 px-4 sm:px-6" variants={itemVariants}>
+                <motion.div className="text-center  px-4 sm:px-6" variants={itemVariants}>
                     <motion.h2
                         className="text-3xl font-bold text-gray-900 dark:text-white mb-4"
                         initial={{ opacity: 0, y: 10 }}

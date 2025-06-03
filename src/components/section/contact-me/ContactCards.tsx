@@ -18,12 +18,14 @@ export default function ContactCards() {
                         icon={<FaLinkedin size={24} />}
                         title="LinkedIn"
                         link="https://www.linkedin.com/in/sok-chetra/"
+                        linkTitle='Sok Chetra'
                     />
 
                     <ContactCard
                         icon={<FaTelegramPlane size={24} />}
                         title="Telegram"
                         link="https://t.me/tra_6"
+                        linkTitle='@tra_6'
                         qrCode="/telegram-qr.jpeg"
                     />
 
@@ -31,6 +33,7 @@ export default function ContactCards() {
                         icon={<FaWhatsapp size={24} />}
                         title="WhatsApp"
                         link="https://wa.me/85589450486"
+                        linkTitle='+855 89 450 486'
                         qrCode="/whatsapp-qr.jpeg"
                     />
 

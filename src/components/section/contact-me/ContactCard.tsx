@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import QrModal from './QrModal';
+import Image from 'next/image';
 
 const cardVariants = {
     offscreen: {
@@ -18,10 +19,11 @@ const cardVariants = {
     }
 };
 
-const ContactCard = ({ icon, title, link, qrCode, isPhone = false }: {
+const ContactCard = ({ icon, title, link, linkTitle, qrCode, isPhone = false }: {
     icon: React.ReactNode,
     title: string,
     link: string,
+    linkTitle?: string;
     qrCode?: string,
     isPhone?: boolean
 }) => {
@@ -58,7 +60,7 @@ const ContactCard = ({ icon, title, link, qrCode, isPhone = false }: {
                     {isPhone ? (
                         <div className='flex justify-center'>
                             <a href={`tel:${link.replace(/\s+/g, '')}`} className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 text-lg">
-                                {link}
+                                {linkTitle || link}
                             </a>
                         </div>
                     ) : (
@@ -69,7 +71,7 @@ const ContactCard = ({ icon, title, link, qrCode, isPhone = false }: {
                                 rel="noopener noreferrer"
                                 className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 break-words whitespace-pre-wrap"
                             >
-                                {link}
+                                {linkTitle || link}
                             </a>
                         </div>
                     )}

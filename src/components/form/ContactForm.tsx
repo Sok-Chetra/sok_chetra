@@ -67,7 +67,7 @@ export default function ContactForm() {
     return (
         <section className="py-20 px-2.5 xs:px-4 sm:px-6 lg:px-8 transition-colors duration-300">
             <div className="max-w-4xl mx-auto">
-                <motion.h2
+                {/* <motion.h2
                     ref={ref}
                     initial={{ opacity: 0, x: 50 }}
                     whileInView={{ opacity: 1, x: 0 }}
@@ -76,14 +76,14 @@ export default function ContactForm() {
                     className="text-3xl sm:text-4xl font-bold mb-12 text-center dark:text-white"
                 >
                     Get In Touch
-                </motion.h2>
+                </motion.h2> */}
 
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.2 }}
                     viewport={{ once: true, margin: '-100px' }}
-                    className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 xs:p-6 sm:p-8 transition-colors duration-300"
+                    className="bg-gray-50 dark:bg-gray-800 rounded-xl shadow-md p-4 xs:p-6 sm:p-8 transition-colors duration-300"
                 >
                     {submitStatus.status === 'success' ? (
                         <div className="text-center py-8">

@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -8,7 +9,7 @@ const containerVariants = {
         opacity: 1,
         transition: {
             staggerChildren: 0.2,
-            delayChildren: 0.3, // Added initial delay before animation starts
+            delayChildren: 0.3,
         },
     },
 };
@@ -22,8 +23,8 @@ const itemVariants = {
         y: 0,
         opacity: 1,
         transition: {
-            duration: 0.6, // Slightly longer duration
-            ease: "easeOut", // Smoother easing
+            duration: 0.6,
+            ease: "easeOut",
         },
     },
 };
@@ -31,11 +32,11 @@ const itemVariants = {
 export default function HeroSection() {
     return (
         <motion.section
-            className="py-20 px-4 sm:px-6 lg:px-8 text-center"
+            className="pb-20 pt-48 px-4 sm:px-6 lg:px-8 text-center  dark:bg-gray-900"
             initial="hidden"
-            animate="visible"
+            whileInView="visible"
             variants={containerVariants}
-            viewport={{ once: true, margin: "-100px" }} // Only animate once
+            viewport={{ once: true, margin: "-100px" }}
         >
             <motion.div
                 className="max-w-3xl mx-auto"
@@ -51,17 +52,32 @@ export default function HeroSection() {
                     className="text-xl text-gray-600 dark:text-gray-300 mb-8"
                     variants={itemVariants}
                 >
-                    I&apos;d love to hear from you! Whether you have a project in mind or just want to say hello, feel free to reach out through any of these channels.
+                    I&apos;d love to hear from you! Whether you have a project in mind or just want to say hello.
                 </motion.p>
             </motion.div>
 
-            {/* Adding an animated divider that appears last */}
             <motion.div
-                className="w-16 h-1 bg-indigo-600 mx-auto mt-8"
+                className="flex justify-center space-x-4"
+                variants={itemVariants}
+            >
+                <Link
+                    href={'/about-me'}
+                    className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white rounded-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-indigo-500/20 dark:hover:shadow-indigo-400/20"
+                >
+
+                    Who Am I?
+
+                </Link>
+            </motion.div>
+
+            {/* Animated divider with dark mode support */}
+            <motion.div
+                className="w-16 h-1 bg-indigo-600 dark:bg-indigo-400 mx-auto mt-8"
                 initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: true }}
                 transition={{
-                    delay: 1.2, // Appears after text
+                    delay: 0.8,
                     duration: 0.8,
                     type: "spring",
                     stiffness: 100,
