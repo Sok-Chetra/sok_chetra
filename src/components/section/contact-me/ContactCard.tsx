@@ -37,7 +37,7 @@ const ContactCard = ({ icon, title, link, linkTitle, qrCode, isPhone = false }: 
             >
                 <div className="p-6">
                     <div className="flex justify-center items-center mb-4">
-                        <div className="p-3 rounded-full bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-300">
+                        <div className="p-3 rounded-full bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-200">
                             {icon}
                         </div>
                     </div>
@@ -59,7 +59,7 @@ const ContactCard = ({ icon, title, link, linkTitle, qrCode, isPhone = false }: 
 
                     {isPhone ? (
                         <div className='flex justify-center'>
-                            <a href={`tel:${link.replace(/\s+/g, '')}`} className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 text-lg">
+                            <a href={`tel:${link.replace(/\s+/g, '')}`} className="text-indigo-600 dark:text-indigo-300 hover:text-indigo-800 dark:hover:text-indigo-400 text-lg">
                                 {linkTitle || link}
                             </a>
                         </div>
@@ -69,7 +69,7 @@ const ContactCard = ({ icon, title, link, linkTitle, qrCode, isPhone = false }: 
                                 href={link.startsWith('http') ? link : `https://${link}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 break-words whitespace-pre-wrap"
+                                className="text-indigo-600 dark:text-indigo-300 hover:text-indigo-800 dark:hover:text-indigo-400 break-words whitespace-pre-wrap"
                             >
                                 {linkTitle || link}
                             </a>

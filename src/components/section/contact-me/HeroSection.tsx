@@ -64,9 +64,7 @@ export default function HeroSection() {
                     href={'/about-me'}
                     className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white rounded-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-indigo-500/20 dark:hover:shadow-indigo-400/20"
                 >
-
                     Who Am I?
-
                 </Link>
             </motion.div>
 
