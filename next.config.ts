@@ -1,14 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-    async rewrites() {
-        return [
-            {
-                source: '/about-me',
-                destination: 'https://sok-chetra.me/about-me.html',
-            }
-        ]
-    },
+    allowedDevOrigins: ['*.ngrok-free.app'],
     images: {
         unoptimized: true,
         remotePatterns: [

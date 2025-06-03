@@ -16,12 +16,14 @@ type ResponsiveItemsPerView = {
 
 type UpdatedProjectsSectionProps = Omit<ProjectsSectionProps, 'itemsPerView'> & {
     itemsPerView?: number | ResponsiveItemsPerView
+    title?: string;
 }
 
 export default function ProjectsSection({
     itemsPerView = { base: 1, sm: 1, md: 2, lg: 3, xl: 3 },
     overflowBehavior = 'slide',
-    rows = 1
+    rows = 1,
+    title
 }: UpdatedProjectsSectionProps) {
     const ref = useRef(null)
     const router = useRouter()
@@ -84,7 +86,7 @@ export default function ProjectsSection({
                     transition={{ duration: 0.6 }}
                     className="text-3xl sm:text-4xl font-bold mb-12 text-center dark:text-white"
                 >
-                    My Projects
+                    {title ? title : 'My Projects'}
                 </motion.h2>
 
                 <div className={`grid ${gridCols} gap-8`}>

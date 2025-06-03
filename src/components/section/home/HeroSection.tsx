@@ -29,7 +29,7 @@ export default function HeroSection() {
                             className='inline-block'
                         >
                             <Link
-                                href="#projects"
+                                href="/portfolio"
                                 className="inline-block bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white font-medium py-3 px-6 rounded-lg transition-all duration-300"
                             >
                                 View Portfolio

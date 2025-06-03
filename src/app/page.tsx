@@ -1,6 +1,7 @@
 import HeroSection from '@/components/section/home/HeroSection'
 import ProjectsSection from '@/components/section/home/ProjectsSection'
 import ContactForm from '@/components/form/ContactForm'
+import ContactFormSection from '@/components/section/contact-me/ContactFormSection'
 
 export default function Home() {
     return (
@@ -11,7 +12,7 @@ export default function Home() {
                 overflowBehavior="pagination_number"
                 rows={2}
             />
-            <ContactForm />
+            <ContactFormSection />
         </main>
     )
 }
