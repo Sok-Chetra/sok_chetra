@@ -69,7 +69,7 @@ const ContactCard = ({ icon, title, link, linkTitle, qrCode, isPhone = false }: 
                                 href={link.startsWith('http') ? link : `https://${link}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-indigo-600 dark:text-indigo-300 hover:text-indigo-800 dark:hover:text-indigo-400 break-words whitespace-pre-wrap"
+                                className="text-indigo-600 dark:text-indigo-300 hover:text-indigo-800 dark:hover:text-indigo-400 break-words whitespace-pre-wrap text-lg"
                             >
                                 {linkTitle || link}
                             </a>
