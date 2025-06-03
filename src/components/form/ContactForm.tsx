@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import ReCAPTCHA from "react-google-recaptcha";
 
 const SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''
@@ -14,8 +14,6 @@ export default function ContactForm() {
         status: 'idle' | 'success' | 'error'
         message?: string
     }>({ status: 'idle' })
-
-    const ref = useRef(null)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target
@@ -34,7 +32,6 @@ export default function ContactForm() {
         }
 
         try {
-            // https://sok-chetra.me/send
             const response = await fetch('/api/send', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
@@ -67,17 +64,6 @@ export default function ContactForm() {
     return (
         <section className="py-20 px-2.5 xs:px-4 sm:px-6 lg:px-8 transition-colors duration-300">
             <div className="max-w-4xl mx-auto">
-                {/* <motion.h2
-                    ref={ref}
-                    initial={{ opacity: 0, x: 50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6 }}
-                    viewport={{ once: true, margin: '-100px' }}
-                    className="text-3xl sm:text-4xl font-bold mb-12 text-center dark:text-white"
-                >
-                    Get In Touch
-                </motion.h2> */}
-
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
                     whileInView={{ opacity: 1, y: 0 }}

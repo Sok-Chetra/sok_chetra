@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import QrModal from './QrModal';
-import Image from 'next/image';
+// import Image from 'next/image';
 
 const cardVariants = {
     offscreen: {
