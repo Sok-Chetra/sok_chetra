@@ -1,7 +1,7 @@
 'use client'
 
 import { motion, useInView } from 'framer-motion'
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, useCallback } from 'react'
 import ProjectCard from './ProjectCard'
 import { projects, ProjectsSectionProps } from '@/lib/mock/projects'
 import { useRouter } from 'next/navigation'
@@ -31,33 +31,29 @@ export default function ProjectsSection({
     const [currentPage, setCurrentPage] = useState(1)
     const [currentItemsPerView, setCurrentItemsPerView] = useState(1) // Start with smallest value
 
-    const calculateItemsPerView = () => {
+    const calculateItemsPerView = useCallback(() => {
         if (typeof itemsPerView === 'number') {
-            return itemsPerView
+            return itemsPerView;
         }
 
-        const width = window.innerWidth
-        if (width >= 1280) return itemsPerView.xl || itemsPerView.lg || itemsPerView.md || itemsPerView.sm || itemsPerView.base || 3
-        if (width >= 1024) return itemsPerView.lg || itemsPerView.md || itemsPerView.sm || itemsPerView.base || 3
-        if (width >= 768) return itemsPerView.md || itemsPerView.sm || itemsPerView.base || 2
-        if (width >= 640) return itemsPerView.sm || itemsPerView.base || 1
-        return itemsPerView.base || 1
-    }
+        const width = window.innerWidth;
+        if (width >= 1280) return itemsPerView.xl || itemsPerView.lg || itemsPerView.md || itemsPerView.sm || itemsPerView.base || 3;
+        if (width >= 1024) return itemsPerView.lg || itemsPerView.md || itemsPerView.sm || itemsPerView.base || 3;
+        if (width >= 768) return itemsPerView.md || itemsPerView.sm || itemsPerView.base || 2;
+        if (width >= 640) return itemsPerView.sm || itemsPerView.base || 1;
+        return itemsPerView.base || 1;
+    }, [itemsPerView]);
 
     useEffect(() => {
         const handleResize = () => {
-            setCurrentItemsPerView(calculateItemsPerView())
-        }
+            setCurrentItemsPerView(calculateItemsPerView());
+        };
 
-        // Initialize on mount
-        handleResize()
+        handleResize(); // Call on mount
+        window.addEventListener('resize', handleResize);
 
-        // Add event listener
-        window.addEventListener('resize', handleResize)
-
-        // Clean up
-        return () => window.removeEventListener('resize', handleResize)
-    }, [itemsPerView, calculateItemsPerView])
+        return () => window.removeEventListener('resize', handleResize);
+    }, [calculateItemsPerView]); // ✅ No more ESLint warning
 
     const totalItems = currentItemsPerView * rows
     const totalPages = Math.ceil(projects.length / totalItems)
