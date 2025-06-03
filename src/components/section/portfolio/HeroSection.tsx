@@ -1,5 +1,6 @@
 'use client';
 
+import ButtonCV from '@/components/ui/ButtonCV';
 import { motion } from 'framer-motion';
 
 const containerVariants = {
@@ -45,14 +46,25 @@ export default function HeroSection() {
                     className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6"
                     variants={itemVariants}
                 >
-                    Let&apos;s <span className="text-indigo-600 dark:text-indigo-400">Connect</span>
+                    My Creative <span className="text-indigo-600 dark:text-indigo-400">Portfolio</span>
                 </motion.h1>
                 <motion.p
                     className="text-xl text-gray-600 dark:text-gray-300 mb-8"
                     variants={itemVariants}
                 >
-                    I&apos;d love to hear from you! Whether you have a project in mind or just want to say hello, feel free to reach out through any of these channels.
+                    A curated collection of my projects, showcasing my skills and creative process.
                 </motion.p>
+            </motion.div>
+
+
+            <motion.div
+                className="flex justify-center space-x-4"
+                variants={itemVariants}
+            >
+                <button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all transform hover:scale-105 shadow-lg">
+                    Contact Me
+                </button>
+                <ButtonCV />
             </motion.div>
 
             {/* Adding an animated divider that appears last */}

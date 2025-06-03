@@ -65,7 +65,7 @@ export default function ContactForm() {
     }
 
     return (
-        <section className="py-20 px-2.5 xs:px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+        <section className="py-20 px-2.5 xs:px-4 sm:px-6 lg:px-8 transition-colors duration-300">
             <div className="max-w-4xl mx-auto">
                 <motion.h2
                     ref={ref}

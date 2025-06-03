@@ -27,7 +27,9 @@ export default function ProjectsSection({
 }: UpdatedProjectsSectionProps) {
     const ref = useRef(null)
     const router = useRouter()
+    const gridRef = useRef(null)
     const isInView = useInView(ref, { once: true, margin: '-100px' })
+    const isGridInView = useInView(gridRef, { once: true, margin: '-100px' })
     const [currentPage, setCurrentPage] = useState(1)
     const [currentItemsPerView, setCurrentItemsPerView] = useState(1) // Start with smallest value
 
@@ -85,13 +87,14 @@ export default function ProjectsSection({
                     {title ? title : 'My Projects'}
                 </motion.h2>
 
-                <div className={`grid ${gridCols} gap-8`}>
+                <div ref={gridRef} className={`grid ${gridCols} gap-8`}>
                     {visibleProjects.map((project, index) => (
                         <motion.div
                             key={project.id}
                             initial={{ opacity: 0, y: 50 }}
-                            animate={isInView ? { opacity: 1, y: 0 } : {}}
+                            animate={isGridInView ? { opacity: 1, y: 0 } : {}}
                             transition={{ duration: 0.5, delay: index * 0.1 }}
+
                             className="relative"
                         >
                             <ProjectCard project={project} />
