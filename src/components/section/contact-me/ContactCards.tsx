@@ -19,6 +19,7 @@ export default function ContactCards() {
                         title="LinkedIn"
                         link="https://www.linkedin.com/in/sok-chetra/"
                         linkTitle='Sok Chetra'
+                        qrCode='/linkedin-qr.jpeg'
                     />
 
                     <ContactCard

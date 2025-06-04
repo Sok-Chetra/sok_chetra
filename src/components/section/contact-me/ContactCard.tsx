@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import QrModal from './QrModal';
-// import Image from 'next/image';
+import Image from 'next/image';
 
 const cardVariants = {
     offscreen: {
@@ -42,7 +42,7 @@ const ContactCard = ({ icon, title, link, linkTitle, qrCode, isPhone = false }: 
                         </div>
                     </div>
 
-                    {/* {qrCode && (
+                    {qrCode && (
                         <div
                             className="mb-4 flex justify-center cursor-pointer hover:opacity-90 transition-opacity"
                             onClick={() => setIsModalOpen(true)}
@@ -55,7 +55,7 @@ const ContactCard = ({ icon, title, link, linkTitle, qrCode, isPhone = false }: 
                                 className="border border-gray-200 dark:border-gray-600 rounded"
                             />
                         </div>
-                    )} */}
+                    )}
 
                     {isPhone ? (
                         <div className='flex justify-center'>
