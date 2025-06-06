@@ -43,7 +43,8 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                 </div>
                 <Link
                     href={project.link}
-                    className="inline-block text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors"
+                    className="inline-block text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-semibold transition-colors"
+                    aria-label='Link to Project Detail'
                 >
                     View Project →
                 </Link>

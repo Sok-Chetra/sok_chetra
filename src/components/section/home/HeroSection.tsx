@@ -45,7 +45,7 @@ export default function HeroSection() {
                     transition={{ duration: 0.8 }}
                     className="order-1 md:order-2 flex justify-center"
                 >
-                    <div className="relative w-64 h-64 sm:w-80 sm:h-80 rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-xl dark:shadow-gray-800/20">
+                    <div className="relative w-64 h-64 sm:w-80 sm:h-80 rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-md dark:shadow-gray-800/20">
                         <Image
                             src="/image/my-profile.jpeg"
                             alt="Sok Chetra"
@@ -65,6 +65,7 @@ export default function HeroSection() {
                 >
                     <Link
                         href="#projects"
+                        aria-label="Scroll down to Projects section"
                     >
                         <svg
                             className="w-6 h-6 text-gray-600 dark:text-gray-400"

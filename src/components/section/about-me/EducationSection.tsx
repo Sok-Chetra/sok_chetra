@@ -31,7 +31,7 @@ export default function EducationSection() {
                             <div>
                                 <h3 className="md:text-xl font-semibold">{edu.degree}</h3>
                                 <p className="text-gray-600 dark:text-gray-400">{edu.institution}</p>
-                                <p className="text-sm text-gray-500 dark:text-gray-500">
+                                <p className="text-sm text-gray-500 dark:text-gray-400">
                                     {edu.status}
                                 </p>
                             </div>

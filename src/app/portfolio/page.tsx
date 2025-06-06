@@ -4,8 +4,34 @@ import HeroSection from "@/components/section/portfolio/HeroSection";
 import TechnologiesSection from "@/components/section/portfolio/TechnologiesSection";
 
 export const metadata = {
-    title: 'My Portfolio | Creative Works',
-    description: 'Explore my collection of projects and creative works',
+    title: 'My Portfolio | Sok Chetra’s Creative Works',
+    description: 'Explore Sok Chetra’s collection of professional projects, web applications, and creative development work using Next.js, React Native, and modern technologies.',
+    keywords: [
+        'Sok Chetra Portfolio',
+        'Web Developer Projects',
+        'Next.js Portfolio',
+        'React Native Developer',
+        'Full Stack Developer Cambodia',
+        'Creative Projects',
+        'TypeScript Developer',
+        'Frontend and Backend Projects',
+    ],
+    authors: [{ name: 'Sok Chetra' }],
+    creator: 'Sok Chetra',
+    openGraph: {
+        title: 'Sok Chetra | Developer Portfolio',
+        description:
+            'A showcase of Sok Chetra’s work as a full stack web developer. Browse modern web projects built with React, Next.js, TypeScript, and more.',
+        url: 'https://sok-chetra.me/portfolio', // ✅ your actual domain and route
+        siteName: 'Sok Chetra Portfolio',
+        locale: 'en_US',
+        type: 'website',
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Sok Chetra | Developer Portfolio',
+        description: 'Discover creative and professional projects by Sok Chetra.',
+    },
 };
 
 export default function Portfolio() {

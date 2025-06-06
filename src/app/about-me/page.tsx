@@ -4,8 +4,36 @@ import SkillsSection from '@/components/section/about-me/SkillsSection';
 import WorkExperienceSection from '@/components/section/about-me/WorkExperienceSection';
 
 export const metadata = {
-    title: 'About Sok Chetra',
-    description: 'About Sok Chetra - Full Stack Web Developer',
+    title: 'About Sok Chetra | Full Stack Web Developer',
+    description:
+        'Learn more about Sok Chetra, a passionate Full Stack Developer with expertise in Next.js, React Native, TypeScript, and modern web technologies.',
+    keywords: [
+        'Sok Chetra',
+        'About Sok Chetra',
+        'Full Stack Developer',
+        'Next.js Developer',
+        'React Native Developer',
+        'Web Developer Cambodia',
+        'Frontend Developer',
+        'Backend Developer',
+        'Software Engineer Profile',
+    ],
+    authors: [{ name: 'Sok Chetra' }],
+    creator: 'Sok Chetra',
+    openGraph: {
+        title: 'About Sok Chetra | Full Stack Web Developer',
+        description:
+            'Discover the background, experience, and tech journey of Sok Chetra, a full stack web developer skilled in modern JavaScript frameworks.',
+        url: 'https://sok-chetra.me/about-me', // 🔁 Replace with your actual domain
+        siteName: 'Sok Chetra Portfolio',
+        locale: 'en_US',
+        type: 'profile',
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'About Sok Chetra | Full Stack Developer',
+        description: 'Get to know Sok Chetra, his journey, skills, and professional background.',
+    },
 };
 
 export default function AboutMe() {

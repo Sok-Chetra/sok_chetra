@@ -2,9 +2,41 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 
+const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.2,
+            delayChildren: 0.3,
+        },
+    },
+};
+
+const itemVariants = {
+    hidden: {
+        y: 30,
+        opacity: 0,
+    },
+    visible: {
+        y: 0,
+        opacity: 1,
+        transition: {
+            duration: 0.6,
+            ease: "easeOut",
+        },
+    },
+};
+
 export default function HeroSection() {
     return (
-        <section className="relative h-[90vh] flex items-center justify-center px-4 inset-0  transition-all duration-500">
+        <motion.section
+            className="relative h-[90vh] flex items-center justify-center px-4 inset-0  transition-all duration-500"
+            initial="hidden"
+            whileInView="visible"
+            variants={containerVariants}
+            viewport={{ once: true, margin: "-100px" }}
+        >
 
             {/* Content */}
             <div className="text-center max-w-3xl relative z-10">
@@ -54,6 +86,6 @@ export default function HeroSection() {
                     </Link>
                 </motion.div>
             </div>
-        </section>
+        </motion.section>
     );
 }
