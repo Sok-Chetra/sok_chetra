@@ -24,13 +24,23 @@ export const metadata = {
         siteName: 'Sok Chetra Portfolio',
         locale: 'en_US',
         type: 'website',
+        images: [
+            {
+                url: 'https://sok-chetra.me/image/og-contact-me.jpg',
+                width: 1200,
+                height: 630,
+                alt: 'Contact Sok Chetra Banner',
+            },
+        ],
     },
     twitter: {
         card: 'summary_large_image',
         title: 'Contact Sok Chetra',
-        description: 'Let’s connect for web development projects and opportunities.'
+        description: 'Let’s connect for web development projects and opportunities.',
+        images: ['https://sok-chetra.me/image/og-contact-me.jpg'],
     }
 };
+
 
 export default function ContactMePage() {
     return (

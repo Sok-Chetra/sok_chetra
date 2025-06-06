@@ -28,11 +28,20 @@ export const metadata = {
         siteName: 'Sok Chetra Portfolio',
         locale: 'en_US',
         type: 'website',
+        images: [
+            {
+                url: 'https://sok-chetra.me/image/og-my-profile.jpeg',
+                width: 1200,
+                height: 630,
+                alt: 'Sok Chetra Hero Banner',
+            },
+        ],
     },
     twitter: {
         card: 'summary_large_image',
         title: 'Sok Chetra | Full Stack Web Developer',
         description: 'Explore the work and projects of Sok Chetra, Full Stack Developer.',
+        images: ['https://sok-chetra.me/image/og-my-profile.jpeg'],
     },
 };
 
