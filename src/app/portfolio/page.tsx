@@ -26,11 +26,18 @@ export const metadata = {
         siteName: 'Sok Chetra Portfolio',
         locale: 'en_US',
         type: 'website',
+        images: [
+            {
+                url: 'https://sok-chetra.me/image/og-portfolio.png',
+                alt: 'Sok Chetra Portfolio Preview',
+            },
+        ],
     },
     twitter: {
         card: 'summary_large_image',
         title: 'Sok Chetra | Developer Portfolio',
         description: 'Discover creative and professional projects by Sok Chetra.',
+        images: ['https://sok-chetra.me/image/og-portfolio.png'],
     },
 };
 

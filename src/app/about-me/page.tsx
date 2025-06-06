@@ -30,9 +30,7 @@ export const metadata = {
         type: 'profile',
         images: [
             {
-                url: 'https://sok-chetra.me/image/og-my-profile.jpeg',
-                width: 1200,
-                height: 630,
+                url: 'https://sok-chetra.me/image/my-profile-close.jpeg',
                 alt: 'Sok Chetra About Page Banner',
             },
         ],
@@ -41,7 +39,7 @@ export const metadata = {
         card: 'summary_large_image',
         title: 'About Sok Chetra | Full Stack Developer',
         description: 'Get to know Sok Chetra, his journey, skills, and professional background.',
-        images: ['https://sok-chetra.me/image/og-my-profile.jpeg'],
+        images: ['https://sok-chetra.me/image/my-profile-close.jpeg'],
     },
 };
 

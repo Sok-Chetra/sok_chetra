@@ -27,8 +27,6 @@ export const metadata = {
         images: [
             {
                 url: 'https://sok-chetra.me/image/og-contact-me.jpg',
-                width: 1200,
-                height: 630,
                 alt: 'Contact Sok Chetra Banner',
             },
         ],
