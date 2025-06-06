@@ -15,12 +15,8 @@ const containerVariants = {
 
 export default function HeroSection() {
     return (
-        <motion.section
+        <section
             className="relative h-[90vh] flex items-center justify-center px-4 inset-0  transition-all duration-500"
-            initial="hidden"
-            whileInView="visible"
-            variants={containerVariants}
-            viewport={{ once: true, margin: "-100px" }}
         >
 
             {/* Content */}
@@ -71,6 +67,6 @@ export default function HeroSection() {
                     </Link>
                 </motion.div>
             </div>
-        </motion.section>
+        </section>
     );
 }
