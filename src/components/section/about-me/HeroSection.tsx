@@ -2,17 +2,6 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 
-const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-        opacity: 1,
-        transition: {
-            staggerChildren: 0.2,
-            delayChildren: 0.3,
-        },
-    },
-};
-
 export default function HeroSection() {
     return (
         <section
