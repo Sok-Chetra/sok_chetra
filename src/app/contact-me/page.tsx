@@ -26,7 +26,7 @@ export const metadata = {
         type: 'website',
         images: [
             {
-                url: 'https://sok-chetra.me/image/og-contact-me.png',
+                url: 'https://sok-chetra.me/image/contact-mail.png',
                 width: 1200,
                 height: 630,
                 alt: 'Contact Sok Chetra Banner',
@@ -38,7 +38,7 @@ export const metadata = {
         card: 'summary_large_image',
         title: 'Contact Sok Chetra',
         description: 'Let’s connect for web development projects and opportunities.',
-        images: ['https://sok-chetra.me/image/og-contact-me.png'],
+        images: ['https://sok-chetra.me/image/contact-mail.png'],
     }
 };
 
