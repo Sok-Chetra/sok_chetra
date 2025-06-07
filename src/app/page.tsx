@@ -24,16 +24,17 @@ export const metadata = {
         title: 'Sok Chetra | Full Stack Web Developer',
         description:
             'Discover the portfolio of Sok Chetra — building digital experiences with React, Next.js, and modern technologies.',
-        url: 'https://sok-chetra.me', // 🔁 Replace with your actual domain
+        url: 'https://sok-chetra.me',
         siteName: 'Sok Chetra Portfolio',
         locale: 'en_US',
         type: 'website',
         images: [
             {
-                url: 'https://sok-chetra.me/image/og-my-profile.png',
+                url: '/image/og-my-profile.png',
                 width: 1200,
                 height: 630,
                 alt: 'Sok Chetra Hero Banner',
+                type: 'image/png',
             },
         ],
     },

@@ -28,7 +28,7 @@ export const metadata = {
         type: 'website',
         images: [
             {
-                url: 'https://sok-chetra.me/image/og-portfolio.png',
+                url: '/image/portfolio.png',
                 width: 1200,
                 height: 630,
                 alt: 'Sok Chetra Portfolio Preview',
@@ -40,7 +40,7 @@ export const metadata = {
         card: 'summary_large_image',
         title: 'Sok Chetra | Developer Portfolio',
         description: 'Discover creative and professional projects by Sok Chetra.',
-        images: ['https://sok-chetra.me/image/og-portfolio.png'],
+        images: ['https://sok-chetra.me/image/portfolio.png'],
     },
 };
 

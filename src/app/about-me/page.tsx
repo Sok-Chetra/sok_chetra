@@ -7,6 +7,7 @@ export const metadata = {
     title: 'About Sok Chetra | Full Stack Web Developer',
     description:
         'Learn more about Sok Chetra, a passionate Full Stack Developer with expertise in Next.js, React Native, TypeScript, and modern web technologies.',
+    referrer: 'origin-when-cross-origin',
     keywords: [
         'Sok Chetra',
         'About Sok Chetra',
@@ -30,7 +31,7 @@ export const metadata = {
         type: 'profile',
         images: [
             {
-                url: 'https://sok-chetra.me/image/og-my-profile.png',
+                url: '/image/og-my-profile.png',
                 width: 1200,
                 height: 630,
                 alt: 'Sok Chetra About Page Banner',
