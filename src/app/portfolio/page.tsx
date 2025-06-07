@@ -28,7 +28,7 @@ export const metadata = {
         type: 'website',
         images: [
             {
-                url: '/image/og-portfolio.png',
+                url: '/image/og-portfolio.jpg',
                 width: 1200,
                 height: 630,
                 alt: 'Sok Chetra Portfolio Preview',
