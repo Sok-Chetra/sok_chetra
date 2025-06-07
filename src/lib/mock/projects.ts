@@ -53,7 +53,7 @@ export const projects: Project[] = [
         id: 4,
         title: 'Privili App',
         image: priviliAppImage,
-        tags: ['React Native', 'Woocommerce', 'Polylang'],
+        tags: ['React Native', 'Woocommerce', 'Polylang', 'Node.js'],
         link: '',
         desc: ''
     },
