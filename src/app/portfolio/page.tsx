@@ -22,14 +22,17 @@ export const metadata = {
         title: 'Sok Chetra | Developer Portfolio',
         description:
             'A showcase of Sok Chetra’s work as a full stack web developer. Browse modern web projects built with React, Next.js, TypeScript, and more.',
-        url: 'https://sok-chetra.me/portfolio', // ✅ your actual domain and route
+        url: 'https://sok-chetra.me/portfolio',
         siteName: 'Sok Chetra Portfolio',
         locale: 'en_US',
         type: 'website',
         images: [
             {
                 url: 'https://sok-chetra.me/image/og-portfolio.png',
+                width: 1200,
+                height: 630,
                 alt: 'Sok Chetra Portfolio Preview',
+                type: 'image/png',
             },
         ],
     },

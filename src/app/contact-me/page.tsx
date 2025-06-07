@@ -20,14 +20,17 @@ export const metadata = {
     openGraph: {
         title: 'Contact Sok Chetra',
         description: 'Reach out to Sok Chetra for development projects, questions, or collaborations.',
-        url: 'https://sok-chetra.me/contact-me', // Replace with your real domain
+        url: 'https://sok-chetra.me/contact-me',
         siteName: 'Sok Chetra Portfolio',
         locale: 'en_US',
         type: 'website',
         images: [
             {
                 url: 'https://sok-chetra.me/image/og-contact-me.png',
+                width: 1200,
+                height: 630,
                 alt: 'Contact Sok Chetra Banner',
+                type: 'image/png',
             },
         ],
     },

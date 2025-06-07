@@ -31,7 +31,10 @@ export const metadata = {
         images: [
             {
                 url: 'https://sok-chetra.me/image/og-my-profile.png',
+                width: 1200,
+                height: 630,
                 alt: 'Sok Chetra About Page Banner',
+                type: 'image/png',
             },
         ],
     },
