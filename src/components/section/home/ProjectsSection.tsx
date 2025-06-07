@@ -87,7 +87,7 @@ export default function ProjectsSection({
                     {title ? title : 'My Projects'}
                 </motion.h2>
 
-                <div ref={gridRef} className={`grid ${gridCols} gap-8`}>
+                <div ref={gridRef} className={`grid ${gridCols} gap-8 items-stretch`}>
                     {visibleProjects.map((project, index) => (
                         <motion.div
                             key={project.id}
@@ -95,7 +95,7 @@ export default function ProjectsSection({
                             animate={isGridInView ? { opacity: 1, y: 0 } : {}}
                             transition={{ duration: 0.5, delay: index * 0.1 }}
 
-                            className="relative"
+                            className="relative h-full"
                         >
                             <ProjectCard project={project} />
                         </motion.div>

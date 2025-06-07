@@ -24,13 +24,13 @@ export const metadata = {
         title: 'About Sok Chetra | Full Stack Web Developer',
         description:
             'Discover the background, experience, and tech journey of Sok Chetra, a full stack web developer skilled in modern JavaScript frameworks.',
-        url: 'https://sok-chetra.me/about-me', // 🔁 Replace with your actual domain
+        url: 'https://sok-chetra.me/about-me',
         siteName: 'Sok Chetra Portfolio',
         locale: 'en_US',
         type: 'profile',
         images: [
             {
-                url: 'https://sok-chetra.me/image/my-profile-close.jpeg',
+                url: 'https://sok-chetra.me/image/og-my-profile.png',
                 alt: 'Sok Chetra About Page Banner',
             },
         ],
@@ -39,7 +39,7 @@ export const metadata = {
         card: 'summary_large_image',
         title: 'About Sok Chetra | Full Stack Developer',
         description: 'Get to know Sok Chetra, his journey, skills, and professional background.',
-        images: ['https://sok-chetra.me/image/my-profile-close.jpeg'],
+        images: ['https://sok-chetra.me/image/og-my-profile.png'],
     },
 };
 
