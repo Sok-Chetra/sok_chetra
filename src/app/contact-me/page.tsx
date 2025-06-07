@@ -3,6 +3,7 @@ import ContactFormSection from "@/components/section/contact-me/ContactFormSecti
 import HeroSection from "@/components/section/contact-me/HeroSection";
 
 export const metadata = {
+    metadataBase: new URL('https://sok-chetra.me'),
     title: 'Contact Sok Chetra',
     description: 'Get in touch with Sok Chetra, a passionate Full Stack Web Developer. Whether it’s project collaboration, freelance inquiries, or tech discussion — let’s connect.',
     keywords: [
@@ -38,7 +39,13 @@ export const metadata = {
         card: 'summary_large_image',
         title: 'Contact Sok Chetra',
         description: 'Let’s connect for web development projects and opportunities.',
-        images: ['https://sok-chetra.me/image/contact-information.png'],
+        images: [{
+            url: 'https://sok-chetra.me/image/contact-information.png',
+            width: 1200,
+            height: 630,
+            creator: '@Traa0000',
+            alt: 'Contact Sok Chetra Banner',
+        }],
     }
 };
 
