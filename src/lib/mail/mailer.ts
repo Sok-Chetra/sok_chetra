@@ -26,7 +26,7 @@ export async function sendMail({
 
         await transporter.sendMail({
             from: `"${fromName}" <${fromEmail}>`, // <- from user input
-            to,
+            to: to,
             subject,
             html,
             replyTo: fromEmail, // <- helps you reply directly
