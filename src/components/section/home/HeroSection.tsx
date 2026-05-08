@@ -46,14 +46,32 @@ export default function HeroSection() {
                     className="order-1 md:order-2 flex justify-center"
                 >
                     <div className="relative w-64 h-64 sm:w-80 sm:h-80 rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-md dark:shadow-gray-800/20">
-                        <Image
-                            src="/image/my-profile.png"
-                            alt="Sok Chetra"
-                            fill
-                            className="object-cover"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                            priority
-                        />
+                        <div className="hidden md:block">
+                            <Image
+                                fetchPriority="high"
+                                src="/image/my-profile.webp"
+                                alt="Sok Chetra"
+                                className="object-cover"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                width={320}
+                                height={320}
+                                priority
+                            />
+                        </div>
+
+                        <div className="block md:hidden">
+                            <Image
+                                fetchPriority="high"
+                                src="/image/my-profile-mobile.webp"
+                                alt="Sok Chetra"
+                                className="object-cover"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                width={320}
+                                height={320}
+                                priority
+                            />
+                        </div>
+
                     </div>
                 </motion.div>
             </div>

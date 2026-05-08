@@ -2,6 +2,7 @@ import HeroSection from '@/components/section/about-me/HeroSection';
 import EducationSection from '@/components/section/about-me/EducationSection';
 import SkillsSection from '@/components/section/about-me/SkillsSection';
 import WorkExperienceSection from '@/components/section/about-me/WorkExperienceSection';
+import APP_CONFIG from '@/lib/constants/app_config';
 
 export const metadata = {
     title: 'About Sok Chetra | Full Stack Web Developer',
@@ -25,13 +26,13 @@ export const metadata = {
         title: 'About Sok Chetra | Full Stack Web Developer',
         description:
             'Discover the background, experience, and tech journey of Sok Chetra, a full stack web developer skilled in modern JavaScript frameworks.',
-        url: 'https://sok-chetra.me/about-me',
+        url: `${APP_CONFIG.siteUrl}/about-me`,
         siteName: 'Sok Chetra Portfolio',
         locale: 'en_US',
         type: 'profile',
         images: [
             {
-                url: '/image/og-my-profile.png',
+                url: `${APP_CONFIG.siteUrl}/image/og-my-profile.png`,
                 width: 1200,
                 height: 630,
                 alt: 'Sok Chetra About Page Banner',
@@ -43,7 +44,7 @@ export const metadata = {
         card: 'summary_large_image',
         title: 'About Sok Chetra | Full Stack Developer',
         description: 'Get to know Sok Chetra, his journey, skills, and professional background.',
-        images: ['https://sok-chetra.me/image/og-my-profile.png'],
+        images: [`${APP_CONFIG.siteUrl}/image/og-my-profile.png`],
     },
 };
 

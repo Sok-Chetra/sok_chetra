@@ -2,6 +2,7 @@
 import ProjectsSection from "@/components/section/home/ProjectsSection";
 import HeroSection from "@/components/section/portfolio/HeroSection";
 import TechnologiesSection from "@/components/section/portfolio/TechnologiesSection";
+import APP_CONFIG from "@/lib/constants/app_config";
 
 export const metadata = {
     title: 'My Portfolio | Sok Chetra’s Creative Works',
@@ -22,13 +23,13 @@ export const metadata = {
         title: 'Sok Chetra | Developer Portfolio',
         description:
             'A showcase of Sok Chetra’s work as a full stack web developer. Browse modern web projects built with React, Next.js, TypeScript, and more.',
-        url: 'https://sok-chetra.me/portfolio',
+        url: `${APP_CONFIG.siteUrl}/portfolio`,
         siteName: 'Sok Chetra Portfolio',
         locale: 'en_US',
         type: 'website',
         images: [
             {
-                url: '/image/og-portfolio.png',
+                url: `${APP_CONFIG.siteUrl}/image/og-portfolio.png`,
                 width: 1200,
                 height: 630,
                 alt: 'Sok Chetra Portfolio Preview',
@@ -40,7 +41,7 @@ export const metadata = {
         card: 'summary_large_image',
         title: 'Sok Chetra | Developer Portfolio',
         description: 'Discover creative and professional projects by Sok Chetra.',
-        images: ['https://sok-chetra.me/image/og-portfolio.png'],
+        images: [`${APP_CONFIG.siteUrl}/image/og-portfolio.png`],
     },
 };
 

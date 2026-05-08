@@ -1,9 +1,10 @@
 import ContactCards from "@/components/section/contact-me/ContactCards";
 import ContactFormSection from "@/components/section/contact-me/ContactFormSection";
 import HeroSection from "@/components/section/contact-me/HeroSection";
+import APP_CONFIG from "@/lib/constants/app_config";
 
 export const metadata = {
-    metadataBase: new URL('https://sok-chetra.me'),
+    metadataBase: new URL(APP_CONFIG.siteUrl),
     title: 'Contact Sok Chetra',
     description: 'Get in touch with Sok Chetra, a passionate Full Stack Web Developer. Whether it’s project collaboration, freelance inquiries, or tech discussion — let’s connect.',
     keywords: [
@@ -21,13 +22,13 @@ export const metadata = {
     openGraph: {
         title: 'Contact Sok Chetra',
         description: 'Reach out to Sok Chetra for development projects, questions, or collaborations.',
-        url: 'https://sok-chetra.me/contact-me',
+        url: `${APP_CONFIG.siteUrl}/contact-me`,
         siteName: 'Sok Chetra Portfolio',
         locale: 'en_US',
         type: 'website',
         images: [
             {
-                url: '/image/og-contact-me.png',
+                url: `${APP_CONFIG.siteUrl}/image/og-contact-me.png`,
                 width: 1200,
                 height: 630,
                 alt: 'Contact Sok Chetra Banner',
@@ -40,7 +41,7 @@ export const metadata = {
         title: 'Contact Sok Chetra',
         description: 'Let’s connect for web development projects and opportunities.',
         images: [{
-            url: 'https://sok-chetra.me/image/contact-information.png',
+            url: `${APP_CONFIG.siteUrl}/image/og-contact-me.png`,
             width: 1200,
             height: 630,
             creator: '@Traa0000',

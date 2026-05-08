@@ -1,6 +1,7 @@
 import HeroSection from '@/components/section/home/HeroSection'
 import ProjectsSection from '@/components/section/home/ProjectsSection'
 import ContactFormSection from '@/components/section/contact-me/ContactFormSection'
+import APP_CONFIG from '@/lib/constants/app_config';
 
 export const metadata = {
     title: 'Sok Chetra | Full Stack Web Developer',
@@ -24,13 +25,13 @@ export const metadata = {
         title: 'Sok Chetra | Full Stack Web Developer',
         description:
             'Discover the portfolio of Sok Chetra — building digital experiences with React, Next.js, and modern technologies.',
-        url: 'https://sok-chetra.me',
+        url: `${APP_CONFIG.siteUrl}`,
         siteName: 'Sok Chetra Portfolio',
         locale: 'en_US',
         type: 'website',
         images: [
             {
-                url: '/image/og-my-profile.png',
+                url: `${APP_CONFIG.siteUrl}/image/og-my-profile.png`,
                 width: 1200,
                 height: 630,
                 alt: 'Sok Chetra Hero Banner',
@@ -42,7 +43,7 @@ export const metadata = {
         card: 'summary_large_image',
         title: 'Sok Chetra | Full Stack Web Developer',
         description: 'Explore the work and projects of Sok Chetra, Full Stack Developer.',
-        images: ['https://sok-chetra.me/image/og-my-profile.png'],
+        images: [`${APP_CONFIG.siteUrl}/image/og-my-profile.png`],
     },
 };
 
