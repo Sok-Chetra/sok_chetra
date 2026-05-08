@@ -1,9 +1,10 @@
-import { motion } from 'framer-motion';
+'use client';
+import { motion, Variants } from 'framer-motion';
 import { useState } from 'react';
 import QrModal from './QrModal';
 // import Image from 'next/image';
 
-const cardVariants = {
+const cardVariants: Variants = {
     offscreen: {
         y: 100,
         opacity: 0,

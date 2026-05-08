@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 
-const containerVariants = {
+const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
         opacity: 1,
@@ -15,7 +15,7 @@ const containerVariants = {
     },
 };
 
-const techItemVariants = {
+const techItemVariants: Variants = {
     hidden: { scale: 0.8, opacity: 0, y: 10 },
     visible: {
         scale: 1,
