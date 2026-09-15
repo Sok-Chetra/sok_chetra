@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
 import { useIsHydrated } from "@/lib/hooks/useIsHydrated";
@@ -125,7 +125,7 @@ export default function ThemeSwitch({
                     const isVisible = isOpen || isActive;
 
                     return (
-                        <motion.div
+                        <m.div
                             key={value}
                             initial={false}
                             animate={{
@@ -169,7 +169,7 @@ export default function ThemeSwitch({
                                 <Icon size={15} aria-hidden />
                                 <span className="sr-only">{label}</span>
                             </button>
-                        </motion.div>
+                        </m.div>
                     );
                 })}
             </div>

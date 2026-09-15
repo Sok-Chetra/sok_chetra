@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 import { scrollToId } from "@/lib/scroll";
 
@@ -14,7 +14,7 @@ import { scrollToId } from "@/lib/scroll";
  */
 export default function ScrollCue({ targetId }: { targetId: string }) {
     return (
-        <motion.div
+        <m.div
             animate={{ y: [0, 10, 0] }}
             transition={{ repeat: Infinity, duration: 2 }}
             className="absolute bottom-10 left-1/2 -translate-x-1/2"
@@ -43,6 +43,6 @@ export default function ScrollCue({ targetId }: { targetId: string }) {
                     />
                 </svg>
             </a>
-        </motion.div>
+        </m.div>
     );
 }

@@ -1,13 +1,13 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 import { fadeInUp, VIEWPORT_ONCE } from "@/lib/animations";
 import { EXPERIENCE } from "@/lib/content/experience";
 
 export default function WorkExperienceSection() {
     return (
-        <motion.section
+        <m.section
             initial="hidden"
             whileInView="visible"
             viewport={VIEWPORT_ONCE}
@@ -20,7 +20,7 @@ export default function WorkExperienceSection() {
 
             <div className="space-y-8">
                 {EXPERIENCE.map((job) => (
-                    <motion.article
+                    <m.article
                         key={job.id}
                         initial="hidden"
                         whileInView="visible"
@@ -54,9 +54,9 @@ export default function WorkExperienceSection() {
                                 </li>
                             ))}
                         </ul>
-                    </motion.article>
+                    </m.article>
                 ))}
             </div>
-        </motion.section>
+        </m.section>
     );
 }

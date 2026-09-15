@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 import { MenuLink } from "./MenuLink";
 import ThemeSwitch from "@/components/ui/ThemeSwitch";
@@ -27,7 +27,7 @@ export const DesktopMenu = ({
     <div className="fixed z-50 mt-5 hidden w-full items-center justify-center gap-3 md:flex">
         <nav aria-label="Main" className={`relative flex rounded-full px-3 py-1.5 ${SURFACE}`}>
             <ul className="relative flex">
-                <motion.li
+                <m.li
                     aria-hidden
                     className="absolute top-0 bottom-0 rounded-full bg-blue-500/90"
                     initial={false}

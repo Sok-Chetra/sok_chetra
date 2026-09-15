@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import Link from "next/link";
 
 import type { NavItem } from "@/lib/content/navigation";
@@ -42,5 +42,5 @@ export const MenuLink = ({
         </Link>
     );
 
-    return isMobile ? <motion.div whileTap={{ scale: 0.98 }}>{link}</motion.div> : link;
+    return isMobile ? <m.div whileTap={{ scale: 0.98 }}>{link}</m.div> : link;
 };

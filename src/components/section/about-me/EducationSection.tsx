@@ -1,13 +1,13 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 import { fadeInUp, VIEWPORT_ONCE } from "@/lib/animations";
 import { EDUCATION } from "@/lib/content/education";
 
 export default function EducationSection() {
     return (
-        <motion.section
+        <m.section
             initial="hidden"
             whileInView="visible"
             viewport={VIEWPORT_ONCE}
@@ -20,7 +20,7 @@ export default function EducationSection() {
 
             <ul className="space-y-6">
                 {EDUCATION.map((entry) => (
-                    <motion.li
+                    <m.li
                         key={entry.id}
                         variants={fadeInUp}
                         className={`pl-4 border-l-4 ${entry.accentClass}`}
@@ -35,9 +35,9 @@ export default function EducationSection() {
                                 <p className="text-sm text-gray-500 dark:text-gray-400">{entry.status}</p>
                             </div>
                         </div>
-                    </motion.li>
+                    </m.li>
                 ))}
             </ul>
-        </motion.section>
+        </m.section>
     );
 }

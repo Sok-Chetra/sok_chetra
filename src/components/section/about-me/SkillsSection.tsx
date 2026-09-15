@@ -1,13 +1,13 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 import { fadeInUp, VIEWPORT_ONCE } from "@/lib/animations";
 import { SKILLS } from "@/lib/content/skills";
 
 export default function SkillsSection() {
     return (
-        <motion.section
+        <m.section
             initial="hidden"
             whileInView="visible"
             viewport={VIEWPORT_ONCE}
@@ -18,7 +18,7 @@ export default function SkillsSection() {
 
             <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
                 {SKILLS.map((skill, index) => (
-                    <motion.li
+                    <m.li
                         key={skill}
                         initial={{ opacity: 0, y: 10 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -28,9 +28,9 @@ export default function SkillsSection() {
                     >
                         <span aria-hidden className="w-2 h-2 bg-blue-500 rounded-full mr-2 shrink-0" />
                         {skill}
-                    </motion.li>
+                    </m.li>
                 ))}
             </ul>
-        </motion.section>
+        </m.section>
     );
 }

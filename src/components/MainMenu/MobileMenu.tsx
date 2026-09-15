@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 
 import { MenuLink } from "./MenuLink";
 import { NAV_ITEMS } from "@/lib/content/navigation";
@@ -15,7 +15,7 @@ type MobileMenuProps = {
 export const MobileMenu = ({ id, isOpen, pathname, onItemClick }: MobileMenuProps) => (
     <AnimatePresence>
         {isOpen && (
-            <motion.nav
+            <m.nav
                 id={id}
                 aria-label="Main"
                 initial={{ opacity: 0, y: -10 }}
@@ -39,7 +39,7 @@ export const MobileMenu = ({ id, isOpen, pathname, onItemClick }: MobileMenuProp
                         </li>
                     ))}
                 </ul>
-            </motion.nav>
+            </m.nav>
         )}
     </AnimatePresence>
 );

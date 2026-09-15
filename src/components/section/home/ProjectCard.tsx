@@ -1,7 +1,7 @@
 'use client'
 
 import { Project } from '@/lib/content/projects'
-import { motion } from 'framer-motion'
+import { m } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -11,7 +11,7 @@ type ProjectCardProps = {
 
 export default function ProjectCard({ project }: ProjectCardProps) {
     return (
-        <motion.div
+        <m.div
             whileHover={{ y: -10 }}
             className="bg-white dark:bg-gray-700 rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl dark:hover:shadow-gray-900/50 flex flex-col h-full"
         >
@@ -64,6 +64,6 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                     </div>
                 )}
             </div>
-        </motion.div>
+        </m.div>
     )
 }

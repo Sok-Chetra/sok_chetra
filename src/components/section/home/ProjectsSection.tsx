@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useRef, useState } from "react";
 
 import ProjectCard from "./ProjectCard";
@@ -43,7 +43,7 @@ export default function ProjectsSection({ title = "My Projects", rows = 1 }: Pro
             aria-labelledby="projects-heading"
         >
             <div className="mx-auto max-w-7xl">
-                <motion.h2
+                <m.h2
                     id="projects-heading"
                     initial="hidden"
                     whileInView="visible"
@@ -52,11 +52,11 @@ export default function ProjectsSection({ title = "My Projects", rows = 1 }: Pro
                     className="mb-12 text-center text-3xl font-bold sm:text-4xl dark:text-white"
                 >
                     {title}
-                </motion.h2>
+                </m.h2>
 
                 <ul className="grid grid-cols-1 items-stretch gap-8 sm:grid-cols-2 lg:grid-cols-3">
                     {visibleProjects.map((project, index) => (
-                        <motion.li
+                        <m.li
                             key={project.id}
                             initial="hidden"
                             whileInView="visible"
@@ -66,7 +66,7 @@ export default function ProjectsSection({ title = "My Projects", rows = 1 }: Pro
                             className="h-full"
                         >
                             <ProjectCard project={project} />
-                        </motion.li>
+                        </m.li>
                     ))}
                 </ul>
 

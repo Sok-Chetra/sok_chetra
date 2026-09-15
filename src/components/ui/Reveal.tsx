@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, type Variants } from "framer-motion";
+import { m, type Variants } from "framer-motion";
 import type { ReactNode } from "react";
 
 import { fadeInUp, VIEWPORT_ONCE } from "@/lib/animations";
@@ -14,14 +14,14 @@ import { fadeInUp, VIEWPORT_ONCE } from "@/lib/animations";
  * component, so the content itself ships as plain HTML.
  */
 const MOTION_TAGS = {
-    div: motion.div,
-    section: motion.section,
-    article: motion.article,
-    ul: motion.ul,
-    li: motion.li,
-    p: motion.p,
-    h1: motion.h1,
-    h2: motion.h2,
+    div: m.div,
+    section: m.section,
+    article: m.article,
+    ul: m.ul,
+    li: m.li,
+    p: m.p,
+    h1: m.h1,
+    h2: m.h2,
 } as const;
 
 export type RevealTag = keyof typeof MOTION_TAGS;

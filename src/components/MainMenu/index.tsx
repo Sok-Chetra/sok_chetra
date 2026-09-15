@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -121,7 +121,7 @@ export const MainMenu = () => {
                 />
 
                 <div className="relative" ref={mobileMenuRef}>
-                    <motion.button
+                    <m.button
                         ref={toggleButtonRef}
                         type="button"
                         className="rounded-full border border-gray-100 bg-white/80 p-2 text-slate-700 shadow-sm backdrop-blur-sm transition-colors hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:border-gray-700/50 dark:bg-gray-800/90 dark:text-gray-300 dark:shadow-gray-700/20 dark:hover:bg-gray-700/80"
@@ -131,7 +131,7 @@ export const MainMenu = () => {
                         aria-controls={MOBILE_MENU_ID}
                     >
                         <HamburgerIcon isOpen={isMobileMenuOpen} />
-                    </motion.button>
+                    </m.button>
 
                     <MobileMenu
                         id={MOBILE_MENU_ID}

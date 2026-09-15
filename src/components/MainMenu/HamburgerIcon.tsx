@@ -1,10 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 export const HamburgerIcon = ({ isOpen }: { isOpen: boolean }) => (
     <svg width="20" height="20" viewBox="0 0 20 20">
-        <motion.path
+        <m.path
             fill="transparent"
             stroke="currentColor"
             strokeWidth="2"
@@ -20,7 +20,7 @@ export const HamburgerIcon = ({ isOpen }: { isOpen: boolean }) => (
                 ease: [0.22, 1, 0.36, 1] // Custom cubic bezier for smoother animation
             }}
         />
-        <motion.path
+        <m.path
             fill="transparent"
             stroke="currentColor"
             strokeWidth="2"
@@ -36,7 +36,7 @@ export const HamburgerIcon = ({ isOpen }: { isOpen: boolean }) => (
                 ease: "linear"
             }}
         />
-        <motion.path
+        <m.path
             fill="transparent"
             stroke="currentColor"
             strokeWidth="2"
