@@ -5,7 +5,7 @@ import profileImage from "../../../../public/image/my-profile.webp";
 
 import Reveal from "@/components/ui/Reveal";
 import ScrollCue from "@/components/ui/ScrollCue";
-import { fadeInFrom } from "@/lib/animations";
+import { slideInFrom } from "@/lib/animations";
 import { SITE } from "@/lib/content/site";
 
 /**
@@ -19,7 +19,7 @@ export default function HeroSection() {
                 <Reveal
                     as="div"
                     trigger="mount"
-                    variants={fadeInFrom(-50)}
+                    variants={slideInFrom(-50)}
                     className="order-2 md:order-1"
                 >
                     <h1 className="mb-4 text-center text-4xl font-bold sm:text-5xl md:text-start lg:text-6xl dark:text-white">
@@ -44,7 +44,7 @@ export default function HeroSection() {
                 <Reveal
                     as="div"
                     trigger="mount"
-                    variants={fadeInFrom(50)}
+                    variants={slideInFrom(50)}
                     className="order-1 flex justify-center md:order-2"
                 >
                     <div className="relative h-64 w-64 overflow-hidden rounded-full border-4 border-white shadow-md sm:h-80 sm:w-80 dark:border-gray-800 dark:shadow-gray-800/20">

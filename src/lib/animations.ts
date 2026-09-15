@@ -27,6 +27,23 @@ export const fadeInFrom = (x: number): Variants => ({
     visible: { opacity: 1, x: 0, transition: { duration: 0.8 } },
 });
 
+/**
+ * Slide with no fade — for above-the-fold content, and required for whatever
+ * turns out to be the LCP element.
+ *
+ * An element at `opacity: 0` is not eligible to be the Largest Contentful
+ * Paint, and framer-motion writes the `hidden` variant into the SSR HTML. Using
+ * `fadeInFrom` on the hero therefore left the image fully downloaded but
+ * unpaintable until hydration finished the fade, measured on production as
+ * 1037ms of LCP "render delay" — 43% of a 2.4s LCP. A transform does not stop
+ * the element painting, so the content is genuinely visible straight away
+ * rather than merely counted as visible.
+ */
+export const slideInFrom = (x: number): Variants => ({
+    hidden: { x },
+    visible: { x: 0, transition: { duration: 0.8 } },
+});
+
 /** Parent that reveals its children one after another. */
 export const staggerContainer: Variants = {
     hidden: { opacity: 0 },
