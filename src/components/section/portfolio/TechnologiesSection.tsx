@@ -1,42 +1,17 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { motion, Variants } from 'framer-motion';
+import { motion } from "framer-motion";
 
-const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-        opacity: 1,
-        transition: {
-            when: "beforeChildren",
-            staggerChildren: 0.08,
-            delayChildren: 0.2,
-        },
-    },
-};
+import { popIn, staggerContainer, VIEWPORT_PARTIAL } from "@/lib/animations";
+import { TECHNOLOGIES } from "@/lib/content/technologies";
 
-const techItemVariants: Variants = {
-    hidden: { scale: 0.8, opacity: 0, y: 10 },
-    visible: {
-        scale: 1,
-        opacity: 1,
-        y: 0,
-        transition: {
-            duration: 0.5,
-            ease: "easeOut",
-        },
-    },
-};
-
-const TechnologiesSection = () => {
-    const technologies = ['React', 'Next.js', 'TypeScript', 'Node.js', 'Tailwind CSS', 'Framer Motion'];
-
+export default function TechnologiesSection() {
     return (
         <motion.section
             className="py-16 bg-white dark:bg-gray-800 px-4 sm:px-6 lg:px-8"
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
+            viewport={VIEWPORT_PARTIAL}
         >
             <div className="max-w-7xl mx-auto">
                 <motion.h2
@@ -44,35 +19,39 @@ const TechnologiesSection = () => {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, ease: "easeOut" }}
-                    viewport={{ once: true, amount: 0.2 }}
+                    viewport={VIEWPORT_PARTIAL}
                 >
                     Technologies I Work With
                 </motion.h2>
 
-                <motion.div
-                    className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6"
-                    variants={containerVariants}
+                <motion.ul
+                    className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 md:grid-cols-4 lg:grid-cols-6"
+                    variants={staggerContainer}
                     initial="hidden"
                     whileInView="visible"
-                    viewport={{ once: true, amount: 0.2 }}
+                    viewport={VIEWPORT_PARTIAL}
                 >
-                    {technologies.map((tech) => (
-                        <motion.div
+                    {TECHNOLOGIES.map((tech) => (
+                        <motion.li
                             key={tech}
                             className="flex flex-col items-center p-4 bg-gray-50 dark:bg-gray-700 rounded-xl hover:shadow-lg transition-shadow duration-300"
-                            variants={techItemVariants}
-                            whileHover={{ scale: 1.05, transition: { type: "spring", stiffness: 150, damping: 12 } }}
+                            variants={popIn}
+                            whileHover={{
+                                scale: 1.05,
+                                transition: { type: "spring", stiffness: 150, damping: 12 },
+                            }}
                         >
-                            <div className="w-12 h-12 mb-3 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
-                                <span className="text-blue-600 dark:text-blue-300 text-xl font-bold">{tech[0]}</span>
-                            </div>
-                            <span className="font-medium dark:text-white text-center">{tech}</span>
-                        </motion.div>
+                            <span
+                                aria-hidden
+                                className="w-12 h-12 mb-3 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-300 text-xl font-bold"
+                            >
+                                {tech[0]}
+                            </span>
+                            <span className="min-w-0 text-center font-medium break-words dark:text-white">{tech}</span>
+                        </motion.li>
                     ))}
-                </motion.div>
+                </motion.ul>
             </div>
         </motion.section>
     );
-};
-
-export default TechnologiesSection;
+}

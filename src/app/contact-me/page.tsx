@@ -1,59 +1,23 @@
 import ContactCards from "@/components/section/contact-me/ContactCards";
 import ContactFormSection from "@/components/section/contact-me/ContactFormSection";
 import HeroSection from "@/components/section/contact-me/HeroSection";
-import APP_CONFIG from "@/lib/constants/app_config";
+import { buildMetadata } from "@/lib/seo/metadata";
 
-export const metadata = {
-    metadataBase: new URL(APP_CONFIG.siteUrl),
-    title: 'Contact Sok Chetra',
-    description: 'Get in touch with Sok Chetra, a passionate Full Stack Web Developer. Whether it’s project collaboration, freelance inquiries, or tech discussion — let’s connect.',
-    keywords: [
-        'Sok Chetra',
-        'Contact Sok Chetra',
-        'Full Stack Developer',
-        'Next.js Developer',
-        'Web Developer Contact',
-        'React Developer',
-        'Freelance Web Developer',
-        'Software Engineer Cambodia'
-    ],
-    authors: [{ name: 'Sok Chetra' }],
-    creator: 'Sok Chetra',
-    openGraph: {
-        title: 'Contact Sok Chetra',
-        description: 'Reach out to Sok Chetra for development projects, questions, or collaborations.',
-        url: `${APP_CONFIG.siteUrl}/contact-me`,
-        siteName: 'Sok Chetra Portfolio',
-        locale: 'en_US',
-        type: 'website',
-        images: [
-            {
-                url: `${APP_CONFIG.siteUrl}/image/og-contact-me.png`,
-                width: 1200,
-                height: 630,
-                alt: 'Contact Sok Chetra Banner',
-                type: 'image/png',
-            },
-        ],
-    },
-    twitter: {
-        card: 'summary_large_image',
-        title: 'Contact Sok Chetra',
-        description: 'Let’s connect for web development projects and opportunities.',
-        images: [{
-            url: `${APP_CONFIG.siteUrl}/image/og-contact-me.png`,
-            width: 1200,
-            height: 630,
-            creator: '@Traa0000',
-            alt: 'Contact Sok Chetra Banner',
-        }],
-    }
-};
-
+export const metadata = buildMetadata({
+    title: "Contact",
+    description:
+        "Get in touch with Sok Chetra, a passionate Full Stack Web Developer. Whether it’s project collaboration, freelance inquiries, or tech discussion — let’s connect.",
+    path: "/contact-me",
+    keywords: ["Contact Sok Chetra", "Web Developer Contact", "Freelance Web Developer"],
+    image: "/image/og-contact-me.jpg",
+    imageAlt: "Contact Sok Chetra Banner",
+    ogDescription: "Reach out to Sok Chetra for development projects, questions, or collaborations.",
+    twitterDescription: "Let’s connect for web development projects and opportunities.",
+});
 
 export default function ContactMePage() {
     return (
-        <main className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 overflow-hidden">
+        <main className="min-h-screen overflow-hidden bg-linear-to-br from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900">
             <HeroSection />
             <ContactCards />
             <ContactFormSection />

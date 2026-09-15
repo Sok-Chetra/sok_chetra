@@ -1,9 +1,21 @@
-// src/components/MainMenu/DesktopMenu.tsx
 "use client";
 
 import { motion } from "framer-motion";
-import { NAV_BUTTONS } from "./navButtons";
-import { MenuItem, MenuItemId } from "./types";
+
+import { MenuLink } from "./MenuLink";
+import ThemeSwitch from "@/components/ui/ThemeSwitch";
+import { NAV_ITEMS, type NavItemId } from "@/lib/content/navigation";
+
+type DesktopMenuProps = {
+    highlightStyle: { left: number; width: number };
+    hasMounted: boolean;
+    pathname: string;
+    itemRefs: React.RefObject<Record<NavItemId, HTMLAnchorElement | null>>;
+    onItemClick: () => void;
+};
+
+const SURFACE =
+    "bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm shadow-sm dark:shadow-gray-700/20 border border-gray-100 dark:border-gray-700/50";
 
 export const DesktopMenu = ({
     highlightStyle,
@@ -11,49 +23,38 @@ export const DesktopMenu = ({
     pathname,
     itemRefs,
     onItemClick,
-}: {
-    highlightStyle: { left: number; width: number };
-    hasMounted: boolean;
-    pathname: string;
-    itemRefs: React.RefObject<Record<MenuItemId, HTMLButtonElement | null>>;
-    onItemClick: (item: MenuItem) => void;
-}) => (
-    <motion.nav className="hidden md:flex justify-center items-center mt-5 fixed w-full gap-5 z-50">
-        <div className="relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm px-3 py-1.5 rounded-full flex shadow-sm dark:shadow-gray-700/20 border border-gray-100 dark:border-gray-700/50">
-            <div className="relative flex">
-                <motion.div
-                    className="absolute top-0 bottom-0 bg-blue-500/90 rounded-full"
+}: DesktopMenuProps) => (
+    <div className="fixed z-50 mt-5 hidden w-full items-center justify-center gap-3 md:flex">
+        <nav aria-label="Main" className={`relative flex rounded-full px-3 py-1.5 ${SURFACE}`}>
+            <ul className="relative flex">
+                <motion.li
+                    aria-hidden
+                    className="absolute top-0 bottom-0 rounded-full bg-blue-500/90"
                     initial={false}
                     animate={highlightStyle}
                     transition={
-                        hasMounted
-                            ? {
-                                type: "spring",
-                                stiffness: 500,
-                                damping: 30,
-                            }
-                            : { duration: 0 }
+                        hasMounted ? { type: "spring", stiffness: 500, damping: 30 } : { duration: 0 }
                     }
                 />
 
-                {NAV_BUTTONS.map((item) => (
-                    <button
-                        key={item.id}
-                        ref={(el) => {
-                            if (itemRefs.current) {
-                                itemRefs.current[item.id] = el;
-                            }
-                        }}
-                        className={`relative px-4 py-2 font-medium transition-colors duration-200 ${pathname === item.path
-                            ? "text-white"
-                            : "text-slate-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-                            }`}
-                        onClick={() => onItemClick(item)}
-                    >
-                        {item.label}
-                    </button>
+                {NAV_ITEMS.map((item) => (
+                    <li key={item.id}>
+                        <MenuLink
+                            item={item}
+                            pathname={pathname}
+                            onClick={onItemClick}
+                            setRef={(element) => {
+                                itemRefs.current[item.id] = element;
+                            }}
+                            className="relative block px-4 py-2 font-medium transition-colors duration-200 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                            activeClassName="text-white"
+                            inactiveClassName="text-slate-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+                        />
+                    </li>
                 ))}
-            </div>
-        </div>
-    </motion.nav>
+            </ul>
+        </nav>
+
+        <ThemeSwitch trigger="hover" surfaceClassName={SURFACE} />
+    </div>
 );

@@ -1,121 +1,139 @@
-// app/api/contact/route.ts
-import { sendMail } from '@/lib/mail/mailer'
-import { NextResponse } from 'next/server'
+import { NextResponse } from "next/server";
 
-async function verifyCaptcha(token: string | null): Promise<boolean> {
-    if (!token) return false
+import { sendMail } from "@/lib/mail/mailer";
+import { TEST_SECRET_KEY, useTestKeys } from "@/lib/recaptcha";
 
-    // Get secret key from environment variables (not public)
-    const secretKey = process.env.NEXT_PUBLIC_SECRET_KEY || ''
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MAX_LENGTHS = { name: 100, email: 254, message: 5000 } as const;
+
+/** Escapes the five HTML-significant characters, not just angle brackets. */
+function escapeHtml(value: string): string {
+    return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+/**
+ * Resolves the verification secret. In development this falls back to Google's
+ * test secret so the form works on localhost without registering a domain; a
+ * production build never reaches that branch (see `useTestKeys`).
+ */
+function resolveSecretKey(): string | null {
+    // Must mirror getRecaptchaSiteKey(): a token minted by the test site key
+    // only validates against the test secret, so both sides switch together.
+    if (useTestKeys) return TEST_SECRET_KEY;
+
+    return process.env.RECAPTCHA_SECRET_KEY ?? null;
+}
+
+async function verifyCaptcha(token: string): Promise<boolean> {
+    const secretKey = resolveSecretKey();
+
     if (!secretKey) {
-        console.error('reCAPTCHA secret key is not configured.')
-        return false
+        // Fail closed: a missing secret in production must reject, never allow.
+        console.error("RECAPTCHA_SECRET_KEY is not configured — rejecting submission.");
+        return false;
     }
 
     try {
-        const response = await fetch(
-            `https://www.google.com/recaptcha/api/siteverify`,
-            {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `secret=${encodeURIComponent(secretKey)}&response=${encodeURIComponent(token)}`,
-            }
-        )
+        const response = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({ secret: secretKey, response: token }),
+        });
 
         if (!response.ok) {
-            console.error('reCAPTCHA verification request failed')
-            return false
+            console.error("reCAPTCHA verification request failed");
+            return false;
         }
 
-        const data = await response.json()
+        const data = await response.json();
 
-        // For reCAPTCHA v3, you might want to check the score
-        const isV3 = data.score !== undefined
-        if (isV3) {
-            return data.success && data.score >= 0.5 // Adjust threshold as needed
+        // v3 returns a score; v2 only returns success.
+        if (typeof data.score === "number") {
+            return data.success === true && data.score >= 0.5;
         }
 
-        // For reCAPTCHA v2
-        return data.success === true
+        return data.success === true;
     } catch (error) {
-        console.error('Error verifying reCAPTCHA:', error)
-        return false
+        console.error("Error verifying reCAPTCHA:", error);
+        return false;
     }
+}
+
+function badRequest(error: string) {
+    return NextResponse.json({ success: false, error }, { status: 400 });
 }
 
 export async function POST(request: Request) {
     try {
-        const body = await request.json()
-        const { name, email, message, captcha } = body
+        const { name, email, message, captcha } = await request.json();
 
-        // Validate required fields
         if (!name || !email || !message) {
-            return NextResponse.json(
-                { success: false, error: 'All fields are required' },
-                { status: 400 }
-            )
+            return badRequest("All fields are required");
         }
 
-        // Basic email validation
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            return NextResponse.json(
-                { success: false, error: 'Invalid email format' },
-                { status: 400 }
-            )
+        if (
+            typeof name !== "string" ||
+            typeof email !== "string" ||
+            typeof message !== "string"
+        ) {
+            return badRequest("Invalid field types");
         }
 
-        // Validate captcha
-        if (!captcha) {
-            return NextResponse.json(
-                { success: false, error: 'Captcha token is required' },
-                { status: 400 }
-            )
+        if (
+            name.length > MAX_LENGTHS.name ||
+            email.length > MAX_LENGTHS.email ||
+            message.length > MAX_LENGTHS.message
+        ) {
+            return badRequest("One or more fields exceed the maximum length");
         }
 
-        const isCaptchaValid = await verifyCaptcha(captcha)
-        if (!isCaptchaValid) {
-            return NextResponse.json(
-                { success: false, error: 'Captcha verification failed' },
-                { status: 400 }
-            )
+        if (!EMAIL_PATTERN.test(email)) {
+            return badRequest("Invalid email format");
         }
 
-        // Sanitize inputs
-        const sanitize = (str: string) => str.replace(/</g, '&lt;').replace(/>/g, '&gt;')
-        const sanitizedName = sanitize(name)
-        const sanitizedEmail = sanitize(email)
-        const sanitizedMessage = sanitize(message)
+        if (!captcha || typeof captcha !== "string") {
+            return badRequest("Captcha token is required");
+        }
+
+        if (!(await verifyCaptcha(captcha))) {
+            return badRequest("Captcha verification failed");
+        }
 
         const html = `
             <h2>New Contact Form Submission</h2>
-            <p><strong>Name:</strong> ${sanitizedName}</p>
-            <p><strong>Email:</strong> ${sanitizedEmail}</p>
+            <p><strong>Name:</strong> ${escapeHtml(name)}</p>
+            <p><strong>Email:</strong> ${escapeHtml(email)}</p>
             <p><strong>Message:</strong></p>
-            <p>${sanitizedMessage}</p>
-        `
+            <p>${escapeHtml(message).replace(/\n/g, "<br />")}</p>
+        `;
 
         const result = await sendMail({
-            to: process.env.CONTACT_FORM_RECIPIENT || process.env.SMTP_GMAIL_USER || '',
-            subject: `New message from ${sanitizedName} - Portfolio Contact`,
+            to: process.env.CONTACT_FORM_RECIPIENT || process.env.SMTP_GMAIL_USER || "",
+            subject: `New message from ${escapeHtml(name)} - Portfolio Contact`,
             html,
-            fromEmail: sanitizedEmail,
-            fromName: sanitizedName,
-        })
+            replyToEmail: email,
+            replyToName: name,
+        });
 
         if (!result.success) {
-            console.error('Email sending failed:', result.error)
+            console.error("Email sending failed:", result.error);
             return NextResponse.json(
-                { success: false, error: result.error || 'Failed to send email' },
+                { success: false, error: "Failed to send email" },
                 { status: 500 }
-            )
+            );
         }
 
-        return NextResponse.json({ success: true })
+        return NextResponse.json({ success: true });
     } catch (error) {
-        console.error('Error in contact API:', error)
+        console.error("Error in contact API:", error);
         return NextResponse.json(
-            { success: false, error: 'Internal server error' },
+            { success: false, error: "Internal server error" },
             { status: 500 }
-        )
+        );
     }
 }

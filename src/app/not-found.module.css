@@ -1,0 +1,275 @@
+/**
+ * 404 scene animation.
+ *
+ * Page-scoped on purpose. `experimental.inlineCss` inlines the global sheet
+ * into every document, so keyframes placed in globals.css would be paid for on
+ * all four real pages in order to serve the one page most visitors never see.
+ *
+ * Every animated property is `transform` or `opacity`, which the compositor can
+ * handle on its own thread: no layout, no repaint, no main-thread work. None of
+ * it depends on hydration either, so the scene is already moving while React
+ * boots — which is the point, since a 404 is the one route that can never be
+ * prefetched.
+ *
+ * The 0%/100% frame of every looping animation is the element's resting pose.
+ * That is what lets the global prefers-reduced-motion rule collapse the
+ * duration to ~0 and leave the scene sitting in a neutral position rather than
+ * frozen mid-gesture.
+ */
+
+.stage {
+    /* Single font-size anchor: every size below is in em, so the whole scene
+       scales as one unit and needs no per-breakpoint tuning. */
+    font-size: clamp(4.25rem, 19vw, 9rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    --eye-ring: #2563eb; /* blue-600 */
+    --eye-white: #ffffff;
+    --pupil: #0f172a; /* slate-900 */
+    --shadow-tint: #0f172a;
+    /* Read by the `shadow` keyframes. Opacity is the animated property, so the
+       light/dark difference has to come through variables rather than a plain
+       override — a `.dark` rule would lose to the running animation. */
+    --shadow-max: 0.22;
+    --shadow-min: 0.13;
+}
+
+/* Class-based dark mode, matching the @custom-variant in globals.css. */
+:global(.dark) .stage {
+    --eye-ring: #60a5fa; /* blue-400 */
+    --eye-white: #e2e8f0; /* slate-200 */
+    --pupil: #0f172a;
+    /* A slate shadow is invisible against a slate-900 page, so go to pure
+       black and lean harder on opacity. */
+    --shadow-tint: #000000;
+    --shadow-max: 0.45;
+    --shadow-min: 0.26;
+}
+
+.scene {
+    display: flex;
+    align-items: center;
+    gap: 0.03em;
+    line-height: 1;
+    font-weight: 800;
+    animation: float 4.5s ease-in-out infinite;
+}
+
+.digit {
+    color: var(--eye-ring);
+    /* Pivot at the foot of the glyph so the lean reads as leaning, not sliding. */
+    transform-origin: 50% 85%;
+}
+
+.leanLeft {
+    animation: leanLeft 4.5s ease-in-out infinite;
+}
+
+.leanRight {
+    animation: leanRight 4.5s ease-in-out infinite;
+}
+
+.eye {
+    position: relative;
+    width: 0.74em;
+    height: 0.74em;
+    flex: none;
+    border-radius: 50%;
+    border: 0.055em solid var(--eye-ring);
+    background: var(--eye-white);
+    /* Clips the eyelid sweep to the eye. */
+    overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Easter egg: the eye notices you. Pure :hover, no JS, no listener. */
+.scene:hover .eye {
+    transform: scale(1.07);
+}
+
+.pupil {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0.22em;
+    height: 0.22em;
+    /* Centred with margin so `transform` stays free for the animation. */
+    margin: -0.11em 0 0 -0.11em;
+    border-radius: 50%;
+    background: var(--pupil);
+    animation: look 7s ease-in-out infinite;
+}
+
+/* Catchlight — sells it as an eye rather than a dot. */
+.pupil::after {
+    content: "";
+    position: absolute;
+    top: 0.035em;
+    right: 0.035em;
+    width: 0.06em;
+    height: 0.06em;
+    border-radius: 50%;
+    background: #ffffff;
+    opacity: 0.85;
+}
+
+.lid {
+    position: absolute;
+    inset: -0.02em;
+    background: var(--eye-ring);
+    transform: translateY(-100%);
+    animation: blink 6s ease-in-out infinite;
+}
+
+.shadow {
+    width: 1.5em;
+    height: 0.12em;
+    margin-top: 0.06em;
+    border-radius: 50%;
+    background: var(--shadow-tint);
+    opacity: var(--shadow-max);
+    filter: blur(0.035em);
+    /* Counter-phase to the float: the scene rises, the shadow shrinks. */
+    animation: shadow 4.5s ease-in-out infinite;
+}
+
+/* Reveal used by the copy below the scene. `both` fill mode means the
+   reduced-motion override lands on the final frame instead of the first. */
+.enter {
+    animation: enter 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.type {
+    /* clip-path rather than width: reveals without triggering layout. */
+    animation: type 1.05s steps(26, end) both;
+}
+
+.caret {
+    animation: caret 1.05s steps(1, end) infinite;
+}
+
+@keyframes float {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-0.055em);
+    }
+}
+
+@keyframes shadow {
+    0%,
+    100% {
+        transform: scaleX(1);
+        opacity: var(--shadow-max);
+    }
+    50% {
+        transform: scaleX(0.82);
+        opacity: var(--shadow-min);
+    }
+}
+
+@keyframes leanLeft {
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(-4.5deg);
+    }
+}
+
+@keyframes leanRight {
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(4.5deg);
+    }
+}
+
+/* Searching: glance left, right, down, up, then settle. The paired
+   percentages are the pauses — an eye that moves constantly reads as broken,
+   not curious. */
+@keyframes look {
+    0%,
+    8% {
+        transform: translate(0, 0);
+    }
+    16%,
+    26% {
+        transform: translate(-0.1em, 0.02em);
+    }
+    34%,
+    44% {
+        transform: translate(0.11em, -0.01em);
+    }
+    52%,
+    60% {
+        transform: translate(0.02em, 0.09em);
+    }
+    68%,
+    78% {
+        transform: translate(-0.03em, -0.07em);
+    }
+    86%,
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+/* Double blink at the end of each cycle. */
+@keyframes blink {
+    0%,
+    88% {
+        transform: translateY(-100%);
+    }
+    91% {
+        transform: translateY(0);
+    }
+    94% {
+        transform: translateY(-100%);
+    }
+    96% {
+        transform: translateY(0);
+    }
+    98%,
+    100% {
+        transform: translateY(-100%);
+    }
+}
+
+@keyframes enter {
+    from {
+        opacity: 0;
+        transform: translateY(0.75rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes type {
+    from {
+        clip-path: inset(0 100% 0 0);
+    }
+    to {
+        clip-path: inset(0 0 0 0);
+    }
+}
+
+@keyframes caret {
+    0%,
+    49% {
+        opacity: 1;
+    }
+    50%,
+    100% {
+        opacity: 0;
+    }
+}

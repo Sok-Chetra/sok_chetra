@@ -1,6 +1,6 @@
 'use client'
 
-import { Project } from '@/lib/mock/projects'
+import { Project } from '@/lib/content/projects'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -16,18 +16,19 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             className="bg-white dark:bg-gray-700 rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl dark:hover:shadow-gray-900/50 flex flex-col h-full"
         >
             {/* Image container with fixed aspect ratio */}
-            <div className="relative h-48 w-full flex-shrink-0">
+            <div className="relative h-48 w-full shrink-0">
                 <Image
                     src={project.image}
                     alt={project.title}
                     fill
                     className="object-cover object-top"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    placeholder="blur"
                 />
             </div>
 
             {/* Content area that grows to fill remaining space */}
-            <div className="p-6 flex flex-col flex-grow">
+            <div className="p-6 flex flex-col grow">
                 <h3 className="text-xl font-semibold mb-2 dark:text-white line-clamp-2">
                     {project.title}
                 </h3>
@@ -43,15 +44,15 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                         </span>
                     ))}
                 </div>
-                {project.desc !== '' && (
+                {project.description && (
                     <div>
-                        <p>{project.desc}</p>
+                        <p>{project.description}</p>
                     </div>
                 )}
 
 
                 {/* Link pushed to bottom */}
-                {(project.link !== '') && (
+                {project.link && (
                     <div className="mt-auto">
                         <Link
                             href={project.link}

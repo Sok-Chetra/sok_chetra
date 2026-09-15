@@ -1,168 +1,180 @@
-'use client'
+"use client";
 
-import { motion } from 'framer-motion'
-import { useState } from 'react'
-import ReCAPTCHA from "react-google-recaptcha";
+import dynamic from "next/dynamic";
+import { useState } from "react";
 
-const SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''
+import FormField from "./FormField";
+import { sendContactForm } from "@/lib/api/sendContactForm";
+import { getRecaptchaSiteKey } from "@/lib/recaptcha";
+
+/**
+ * Loaded on demand. The reCAPTCHA widget pulls ~190KB of third-party script
+ * plus connections to three Google origins; mounting it eagerly made every
+ * visitor pay for it, including on the home page where most never touch the
+ * form. It now loads on first interaction with a field.
+ */
+const ReCAPTCHA = dynamic(() => import("react-google-recaptcha"), { ssr: false });
+
+const SITE_KEY = getRecaptchaSiteKey();
+
+const EMPTY_FORM = { name: "", email: "", message: "" };
+
+type SubmitState =
+    | { status: "idle" }
+    | { status: "sending" }
+    | { status: "success" }
+    | { status: "error"; message: string };
 
 export default function ContactForm() {
-    const [formData, setFormData] = useState({ name: '', email: '', message: '' })
-    const [captchaToken, setCaptchaToken] = useState<string | null>(null)
-    const [isSubmitting, setIsSubmitting] = useState(false)
-    const [submitStatus, setSubmitStatus] = useState<{
-        status: 'idle' | 'success' | 'error'
-        message?: string
-    }>({ status: 'idle' })
+    const [formData, setFormData] = useState(EMPTY_FORM);
+    const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+    const [submit, setSubmit] = useState<SubmitState>({ status: "idle" });
+    const [captchaRequested, setCaptchaRequested] = useState(false);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target
-        setFormData(prev => ({ ...prev, [name]: value }))
-    }
+    /** Idempotent — the state setter short-circuits once already true. */
+    const requestCaptcha = () => setCaptchaRequested(true);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setIsSubmitting(true)
-        setSubmitStatus({ status: 'idle' })
+    const handleChange = (
+        event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
+        const { name, value } = event.target;
+        setFormData((previous) => ({ ...previous, [name]: value }));
+    };
+
+    const handleSubmit = async (event: React.FormEvent) => {
+        event.preventDefault();
 
         if (!captchaToken) {
-            setSubmitStatus({ status: 'error', message: 'Please complete the CAPTCHA.' })
-            setIsSubmitting(false)
-            return
+            setSubmit({ status: "error", message: "Please complete the CAPTCHA." });
+            return;
         }
+
+        setSubmit({ status: "sending" });
 
         try {
-            const response = await fetch('/api/send', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-                body: JSON.stringify({ ...formData, captcha: captchaToken }),
-            })
-
-            const data = await response.json()
-
-            if (!response.ok || !data.success) {
-                throw new Error(data.error || 'Failed to send message')
-            }
-
-            setSubmitStatus({ status: 'success', message: 'Message sent successfully!' })
-            setFormData({ name: '', email: '', message: '' })
-            setCaptchaToken(null)
+            await sendContactForm({ ...formData, captcha: captchaToken });
+            setSubmit({ status: "success" });
+            setFormData(EMPTY_FORM);
+            setCaptchaToken(null);
         } catch (error) {
-            setSubmitStatus({
-                status: 'error',
-                message: error instanceof Error ? error.message : 'Failed to send message',
-            })
-        } finally {
-            setIsSubmitting(false)
+            setSubmit({
+                status: "error",
+                message: error instanceof Error ? error.message : "Failed to send message",
+            });
         }
+    };
+
+    if (submit.status === "success") {
+        return <SuccessPanel onReset={() => setSubmit({ status: "idle" })} />;
     }
 
-    const handleCaptchaChange = (token: string | null) => {
-        setCaptchaToken(token)
-    }
+    const isSending = submit.status === "sending";
 
     return (
-        <section className="py-20 px-2.5 xs:px-4 sm:px-6 lg:px-8 transition-colors duration-300">
-            <div className="max-w-4xl mx-auto">
-                <motion.div
-                    initial={{ opacity: 0, y: 50 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                    viewport={{ once: true, margin: '-100px' }}
-                    className="bg-gray-50 dark:bg-gray-800 rounded-xl shadow-md p-4 xs:p-6 sm:p-8 transition-colors duration-300"
-                >
-                    {submitStatus.status === 'success' ? (
-                        <div className="text-center py-8">
-                            <div className="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <svg className="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                                </svg>
-                            </div>
-                            <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">Message Sent!</h3>
-                            <p className="text-gray-600 dark:text-gray-300">{submitStatus.message}</p>
-                            <button
-                                onClick={() => setSubmitStatus({ status: 'idle' })}
-                                className="mt-6 px-6 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white rounded-lg transition-colors"
-                            >
-                                Send Another Message
-                            </button>
-                        </div>
-                    ) : (
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            {submitStatus.status === 'error' && (
-                                <div className="p-3 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg text-sm">
-                                    {submitStatus.message}
-                                </div>
-                            )}
-
-                            <div>
-                                <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Name
-                                </label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    name="name"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-all"
-                                />
-                            </div>
-
-                            <div>
-                                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Email
-                                </label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-all"
-                                />
-                            </div>
-
-                            <div>
-                                <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Message
-                                </label>
-                                <textarea
-                                    id="message"
-                                    name="message"
-                                    rows={5}
-                                    value={formData.message}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-all"
-                                />
-                            </div>
-
-                            {/* reCAPTCHA widget */}
-
-                            <ReCAPTCHA
-                                sitekey={SITE_KEY}
-                                onChange={handleCaptchaChange}
-                                size='normal'
-
-                            />
-
-
-                            <div className="pt-2">
-                                <button
-                                    type="submit"
-                                    disabled={isSubmitting || !captchaToken}
-                                    className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-300 disabled:opacity-70 disabled:cursor-not-allowed"
-                                >
-                                    {isSubmitting ? 'Sending...' : 'Send Message'}
-                                </button>
-                            </div>
-                        </form>
-                    )}
-                </motion.div>
+        <form
+            onSubmit={handleSubmit}
+            /**
+             * Any engagement with the form is the cue to fetch the CAPTCHA.
+             * Focus alone is not enough: a visitor can focus a field before
+             * hydration attaches the handler, in which case the focus event is
+             * missed entirely. Keyboard and pointer input cover that race.
+             */
+            onFocusCapture={requestCaptcha}
+            onPointerDownCapture={requestCaptcha}
+            onKeyDownCapture={requestCaptcha}
+            className="space-y-6"
+        >
+            {/* Announced to screen readers the moment a submission fails. */}
+            <div role="status" aria-live="polite">
+                {submit.status === "error" && (
+                    <p className="rounded-lg bg-red-50 p-3 text-sm text-red-600 dark:bg-red-900/30 dark:text-red-400">
+                        {submit.message}
+                    </p>
+                )}
             </div>
-        </section>
-    )
+
+            <FormField
+                id="name"
+                name="name"
+                label="Name"
+                type="text"
+                autoComplete="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+            />
+
+            <FormField
+                id="email"
+                name="email"
+                label="Email"
+                type="email"
+                autoComplete="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+            />
+
+            <FormField
+                as="textarea"
+                id="message"
+                name="message"
+                label="Message"
+                rows={5}
+                value={formData.message}
+                onChange={handleChange}
+                required
+            />
+
+            {/* Height reserved so the widget appearing causes no layout shift. */}
+            <div className="min-h-[78px]">
+                {captchaRequested && (
+                    <ReCAPTCHA sitekey={SITE_KEY} onChange={setCaptchaToken} size="normal" />
+                )}
+            </div>
+
+            <button
+                type="submit"
+                disabled={isSending || !captchaToken}
+                className="w-full rounded-lg bg-blue-600 px-6 py-3 font-medium text-white transition-colors duration-300 hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:cursor-not-allowed disabled:opacity-70 dark:bg-blue-700 dark:hover:bg-blue-600"
+            >
+                {isSending ? "Sending..." : "Send Message"}
+            </button>
+        </form>
+    );
+}
+
+function SuccessPanel({ onReset }: { onReset: () => void }) {
+    return (
+        <div className="py-8 text-center" role="status" aria-live="polite">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
+                <svg
+                    aria-hidden
+                    className="h-8 w-8 text-green-600 dark:text-green-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M5 13l4 4L19 7"
+                    />
+                </svg>
+            </div>
+
+            <h3 className="mb-2 text-2xl font-bold text-gray-800 dark:text-white">Message Sent!</h3>
+            <p className="text-gray-600 dark:text-gray-300">
+                Thanks for reaching out — I&apos;ll get back to you as soon as possible.
+            </p>
+
+            <button
+                onClick={onReset}
+                className="mt-6 rounded-lg bg-blue-600 px-6 py-2 text-white transition-colors hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:bg-blue-700 dark:hover:bg-blue-600"
+            >
+                Send Another Message
+            </button>
+        </div>
+    );
 }

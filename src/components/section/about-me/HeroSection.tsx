@@ -1,61 +1,55 @@
-'use client';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
+import Link from "next/link";
+
+import Reveal from "@/components/ui/Reveal";
+import { staggerContainer, staggerItem } from "@/lib/animations";
+import { SITE } from "@/lib/content/site";
 
 export default function HeroSection() {
     return (
-        <section
-            className="relative h-[90vh] flex items-center justify-center px-4 inset-0  transition-all duration-500"
+        <Reveal
+            as="section"
+            trigger="mount"
+            variants={staggerContainer}
+            className="relative flex min-h-[80svh] items-center justify-center px-4 py-24 transition-all duration-500"
         >
-
-            {/* Content */}
-            <div className="text-center max-w-3xl relative z-10">
-                <motion.h1
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8 }}
-                    className="text-5xl md:text-7xl font-bold mb-6"
-                >
-                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-500">
-                        Sok Chetra
+            <div className="relative z-10 max-w-3xl text-center">
+                <Reveal as="h1" variants={staggerItem} className="mb-6 text-5xl font-bold md:text-7xl">
+                    <span className="bg-linear-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
+                        {SITE.name}
                     </span>
-                </motion.h1>
+                </Reveal>
 
-                <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.3, duration: 0.8 }}
-                    className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8"
+                <Reveal
+                    as="p"
+                    variants={staggerItem}
+                    className="mb-8 text-xl text-gray-600 md:text-2xl dark:text-gray-300"
                 >
-                    Full Stack Developer
-                </motion.p>
+                    {SITE.role}
+                </Reveal>
 
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.6, duration: 0.8 }}
-                    className="max-w-lg mx-auto"
-                >
-                    <p className="text-gray-500 dark:text-gray-400 leading-relaxed">
-                        Building digital experiences with <span className="font-medium text-purple-600">Next.js</span>,{' '}
-                        <span className="font-medium text-blue-500">React Native</span>, and modern web technologies.
+                <Reveal variants={staggerItem} className="mx-auto max-w-lg">
+                    <p className="leading-relaxed text-gray-500 dark:text-gray-400">
+                        Building digital experiences with{" "}
+                        <span className="font-medium text-purple-600 dark:text-purple-400">
+                            Next.js
+                        </span>
+                        ,{" "}
+                        <span className="font-medium text-blue-500 dark:text-blue-400">
+                            React Native
+                        </span>
+                        , and modern web technologies.
                     </p>
-                </motion.div>
+                </Reveal>
 
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.9, duration: 0.8 }}
-                    className="mt-8 flex justify-center"
-                >
+                <Reveal variants={staggerItem} className="mt-8 flex justify-center">
                     <Link
-                        href="/" // or change to "/about-me", "/" etc.
-                        className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-500 text-white font-semibold rounded-lg shadow-lg hover:scale-105 transition-transform duration-300"
+                        href="/portfolio"
+                        className="inline-block rounded-lg bg-linear-to-r from-purple-600 to-blue-500 px-6 py-3 font-semibold text-white shadow-lg transition-transform duration-300 hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-600"
                     >
-                        Take Me Home
+                        View My Work
                     </Link>
-                </motion.div>
+                </Reveal>
             </div>
-        </section>
+        </Reveal>
     );
 }
