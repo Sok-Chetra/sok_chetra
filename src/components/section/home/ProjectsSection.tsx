@@ -6,21 +6,41 @@ import { useRef, useState } from "react";
 import ProjectCard from "./ProjectCard";
 import { fadeInUp, VIEWPORT_ONCE } from "@/lib/animations";
 import { PROJECTS } from "@/lib/content/projects";
-import { useGridColumns } from "@/lib/hooks/useGridColumns";
 import { scrollToElement } from "@/lib/scroll";
+
+/** Widest the CSS grid ever gets (`lg:grid-cols-3`). */
+const MAX_COLUMNS = 3;
 
 type ProjectsSectionProps = {
     title?: string;
-    /** Rows of cards per page; page size is rows × current column count. */
+    /** Rows of cards per page at the widest breakpoint. */
     rows?: number;
 };
 
 export default function ProjectsSection({ title = "My Projects", rows = 1 }: ProjectsSectionProps) {
     const sectionRef = useRef<HTMLElement>(null);
-    const columns = useGridColumns();
     const [page, setPage] = useState(1);
 
-    const pageSize = columns * rows;
+    /**
+     * Fixed, not derived from the measured column count.
+     *
+     * Page size used to be `columns × rows`, where `columns` came from a hook
+     * that starts at the mobile value so the server markup matches, then
+     * corrects itself in an effect. On a desktop viewport that took the grid
+     * from 2 cards to 6 straight after hydration, growing the section by 288px.
+     *
+     * That is not cosmetic: a document that is shorter at first paint than at
+     * final layout cannot have its scroll position restored. Reloading partway
+     * down the page made the browser clamp to the shorter height and then jump
+     * once the grid filled in.
+     *
+     * Static HTML cannot know the viewport, so any viewport-derived page size
+     * will always disagree with the server. Sizing pages for the widest
+     * breakpoint keeps the served markup and every client render identical:
+     * narrow screens show the same cards in more rows, which is what the CSS
+     * grid already does.
+     */
+    const pageSize = MAX_COLUMNS * rows;
     const pageCount = Math.ceil(PROJECTS.length / pageSize);
 
     // A resize can shrink the page count out from under the current page, so
