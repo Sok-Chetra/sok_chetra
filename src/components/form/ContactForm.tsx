@@ -1,17 +1,24 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import FormField from "./FormField";
 import { sendContactForm } from "@/lib/api/sendContactForm";
 import { getRecaptchaSiteKey } from "@/lib/recaptcha";
 
 /**
- * Loaded on demand. The reCAPTCHA widget pulls ~190KB of third-party script
- * plus connections to three Google origins; mounting it eagerly made every
- * visitor pay for it, including on the home page where most never touch the
- * form. It now loads on first interaction with a field.
+ * Loaded on demand. The reCAPTCHA widget pulls ~347KB across two sequential
+ * Google requests; mounting it eagerly made every visitor pay for it,
+ * including on the home page where most never touch the form.
+ *
+ * Loading is warmed when the form nears the viewport rather than waiting for
+ * a field interaction — measured cold, the widget needs ~570ms to appear, long
+ * enough to read as a broken box if it starts once the visitor is already
+ * typing. The form sits 1.2-2.5 screens below the fold on both pages that
+ * render it, so scrolling is still a real signal of intent: a visitor who
+ * never reaches it never pays, and neither does Lighthouse, which does not
+ * scroll.
  */
 const ReCAPTCHA = dynamic(() => import("react-google-recaptcha"), { ssr: false });
 
@@ -30,9 +37,31 @@ export default function ContactForm() {
     const [captchaToken, setCaptchaToken] = useState<string | null>(null);
     const [submit, setSubmit] = useState<SubmitState>({ status: "idle" });
     const [captchaRequested, setCaptchaRequested] = useState(false);
+    const [captchaReady, setCaptchaReady] = useState(false);
+
+    const formRef = useRef<HTMLFormElement>(null);
 
     /** Idempotent — the state setter short-circuits once already true. */
     const requestCaptcha = () => setCaptchaRequested(true);
+
+    // Begin fetching before the form is actually on screen, so the widget is
+    // usually in place by the time the visitor reaches the fields.
+    useEffect(() => {
+        const form = formRef.current;
+        if (!form) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (!entries.some((entry) => entry.isIntersecting)) return;
+                setCaptchaRequested(true);
+                observer.disconnect();
+            },
+            { rootMargin: "400px" }
+        );
+
+        observer.observe(form);
+        return () => observer.disconnect();
+    }, []);
 
     const handleChange = (
         event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -72,6 +101,7 @@ export default function ContactForm() {
 
     return (
         <form
+            ref={formRef}
             onSubmit={handleSubmit}
             /**
              * Any engagement with the form is the cue to fetch the CAPTCHA.
@@ -127,9 +157,30 @@ export default function ContactForm() {
             />
 
             {/* Height reserved so the widget appearing causes no layout shift. */}
-            <div className="min-h-[78px]">
+            <div className="relative min-h-[78px]">
+                {/* Stand-in for the ~570ms before Google's iframe paints, so the
+                    reserved space reads as loading rather than as broken. */}
+                {!captchaReady && (
+                    <div
+                        aria-hidden
+                        className="flex h-[78px] w-[304px] max-w-full items-center gap-3 rounded border border-gray-200 bg-gray-50 px-4 dark:border-gray-700 dark:bg-gray-800"
+                    >
+                        <span className="h-7 w-7 animate-pulse rounded-sm bg-gray-200 dark:bg-gray-700" />
+                        <span className="text-sm text-gray-400 dark:text-gray-500">
+                            Loading verification…
+                        </span>
+                    </div>
+                )}
+
                 {captchaRequested && (
-                    <ReCAPTCHA sitekey={SITE_KEY} onChange={setCaptchaToken} size="normal" />
+                    <div className={captchaReady ? undefined : "absolute inset-0 opacity-0"}>
+                        <ReCAPTCHA
+                            sitekey={SITE_KEY}
+                            onChange={setCaptchaToken}
+                            size="normal"
+                            asyncScriptOnLoad={() => setCaptchaReady(true)}
+                        />
+                    </div>
                 )}
             </div>
 
