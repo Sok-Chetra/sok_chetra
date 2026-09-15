@@ -4,9 +4,9 @@ import HeroSection from "@/components/section/contact-me/HeroSection";
 import { buildMetadata } from "@/lib/seo/metadata";
 
 export const metadata = buildMetadata({
-    title: "Contact",
+    title: "Contact — Hire a Developer in Cambodia",
     description:
-        "Get in touch with Sok Chetra, a passionate Full Stack Web Developer. Whether it’s project collaboration, freelance inquiries, or tech discussion — let’s connect.",
+        "Get in touch with Sok Chetra, a full stack web and mobile developer in Phnom Penh, Cambodia — available for freelance, contract, and full-time work.",
     path: "/contact-me",
     keywords: ["Contact Sok Chetra", "Web Developer Contact", "Freelance Web Developer"],
     image: "/image/og-contact-me.jpg",

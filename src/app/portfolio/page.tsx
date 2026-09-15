@@ -4,9 +4,9 @@ import TechnologiesSection from "@/components/section/portfolio/TechnologiesSect
 import { buildMetadata } from "@/lib/seo/metadata";
 
 export const metadata = buildMetadata({
-    title: "Portfolio",
+    title: "Portfolio — Web & Mobile Projects",
     description:
-        "Explore Sok Chetra’s collection of professional projects, web applications, and creative development work using Next.js, React Native, and modern technologies.",
+        "Web and mobile projects built by Sok Chetra, a full stack developer in Cambodia, using Next.js, React Native, WordPress, and TypeScript.",
     path: "/portfolio",
     keywords: ["Sok Chetra Portfolio", "Web Developer Projects", "Next.js Portfolio", "Creative Projects"],
     image: "/image/og-portfolio.png",

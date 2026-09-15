@@ -10,7 +10,7 @@ export default function HeroSection() {
                     Let&apos;s <span className="text-indigo-600 dark:text-indigo-400">Connect</span>
                 </>
             }
-            description="I'd love to hear from you! Whether you have a project in mind or just want to say hello."
+            description="I'm a full stack web and mobile developer based in Phnom Penh, Cambodia, available for freelance projects, contract work, and full-time roles — locally or remote. Whether you have a project in mind or just want to say hello, I'd love to hear from you."
             actions={
                 <Link
                     href="/about-me"

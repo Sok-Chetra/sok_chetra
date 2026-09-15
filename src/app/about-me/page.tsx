@@ -5,9 +5,9 @@ import WorkExperienceSection from "@/components/section/about-me/WorkExperienceS
 import { buildMetadata } from "@/lib/seo/metadata";
 
 export const metadata = buildMetadata({
-    title: "About Me",
+    title: "About — Full Stack Developer in Cambodia",
     description:
-        "Learn more about Sok Chetra, a passionate Full Stack Developer with expertise in Next.js, React Native, TypeScript, and modern web technologies.",
+        "Sok Chetra, full stack developer in Phnom Penh, Cambodia and Computer Science graduate of RUPP, working with Next.js, React Native, and TypeScript.",
     path: "/about-me",
     keywords: ["About Sok Chetra", "Software Engineer Profile"],
     ogType: "profile",

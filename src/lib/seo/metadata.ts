@@ -43,7 +43,11 @@ export function buildMetadata({
     twitterDescription,
 }: PageMetaInput): Metadata {
     const url = path === "/" ? SITE.url : `${SITE.url}${path}`;
-    const fullTitle = path === "/" ? `${SITE.name} | ${SITE.role}` : `${title} | ${SITE.name}`;
+    // The home page previously discarded its `title` and rebuilt one from
+    // SITE.role, so there was no way to give the most important page in the
+    // site its own headline. It now uses what the page passes, like every
+    // other route.
+    const fullTitle = path === "/" ? `${SITE.name} — ${title}` : `${title} | ${SITE.name}`;
 
     return {
         // Home uses `absolute` so the layout's "%s | Sok Chetra"

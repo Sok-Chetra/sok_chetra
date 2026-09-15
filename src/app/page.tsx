@@ -4,9 +4,9 @@ import ProjectsSection from "@/components/section/home/ProjectsSection";
 import { buildMetadata } from "@/lib/seo/metadata";
 
 export const metadata = buildMetadata({
-    title: "Full Stack Web Developer",
+    title: "Full Stack Web & Mobile Developer in Cambodia",
     description:
-        "Welcome to the personal website of Sok Chetra, a passionate Full Stack Developer skilled in Next.js, React Native, and modern web technologies. Explore my work, projects, and contact information.",
+        "Sok Chetra — full stack web and mobile developer in Phnom Penh, Cambodia, building websites and mobile apps with Next.js, React Native, and TypeScript.",
     path: "/",
     keywords: ["Frontend Developer", "Backend Developer", "JavaScript Developer"],
     ogDescription:
