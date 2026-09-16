@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 import Reveal from "@/components/ui/Reveal";
-import { growLine, staggerContainer, staggerItem } from "@/lib/animations";
+import { growLine, slideUpItem, staggerContainerVisible } from "@/lib/animations";
 
 type PageHeroProps = {
     /** Accepts markup so a word can be colour-accented. */
@@ -27,10 +27,10 @@ export default function PageHero({
         <Reveal
             as="section"
             trigger="mount"
-            variants={staggerContainer}
+            variants={staggerContainerVisible}
             className="px-4 pt-32 pb-20 text-center transition-colors duration-300 sm:px-6 md:pt-48 lg:px-8"
         >
-            <Reveal variants={staggerItem} className="mx-auto max-w-3xl">
+            <Reveal variants={slideUpItem} className="mx-auto max-w-3xl">
                 <h1 className="mb-6 text-4xl font-bold text-gray-900 md:text-5xl dark:text-white">
                     {title}
                 </h1>
@@ -39,7 +39,7 @@ export default function PageHero({
 
             {actions && (
                 <Reveal
-                    variants={staggerItem}
+                    variants={slideUpItem}
                     className="flex flex-wrap items-center justify-center gap-4"
                 >
                     {actions}

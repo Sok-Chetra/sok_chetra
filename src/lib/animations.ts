@@ -53,6 +53,32 @@ export const staggerContainer: Variants = {
     },
 };
 
+/**
+ * Orchestration-only container for content that is above the fold on load.
+ *
+ * `staggerContainer` sets `hidden: { opacity: 0 }`, and framer-motion writes
+ * the hidden variant into the SSR HTML — which hides every descendant until
+ * hydration finishes the fade. Measured on a throttled phone, that left the
+ * interior pages blank for 1.4-1.8s while the markup sat there fully painted
+ * and invisible. This variant carries no opacity at all, so the server-rendered
+ * copy is readable from first paint and only moves afterwards.
+ *
+ * Below-the-fold reveals can keep fading: the visitor scrolls to them, so there
+ * is no window where they stare at nothing.
+ */
+export const staggerContainerVisible: Variants = {
+    hidden: {},
+    visible: {
+        transition: { when: "beforeChildren", staggerChildren: 0.08, delayChildren: 0.05 },
+    },
+};
+
+/** Child of {@link staggerContainerVisible} — slides without fading. */
+export const slideUpItem: Variants = {
+    hidden: { y: 24 },
+    visible: { y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+};
+
 /** Child of {@link staggerContainer}. */
 export const staggerItem: Variants = {
     hidden: { opacity: 0, y: 30 },
