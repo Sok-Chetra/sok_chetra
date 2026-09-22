@@ -8,8 +8,7 @@ export default function HeroSection() {
         <PageHero
             title={
                 <>
-                    My Creative{" "}
-                    <span className="text-indigo-600 dark:text-indigo-400">Portfolio</span>
+                    My <span className="text-indigo-600 dark:text-indigo-400">Portfolio</span>
                 </>
             }
             description="A curated collection of web and mobile projects I've built from Phnom Penh, Cambodia — for local clients and remote teams alike."
