@@ -13,9 +13,18 @@ type ProjectsSectionProps = {
     title?: string;
     /** Rows of cards per page at the widest breakpoint. */
     rows?: number;
+    /**
+     * Preload the first card's image. Only for pages where this section starts
+     * inside the opening view — on /portfolio that image is the LCP element.
+     */
+    prioritizeFirstImage?: boolean;
 };
 
-export default function ProjectsSection({ title = "My Projects", rows = 1 }: ProjectsSectionProps) {
+export default function ProjectsSection({
+    title = "My Projects",
+    rows = 1,
+    prioritizeFirstImage = false,
+}: ProjectsSectionProps) {
     const sectionRef = useRef<HTMLElement>(null);
     const [page, setPage] = useState(1);
 
@@ -86,7 +95,10 @@ export default function ProjectsSection({ title = "My Projects", rows = 1 }: Pro
                             // mounts, which is what the reveal did too.
                             style={{ "--enter-delay": `${index * 80}ms` } as React.CSSProperties}
                         >
-                            <ProjectCard project={project} />
+                            <ProjectCard
+                                project={project}
+                                priority={prioritizeFirstImage && index === 0}
+                            />
                         </li>
                     ))}
                 </ul>

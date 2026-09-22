@@ -22,7 +22,7 @@ export default function PortfolioPage() {
             <HeroSection />
 
             <div className="pb-32">
-                <ProjectsSection title="Featured Works" rows={2} />
+                <ProjectsSection title="Featured Works" rows={2} prioritizeFirstImage />
             </div>
 
             <TechnologiesSection />

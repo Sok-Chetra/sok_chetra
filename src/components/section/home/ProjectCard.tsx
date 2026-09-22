@@ -7,9 +7,16 @@ import Link from 'next/link'
 
 type ProjectCardProps = {
     project: Project
+    /**
+     * Set for the first card on /portfolio, where it sits in the opening view
+     * and is the measured LCP element. next/image lazy-loads by default, which
+     * delayed that fetch until after layout. Left off on the home page, where
+     * this section is below the fold and the hero portrait is the LCP.
+     */
+    priority?: boolean
 }
 
-export default function ProjectCard({ project }: ProjectCardProps) {
+export default function ProjectCard({ project, priority = false }: ProjectCardProps) {
     return (
         <m.div
             whileHover={{ y: -10 }}
@@ -24,6 +31,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                     className="object-cover object-top"
                     sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                     placeholder="blur"
+                    priority={priority}
                 />
             </div>
 

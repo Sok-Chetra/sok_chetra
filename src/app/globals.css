@@ -88,13 +88,14 @@ body {
         transform: scaleX(0);
     }
 }
-/* Cards may fade: they are never the LCP element, and a CSS fade starts at
-   first paint rather than waiting for hydration, so it never strands content
-   invisible the way the Framer `cardRise` variant did. */
+/* Deliberately transform-only, like the rest. The Framer `cardRise` variant
+   this replaced also faded, but the project card image is the measured LCP
+   element on /portfolio, and an element at `opacity: 0` is not eligible to be
+   the Largest Contentful Paint. A longer travel with a little overshoot keeps
+   the entrance obvious without touching opacity. */
 @keyframes enter-card {
     from {
         transform: translateY(60px);
-        opacity: 0;
     }
 }
 
