@@ -12,8 +12,20 @@ const nextConfig: NextConfig = {
         // <link rel="stylesheet"> round trip before first paint.
         inlineCss: true,
     },
-    // Dev-only: allows the LAN address to load the dev server's assets.
-    allowedDevOrigins: ["http://192.168.110.186:3000"],
+    /**
+     * Dev-only, for opening the dev server from a phone on the same Wi-Fi.
+     *
+     * Only the *hostname* is matched — scheme, port and path are ignored, so
+     * entries must be written bare. The previous value,
+     * "http://192.168.110.186:3000", could therefore never match anything, and
+     * it also named a subnet this machine is no longer on.
+     *
+     * Without a match the dev client is refused and hydration never completes,
+     * which shows up as sections that stay invisible: Framer Motion writes
+     * `opacity: 0` into the server HTML and nothing ever arrives to animate it
+     * away. A wildcard per octet keeps this working when DHCP moves the box.
+     */
+    allowedDevOrigins: ["192.168.*.*"],
     /**
      * Next serves prerendered pages as `max-age=0, must-revalidate`, so every
      * reload waits on a network round trip before it can paint anything — the
