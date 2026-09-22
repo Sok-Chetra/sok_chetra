@@ -39,7 +39,8 @@ export const PROJECTS: Project[] = [
         image: ccfkhImage,
         // Web stack read off the live site: Laravel session and CSRF cookies,
         // a csrf-token meta tag, Bootstrap and jQuery, PHP 8 behind Cloudflare.
-        tags: ["Laravel", "PHP", "Bootstrap", "iOS", "Android"],
+        // Flutter for the apps is confirmed by the site owner, who built them.
+        tags: ["Laravel", "PHP", "Bootstrap", "Flutter", "iOS", "Android"],
         links: [
             { kind: "website", href: "https://www.ccfkh.com/" },
             {
@@ -61,7 +62,7 @@ export const PROJECTS: Project[] = [
         id: 2,
         title: "Ang Duong Hospital",
         image: angDuongImage,
-        tags: ["Android", "Appointment Booking", "In-App Chat", "Patient Profiles"],
+        tags: ["Flutter", "Android", "Appointment Booking", "In-App Chat", "Patient Profiles"],
         links: [
             {
                 kind: "play-store",
@@ -73,7 +74,7 @@ export const PROJECTS: Project[] = [
         id: 3,
         title: "Briquet App",
         image: briquetImage,
-        tags: ["iOS", "Android", "Mobile Order", "Loyalty Card", "Store Locator"],
+        tags: ["Flutter", "iOS", "Android", "Mobile Order", "Loyalty Card", "Store Locator"],
         links: [
             {
                 kind: "app-store",
