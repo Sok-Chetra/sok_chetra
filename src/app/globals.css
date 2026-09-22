@@ -84,6 +84,11 @@ body {
    render delay, whereas this starts climbing off zero on the first styled
    frame, so an element is LCP-eligible essentially immediately. The two pages
    whose LCP element is an image (home, /portfolio) do not use this. */
+@keyframes enter-fade {
+    from {
+        opacity: 0;
+    }
+}
 @keyframes enter-rise {
     from {
         transform: translateY(40px);
@@ -106,6 +111,7 @@ body {
 }
 
 .enter-rise,
+.enter-lift,
 .enter-from-left,
 .enter-from-right,
 .enter-line {
@@ -130,17 +136,30 @@ body {
 }
 
 /*
- * Slide only, never opacity.
+ * Fade and slide, as two animations of different lengths on one element.
  *
- * Chrome will not accept an element that animates its opacity as a Largest
- * Contentful Paint candidate until the animation ends — measured on the same
- * hero copy, 328ms sliding against 944ms with a fade. Shortening the fade did
- * nothing (948ms at 0.8s, 944ms at 0.4s): it is the presence of the fade that
- * defers the metric, not its length. The interior pages' LCP element is hero
- * copy, so they paid that in full, which is what held them at 98 rather than
- * 100 with an LCP of 2.4s against a 2.5s "good" threshold.
+ * Kept deliberately, with its cost known. Chrome will not accept an element
+ * that animates opacity as a Largest Contentful Paint candidate until the
+ * animation ends: the interior heroes measure ~330ms sliding and ~900ms with
+ * the fade, which is the difference between 100 and 98 in Lighthouse. The fade
+ * is what makes the movement read as an animation rather than a twitch, and
+ * that was judged worth two points.
+ *
+ * Shortening the fade does not help — 948ms at 0.8s against 944ms at 0.4s. It
+ * is the presence of the fade that defers the metric, not its length. So the
+ * fade is short for looks, and `lift` exists for the elements that must not
+ * pay this at all.
  */
 .enter-rise {
+    animation-name: enter-fade, enter-rise;
+    animation-duration: 0.3s, 0.45s;
+}
+
+/*
+ * Slide with no fade, for anything that may itself be the LCP element — on
+ * /portfolio that is the first project card's image.
+ */
+.enter-lift {
     animation-name: enter-rise;
 }
 

@@ -88,8 +88,12 @@ export default function ProjectsSection({
 
                 <ul className="grid grid-cols-1 items-stretch gap-8 sm:grid-cols-2 lg:grid-cols-3">
                     {visibleProjects.map((project, index) => (
+                        // `lift`, not the default `rise`: these must not fade,
+                        // because on /portfolio the first card's image is the
+                        // measured LCP element.
                         <Enter
                             as="li"
+                            animation="lift"
                             key={project.id}
                             delayMs={90 + index * 90}
                             className="h-full"
