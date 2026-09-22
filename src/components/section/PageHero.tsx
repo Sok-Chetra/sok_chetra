@@ -35,15 +35,28 @@ export default function PageHero({
 }: PageHeroProps) {
     return (
         <section className="px-4 pt-32 pb-20 text-center sm:px-6 md:pt-48 lg:px-8">
-            <Enter className="mx-auto max-w-3xl">
-                <h1 className="mb-6 text-4xl font-bold text-gray-900 md:text-5xl dark:text-white">
-                    {title}
-                </h1>
-                <p className="mb-8 text-xl text-gray-600 dark:text-gray-300">{description}</p>
+            {/*
+              Heading and description are separate blocks so this cascades the
+              same four steps as the about-me hero, rather than moving the copy
+              as a single lump.
+            */}
+            <Enter
+                as="h1"
+                className="mx-auto mb-6 max-w-3xl text-4xl font-bold text-gray-900 md:text-5xl dark:text-white"
+            >
+                {title}
+            </Enter>
+
+            <Enter
+                as="p"
+                step={1}
+                className="mx-auto mb-8 max-w-3xl text-xl text-gray-600 dark:text-gray-300"
+            >
+                {description}
             </Enter>
 
             {actions && (
-                <Enter step={1} className="flex flex-wrap items-center justify-center gap-4">
+                <Enter step={2} className="flex flex-wrap items-center justify-center gap-4">
                     {actions}
                 </Enter>
             )}
@@ -51,7 +64,7 @@ export default function PageHero({
             {showDivider && (
                 <Enter
                     animation="line"
-                    step={2}
+                    step={3}
                     className="mx-auto mt-8 h-1 w-16 bg-indigo-600 dark:bg-indigo-400"
                 />
             )}

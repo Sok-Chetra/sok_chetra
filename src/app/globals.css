@@ -171,18 +171,3 @@ body {
 .enter-d4 {
     --enter-delay: 360ms;
 }
-
-/*
- * Entrance plays once per session — see @/lib/entrance.
- *
- * The flag is stamped on <html> before first paint, so a navigation or reload
- * renders the content in place with no animation at all, rather than starting
- * one and cancelling it.
- */
-.entered .enter-rise,
-.entered .enter-lift,
-.entered .enter-from-left,
-.entered .enter-from-right,
-.entered .enter-line {
-    animation-name: none;
-}
