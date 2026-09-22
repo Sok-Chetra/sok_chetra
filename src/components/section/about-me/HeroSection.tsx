@@ -6,10 +6,14 @@ import { SITE } from "@/lib/content/site";
 /**
  * Entrance is CSS so it runs from first paint rather than waiting on
  * hydration — see @/components/ui/Enter.
+ *
+ * No `transition-*` on the section, matching the home hero. This one had
+ * `transition-all duration-500`, which watches layout properties — so the
+ * webfont swap mid-entrance forced layout on every frame. See PageHero.
  */
 export default function HeroSection() {
     return (
-        <section className="relative flex min-h-[80svh] items-center justify-center px-4 py-24 transition-all duration-500">
+        <section className="relative flex min-h-[80svh] items-center justify-center px-4 py-24">
             <Enter className="relative z-10 max-w-3xl text-center">
                 <h1 className="mb-6 text-5xl font-bold md:text-7xl">
                     <span className="bg-linear-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">

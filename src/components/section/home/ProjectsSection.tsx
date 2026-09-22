@@ -66,7 +66,7 @@ export default function ProjectsSection({
         <section
             ref={sectionRef}
             id="projects"
-            className="bg-white px-4 py-20 transition-colors duration-300 sm:px-6 lg:px-8 dark:bg-gray-800"
+            className="bg-white px-4 py-20 sm:px-6 lg:px-8 dark:bg-gray-800"
             aria-labelledby="projects-heading"
         >
             <div className="mx-auto max-w-7xl">

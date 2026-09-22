@@ -18,7 +18,7 @@ export default function ProjectCard({ project, priority = false }: ProjectCardPr
     // every card a client component and shipped Framer Motion to hydrate a
     // hover effect the compositor does for free.
     return (
-        <div className="flex h-full flex-col overflow-hidden rounded-xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-2.5 hover:shadow-xl dark:bg-gray-700 dark:hover:shadow-gray-900/50">
+        <div className="flex h-full flex-col overflow-hidden rounded-xl bg-white shadow-lg transition-[transform,box-shadow] duration-300 hover:-translate-y-2.5 hover:shadow-xl dark:bg-gray-700 dark:hover:shadow-gray-900/50">
             {/* Image container with fixed aspect ratio */}
             <div className="relative h-48 w-full shrink-0">
                 <Image

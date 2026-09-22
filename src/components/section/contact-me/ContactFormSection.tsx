@@ -30,7 +30,7 @@ export default function ContactFormSection() {
 
                 <Reveal
                     variants={staggerItem}
-                    className="mt-8 rounded-xl bg-gray-50 p-4 shadow-md transition-colors duration-300 xs:p-6 sm:p-8 dark:bg-gray-800"
+                    className="mt-8 rounded-xl bg-gray-50 p-4 shadow-md xs:p-6 sm:p-8 dark:bg-gray-800"
                 >
                     <ContactForm />
                 </Reveal>

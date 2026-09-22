@@ -18,6 +18,14 @@ type PageHeroProps = {
  *
  * Entrance is CSS, not Framer Motion — this is the first thing a visitor sees,
  * so it must not wait for hydration. See @/components/ui/Enter.
+ *
+ * The section carries no `transition-*` class, matching the home hero. It had
+ * `transition-colors duration-300`, and the home hero — the one page that was
+ * never reported as janky — has none. A transition on a full-width section
+ * re-runs whenever a watched property changes, and the webfont swapping in
+ * around 960ms does exactly that, mid-entrance. `transition-all` is worse
+ * still: it watches layout properties, so the swap forces layout every frame.
+ * Keep transitions on small interactive elements, not on page sections.
  */
 export default function PageHero({
     title,
@@ -26,7 +34,7 @@ export default function PageHero({
     showDivider = true,
 }: PageHeroProps) {
     return (
-        <section className="px-4 pt-32 pb-20 text-center transition-colors duration-300 sm:px-6 md:pt-48 lg:px-8">
+        <section className="px-4 pt-32 pb-20 text-center sm:px-6 md:pt-48 lg:px-8">
             {/*
               One animated element, not one per child. Each animating element
               needs its own compositor layer, rasterised exactly when the phone
