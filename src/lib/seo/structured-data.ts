@@ -1,5 +1,6 @@
 import { CONTACT_CHANNELS } from "@/lib/content/contact";
 import { EDUCATION } from "@/lib/content/education";
+import { EXPERIENCE } from "@/lib/content/experience";
 import { SITE } from "@/lib/content/site";
 import { SKILLS } from "@/lib/content/skills";
 
@@ -9,6 +10,17 @@ import { SKILLS } from "@/lib/content/skills";
  * exactly the case Person schema exists for.
  */
 export function buildPersonSchema() {
+    /**
+     * Named employers corroborate the person the way `alumniOf` corroborates
+     * the location: a real company with its own domain, which Google already
+     * knows about, vouching for an otherwise unknown one.
+     */
+    const employers = EXPERIENCE.filter((job) => job.current).map((job) => ({
+        "@type": "Organization",
+        name: job.company,
+        ...(job.companyUrl ? { url: job.companyUrl } : {}),
+    }));
+
     return {
         "@context": "https://schema.org",
         "@type": "Person",
@@ -45,6 +57,8 @@ export function buildPersonSchema() {
             { "@type": "Country", name: SITE.location.country },
             { "@type": "Place", name: "Worldwide (remote)" },
         ],
+
+        ...(employers.length ? { worksFor: employers } : {}),
 
         /** Corroborates the location — a real, verifiable institution. */
         alumniOf: EDUCATION.map((entry) => ({
