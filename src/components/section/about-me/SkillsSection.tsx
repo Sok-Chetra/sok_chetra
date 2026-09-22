@@ -1,7 +1,8 @@
+import Enter from "@/components/ui/Enter";
 import { SKILLS } from "@/lib/content/skills";
 
 /**
- * Server component, and deliberately not animated.
+ * Server component. The card animates as one block rather than per chip.
  *
  * On a 390x844 phone this card starts ~150px inside the first screen. It was a
  * `whileInView` reveal, which wrote `opacity: 0` into the SSR HTML and left
@@ -13,7 +14,7 @@ import { SKILLS } from "@/lib/content/skills";
  */
 export default function SkillsSection() {
     return (
-        <section className="rounded-2xl bg-white p-5 shadow-lg sm:p-6 md:p-8 dark:bg-gray-800">
+        <Enter as="section" className="rounded-2xl bg-white p-5 shadow-lg sm:p-6 md:p-8 dark:bg-gray-800">
             <h2 className="mb-6 text-2xl font-bold text-purple-600 dark:text-purple-400">Skills</h2>
 
             <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
@@ -27,6 +28,6 @@ export default function SkillsSection() {
                     </li>
                 ))}
             </ul>
-        </section>
+        </Enter>
     );
 }

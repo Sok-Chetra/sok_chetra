@@ -6,6 +6,7 @@ import MotionProvider from "@/components/providers/MotionProvider";
 import JsonLd from "@/components/seo/JsonLd";
 import { SITE } from "@/lib/content/site";
 import { buildPersonSchema, buildWebSiteSchema } from "@/lib/seo/structured-data";
+import { ENTRANCE_INIT_SCRIPT } from "@/lib/entrance";
 import { THEME_INIT_SCRIPT } from "@/lib/theme";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -58,6 +59,8 @@ export default function RootLayout({
             <head>
                 {/* Must run before paint to avoid a flash of the wrong theme. */}
                 <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+                {/* Also before paint: decides whether the entrance replays. */}
+                <script dangerouslySetInnerHTML={{ __html: ENTRANCE_INIT_SCRIPT }} />
             </head>
             <body
                 className={`${geistSans.variable} bg-gray-50 text-gray-900 antialiased transition-colors duration-300 dark:bg-gray-900 dark:text-gray-100`}

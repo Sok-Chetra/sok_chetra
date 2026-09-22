@@ -1,6 +1,7 @@
 import type { IconType } from "react-icons";
 import { FaLinkedin, FaPhone, FaTelegramPlane, FaWhatsapp } from "react-icons/fa";
 
+import Enter from "@/components/ui/Enter";
 import type { ContactChannel, ContactIcon } from "@/lib/content/contact";
 
 /** Maps the content layer's icon key to a component, keeping content JSX-free. */
@@ -12,16 +13,25 @@ const ICONS: Record<ContactIcon, IconType> = {
 };
 
 /**
- * Not animated. The first card sits ~730px down a 844px phone screen, inside
- * the first view, so any hydration-gated reveal left it blank and any
- * first-paint animation put four shadowed layers into the load's busiest
- * moment. Rendering it plainly avoids both.
+ * Enters block by block. The first card sits ~730px down a 844px phone screen,
+ * inside the first view, so this must be a CSS entrance rather than a
+ * hydration-gated reveal, which left it blank until React caught up.
  */
-export default function ContactCard({ channel }: { channel: ContactChannel }) {
+export default function ContactCard({
+    channel,
+    index = 0,
+}: {
+    channel: ContactChannel;
+    index?: number;
+}) {
     const Icon = ICONS[channel.icon];
 
     return (
-        <li className="overflow-hidden rounded-xl bg-white shadow-lg transition-shadow duration-300 hover:shadow-xl dark:bg-gray-800">
+        <Enter
+            as="li"
+            delayMs={90 + index * 90}
+            className="overflow-hidden rounded-xl bg-white shadow-lg transition-shadow duration-300 hover:shadow-xl dark:bg-gray-800"
+        >
             <div className="p-6">
                 <div className="mb-4 flex items-center justify-center">
                     <span className="rounded-full bg-indigo-100 p-3 text-indigo-600 dark:bg-indigo-900 dark:text-indigo-200">
@@ -47,6 +57,6 @@ export default function ContactCard({ channel }: { channel: ContactChannel }) {
                     </a>
                 </div>
             </div>
-        </li>
+        </Enter>
     );
 }

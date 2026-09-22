@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 
 import ProjectCard from "./ProjectCard";
+import Enter from "@/components/ui/Enter";
 import { PROJECTS } from "@/lib/content/projects";
 import { scrollToElement } from "@/lib/scroll";
 
@@ -77,26 +78,32 @@ export default function ProjectsSection({
                   HTML — leaving it blank until hydration. The cards below it
                   are genuinely off screen and still reveal on scroll.
                 */}
-                <h2
+                <Enter
+                    as="h2"
                     id="projects-heading"
-                    className="enter-rise mb-12 text-center text-3xl font-bold sm:text-4xl dark:text-white"
+                    className="mb-12 text-center text-3xl font-bold sm:text-4xl dark:text-white"
                 >
                     {title}
-                </h2>
+                </Enter>
 
                 <ul className="grid grid-cols-1 items-stretch gap-8 sm:grid-cols-2 lg:grid-cols-3">
                     {visibleProjects.map((project, index) => (
-                        // Not animated: on /portfolio the first card lands in
-                        // the opening view, where a hydration-gated reveal left
-                        // it blank and a first-paint animation janked — four
-                        // image-bearing layers compositing while the page is
-                        // still loading.
-                        <li key={project.id} className="h-full">
+                        // `lift`, not `rise`: these must not fade, because on
+                        // /portfolio the first card's image is the measured LCP
+                        // element and Chrome will not count a fading element
+                        // until the fade ends.
+                        <Enter
+                            as="li"
+                            animation="lift"
+                            key={project.id}
+                            delayMs={90 + index * 90}
+                            className="h-full"
+                        >
                             <ProjectCard
                                 project={project}
                                 priority={prioritizeFirstImage && index === 0}
                             />
-                        </li>
+                        </Enter>
                     ))}
                 </ul>
 

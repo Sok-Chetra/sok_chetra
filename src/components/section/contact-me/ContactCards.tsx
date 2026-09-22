@@ -11,8 +11,8 @@ export default function ContactCards() {
                 </h2>
 
                 <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                    {CONTACT_CHANNELS.map((channel) => (
-                        <ContactCard key={channel.id} channel={channel} />
+                    {CONTACT_CHANNELS.map((channel, index) => (
+                        <ContactCard key={channel.id} channel={channel} index={index} />
                     ))}
                 </ul>
             </div>

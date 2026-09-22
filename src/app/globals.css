@@ -77,9 +77,21 @@ body {
  * transform. The reduced-motion block above neutralises duration and delay, so
  * these collapse to "already in place" for visitors who ask for it.
  */
+/* Fade and rise together — the original look, and the fade is what actually
+   makes the movement read as an animation on a phone.
+   Safe for the LCP here in a way the Framer version was not: Framer held
+   `opacity: 0` in the SSR HTML until hydration, costing over a second of LCP
+   render delay, whereas this starts climbing off zero on the first styled
+   frame, so an element is LCP-eligible essentially immediately. The two pages
+   whose LCP element is an image (home, /portfolio) do not use this. */
+@keyframes enter-fade {
+    from {
+        opacity: 0;
+    }
+}
 @keyframes enter-rise {
     from {
-        transform: translateY(24px);
+        transform: translateY(40px);
     }
 }
 @keyframes enter-from-left {
@@ -92,25 +104,85 @@ body {
         transform: translateX(50px);
     }
 }
-
-.enter-rise,
-.enter-from-left,
-.enter-from-right {
-    animation-duration: 0.5s;
-    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
-    animation-fill-mode: backwards;
+@keyframes enter-line {
+    from {
+        transform: scaleX(0);
+    }
 }
 
+.enter-rise,
+.enter-lift,
+.enter-from-left,
+.enter-from-right,
+.enter-line {
+    animation-duration: 0.6s;
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    animation-fill-mode: backwards;
+    animation-delay: var(--enter-delay, 0ms);
+}
+
+/*
+ * Fade and rise, as two animations of different lengths on one element.
+ *
+ * The fade is deliberately half the slide. Chrome does not treat a fading
+ * element as a Largest Contentful Paint candidate until the fade finishes —
+ * measured, the hero went from an LCP of 328ms to 928ms when it faded over
+ * 0.8s, because that is genuinely when the text becomes readable. A 0.4s fade
+ * halves that cost while the 0.8s slide still carries the motion.
+ */
 .enter-rise {
+    animation-name: enter-fade, enter-rise;
+    animation-duration: 0.35s, 0.6s;
+}
+
+/* Rise with no fade — for anything that may itself be the LCP element, which
+   on /portfolio is the first project card's image. */
+.enter-lift {
     animation-name: enter-rise;
 }
 
 .enter-from-left {
     animation-name: enter-from-left;
-    animation-duration: 0.8s;
 }
 
 .enter-from-right {
     animation-name: enter-from-right;
-    animation-duration: 0.8s;
+}
+
+/* 64x4px; one trivially cheap layer. */
+.enter-line {
+    animation-name: enter-line;
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Block-by-block stagger. Restored after the real cause of the jank turned out
+   to be `transition-all` on page-sized sections, not the number of animating
+   elements — cutting to one element per page did not fix it, removing those
+   transitions did. */
+.enter-d1 {
+    --enter-delay: 90ms;
+}
+.enter-d2 {
+    --enter-delay: 180ms;
+}
+.enter-d3 {
+    --enter-delay: 270ms;
+}
+.enter-d4 {
+    --enter-delay: 360ms;
+}
+
+/*
+ * Entrance plays once per session — see @/lib/entrance.
+ *
+ * The flag is stamped on <html> before first paint, so a navigation or reload
+ * renders the content in place with no animation at all, rather than starting
+ * one and cancelling it.
+ */
+.entered .enter-rise,
+.entered .enter-lift,
+.entered .enter-from-left,
+.entered .enter-from-right,
+.entered .enter-line {
+    animation-name: none;
 }
