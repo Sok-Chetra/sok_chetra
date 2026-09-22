@@ -45,12 +45,6 @@ export const staggerItem: Variants = {
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
 };
 
-/** Springy card entrance for the contact grid. */
-export const cardRise: Variants = {
-    hidden: { y: 100, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { type: "spring", bounce: 0.4, duration: 1 } },
-};
-
 /** Scale-and-settle used by the technology tiles. */
 export const popIn: Variants = {
     hidden: { scale: 0.8, opacity: 0, y: 10 },

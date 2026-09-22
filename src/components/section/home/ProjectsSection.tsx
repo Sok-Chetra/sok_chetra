@@ -1,10 +1,8 @@
 "use client";
 
-import { m } from "framer-motion";
 import { useRef, useState } from "react";
 
 import ProjectCard from "./ProjectCard";
-import { fadeInUp, VIEWPORT_ONCE } from "@/lib/animations";
 import { PROJECTS } from "@/lib/content/projects";
 import { scrollToElement } from "@/lib/scroll";
 
@@ -63,30 +61,33 @@ export default function ProjectsSection({ title = "My Projects", rows = 1 }: Pro
             aria-labelledby="projects-heading"
         >
             <div className="mx-auto max-w-7xl">
-                <m.h2
+                {/*
+                  CSS entrance, not a whileInView reveal. On /portfolio this
+                  heading lands ~640px down a 844px phone screen, inside the
+                  first view, and a Framer reveal writes opacity:0 into the SSR
+                  HTML — leaving it blank until hydration. The cards below it
+                  are genuinely off screen and still reveal on scroll.
+                */}
+                <h2
                     id="projects-heading"
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={VIEWPORT_ONCE}
-                    variants={fadeInUp}
-                    className="mb-12 text-center text-3xl font-bold sm:text-4xl dark:text-white"
+                    className="enter-rise mb-12 text-center text-3xl font-bold sm:text-4xl dark:text-white"
                 >
                     {title}
-                </m.h2>
+                </h2>
 
                 <ul className="grid grid-cols-1 items-stretch gap-8 sm:grid-cols-2 lg:grid-cols-3">
                     {visibleProjects.map((project, index) => (
-                        <m.li
+                        <li
                             key={project.id}
-                            initial="hidden"
-                            whileInView="visible"
-                            viewport={VIEWPORT_ONCE}
-                            variants={fadeInUp}
-                            transition={{ delay: index * 0.1 }}
-                            className="h-full"
+                            className="enter-card h-full"
+                            // On /portfolio the first card lands inside the
+                            // opening view, so its entrance must not wait for
+                            // hydration. Re-runs when a new page of cards
+                            // mounts, which is what the reveal did too.
+                            style={{ "--enter-delay": `${index * 80}ms` } as React.CSSProperties}
                         >
                             <ProjectCard project={project} />
-                        </m.li>
+                        </li>
                     ))}
                 </ul>
 

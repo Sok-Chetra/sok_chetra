@@ -1,8 +1,7 @@
 import type { IconType } from "react-icons";
 import { FaLinkedin, FaPhone, FaTelegramPlane, FaWhatsapp } from "react-icons/fa";
 
-import Reveal from "@/components/ui/Reveal";
-import { cardRise } from "@/lib/animations";
+import Enter from "@/components/ui/Enter";
 import type { ContactChannel, ContactIcon } from "@/lib/content/contact";
 
 /** Maps the content layer's icon key to a component, keeping content JSX-free. */
@@ -13,13 +12,27 @@ const ICONS: Record<ContactIcon, IconType> = {
     phone: FaPhone,
 };
 
-export default function ContactCard({ channel }: { channel: ContactChannel }) {
+/**
+ * Entrance is CSS, not Framer Motion. The first card sits ~730px down a 844px
+ * phone screen — inside the first view — and a Framer reveal writes its
+ * `opacity: 0` into the SSR HTML, so it stayed blank until hydration. A CSS
+ * fade starts at first paint instead, which keeps the same look without the
+ * wait, and lets this stay a server component.
+ */
+export default function ContactCard({
+    channel,
+    index = 0,
+}: {
+    channel: ContactChannel;
+    index?: number;
+}) {
     const Icon = ICONS[channel.icon];
 
     return (
-        <Reveal
+        <Enter
             as="li"
-            variants={cardRise}
+            animation="card"
+            delayMs={index * 80}
             className="overflow-hidden rounded-xl bg-white shadow-lg transition-shadow duration-300 hover:shadow-xl dark:bg-gray-800"
         >
             <div className="p-6">
@@ -47,6 +60,6 @@ export default function ContactCard({ channel }: { channel: ContactChannel }) {
                     </a>
                 </div>
             </div>
-        </Reveal>
+        </Enter>
     );
 }

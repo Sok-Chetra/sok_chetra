@@ -13,10 +13,10 @@ import type { ReactNode } from "react";
  * `Reveal` remains the right tool for scroll-triggered sections: the visitor
  * has to scroll to reach them, by which time hydration is long finished.
  */
-type EnterTag = "div" | "section" | "h1" | "h2" | "p";
+type EnterTag = "div" | "section" | "h1" | "h2" | "p" | "ul" | "li";
 
 /** Directions match the Framer variants these replaced, so motion is unchanged. */
-type EnterAnimation = "rise" | "from-left" | "from-right" | "line";
+type EnterAnimation = "rise" | "from-left" | "from-right" | "line" | "card";
 
 type EnterProps = {
     children?: ReactNode;
@@ -25,6 +25,8 @@ type EnterProps = {
     animation?: EnterAnimation;
     /** Stagger position. Maps to a fixed delay step shared with siblings. */
     step?: 1 | 2 | 3 | 4;
+    /** Explicit delay, for list items whose count is not known up front. */
+    delayMs?: number;
     className?: string;
     id?: string;
     role?: string;
@@ -37,6 +39,7 @@ export default function Enter({
     as: Tag = "div",
     animation = "rise",
     step,
+    delayMs,
     className,
     ...rest
 }: EnterProps) {
@@ -44,8 +47,15 @@ export default function Enter({
         .filter(Boolean)
         .join(" ");
 
+    // The reduced-motion block in globals.css sets `animation-delay` with
+    // `!important`, which outranks this inline custom property.
+    const style =
+        delayMs === undefined
+            ? undefined
+            : ({ "--enter-delay": `${delayMs}ms` } as React.CSSProperties);
+
     return (
-        <Tag className={classes} {...rest}>
+        <Tag className={classes} style={style} {...rest}>
             {children}
         </Tag>
     );
