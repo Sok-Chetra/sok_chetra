@@ -84,11 +84,6 @@ body {
    render delay, whereas this starts climbing off zero on the first styled
    frame, so an element is LCP-eligible essentially immediately. The two pages
    whose LCP element is an image (home, /portfolio) do not use this. */
-@keyframes enter-fade {
-    from {
-        opacity: 0;
-    }
-}
 @keyframes enter-rise {
     from {
         transform: translateY(40px);
@@ -111,7 +106,6 @@ body {
 }
 
 .enter-rise,
-.enter-lift,
 .enter-from-left,
 .enter-from-right,
 .enter-line {
@@ -122,22 +116,17 @@ body {
 }
 
 /*
- * Fade and rise, as two animations of different lengths on one element.
+ * Slide only, never opacity.
  *
- * The fade is deliberately half the slide. Chrome does not treat a fading
- * element as a Largest Contentful Paint candidate until the fade finishes —
- * measured, the hero went from an LCP of 328ms to 928ms when it faded over
- * 0.8s, because that is genuinely when the text becomes readable. A 0.4s fade
- * halves that cost while the 0.8s slide still carries the motion.
+ * Chrome will not accept an element that animates its opacity as a Largest
+ * Contentful Paint candidate until the animation ends — measured on the same
+ * hero copy, 328ms sliding against 944ms with a fade. Shortening the fade did
+ * nothing (948ms at 0.8s, 944ms at 0.4s): it is the presence of the fade that
+ * defers the metric, not its length. The interior pages' LCP element is hero
+ * copy, so they paid that in full, which is what held them at 98 rather than
+ * 100 with an LCP of 2.4s against a 2.5s "good" threshold.
  */
 .enter-rise {
-    animation-name: enter-fade, enter-rise;
-    animation-duration: 0.3s, 0.45s;
-}
-
-/* Rise with no fade — for anything that may itself be the LCP element, which
-   on /portfolio is the first project card's image. */
-.enter-lift {
     animation-name: enter-rise;
 }
 
