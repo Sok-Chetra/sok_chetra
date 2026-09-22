@@ -1,9 +1,18 @@
 import type { Variants } from "framer-motion";
 
 /**
- * Shared motion presets. Sections previously each declared their own near
- * identical variants; keeping them here means timing stays consistent and one
- * edit re-tunes the whole site.
+ * Shared motion presets for scroll-revealed sections.
+ *
+ * These are all below-the-fold: the visitor has to scroll to reach them, so
+ * hydration is long finished by the time they trigger, and fading in costs
+ * nothing. Above-the-fold entrances are CSS instead — Framer Motion cannot
+ * start until React hydrates, which left hero copy visibly mis-placed for
+ * 1.6-2.0s on a throttled phone. See @/components/ui/Enter and the `enter-*`
+ * block in globals.css.
+ *
+ * Note for anything that may become the Largest Contentful Paint: an element
+ * at `opacity: 0` is not eligible to be the LCP, and Framer Motion writes the
+ * `hidden` variant into the SSR HTML. Animate such elements by transform only.
  *
  * Motion is disabled automatically for visitors who prefer reduced motion —
  * see the <MotionConfig reducedMotion="user"> wrapper in the root layout.
@@ -21,29 +30,6 @@ export const fadeInUp: Variants = {
     visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
 };
 
-/** Fade in from the side — used by hero copy and imagery. */
-export const fadeInFrom = (x: number): Variants => ({
-    hidden: { opacity: 0, x },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.8 } },
-});
-
-/**
- * Slide with no fade — for above-the-fold content, and required for whatever
- * turns out to be the LCP element.
- *
- * An element at `opacity: 0` is not eligible to be the Largest Contentful
- * Paint, and framer-motion writes the `hidden` variant into the SSR HTML. Using
- * `fadeInFrom` on the hero therefore left the image fully downloaded but
- * unpaintable until hydration finished the fade, measured on production as
- * 1037ms of LCP "render delay" — 43% of a 2.4s LCP. A transform does not stop
- * the element painting, so the content is genuinely visible straight away
- * rather than merely counted as visible.
- */
-export const slideInFrom = (x: number): Variants => ({
-    hidden: { x },
-    visible: { x: 0, transition: { duration: 0.8 } },
-});
-
 /** Parent that reveals its children one after another. */
 export const staggerContainer: Variants = {
     hidden: { opacity: 0 },
@@ -51,32 +37,6 @@ export const staggerContainer: Variants = {
         opacity: 1,
         transition: { when: "beforeChildren", staggerChildren: 0.08, delayChildren: 0.2 },
     },
-};
-
-/**
- * Orchestration-only container for content that is above the fold on load.
- *
- * `staggerContainer` sets `hidden: { opacity: 0 }`, and framer-motion writes
- * the hidden variant into the SSR HTML — which hides every descendant until
- * hydration finishes the fade. Measured on a throttled phone, that left the
- * interior pages blank for 1.4-1.8s while the markup sat there fully painted
- * and invisible. This variant carries no opacity at all, so the server-rendered
- * copy is readable from first paint and only moves afterwards.
- *
- * Below-the-fold reveals can keep fading: the visitor scrolls to them, so there
- * is no window where they stare at nothing.
- */
-export const staggerContainerVisible: Variants = {
-    hidden: {},
-    visible: {
-        transition: { when: "beforeChildren", staggerChildren: 0.08, delayChildren: 0.05 },
-    },
-};
-
-/** Child of {@link staggerContainerVisible} — slides without fading. */
-export const slideUpItem: Variants = {
-    hidden: { y: 24 },
-    visible: { y: 0, transition: { duration: 0.5, ease: "easeOut" } },
 };
 
 /** Child of {@link staggerContainer}. */
@@ -95,13 +55,4 @@ export const cardRise: Variants = {
 export const popIn: Variants = {
     hidden: { scale: 0.8, opacity: 0, y: 10 },
     visible: { scale: 1, opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
-};
-
-/** Divider rule that draws itself out from the centre. */
-export const growLine: Variants = {
-    hidden: { scaleX: 0 },
-    visible: {
-        scaleX: 1,
-        transition: { delay: 0.8, duration: 0.8, type: "spring", stiffness: 100, damping: 10 },
-    },
 };

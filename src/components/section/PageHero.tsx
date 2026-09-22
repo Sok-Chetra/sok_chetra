@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 
-import Reveal from "@/components/ui/Reveal";
-import { growLine, slideUpItem, staggerContainerVisible } from "@/lib/animations";
+import Enter from "@/components/ui/Enter";
 
 type PageHeroProps = {
     /** Accepts markup so a word can be colour-accented. */
@@ -16,6 +15,9 @@ type PageHeroProps = {
  * Shared hero for interior pages. The portfolio and contact heroes were
  * separate ~80-line files with the same structure and variants; they now differ
  * only in their copy.
+ *
+ * Entrance is CSS, not Framer Motion — this is the first thing a visitor sees,
+ * so it must not wait for hydration. See @/components/ui/Enter.
  */
 export default function PageHero({
     title,
@@ -24,34 +26,26 @@ export default function PageHero({
     showDivider = true,
 }: PageHeroProps) {
     return (
-        <Reveal
-            as="section"
-            trigger="mount"
-            variants={staggerContainerVisible}
-            className="px-4 pt-32 pb-20 text-center transition-colors duration-300 sm:px-6 md:pt-48 lg:px-8"
-        >
-            <Reveal variants={slideUpItem} className="mx-auto max-w-3xl">
+        <section className="px-4 pt-32 pb-20 text-center transition-colors duration-300 sm:px-6 md:pt-48 lg:px-8">
+            <Enter step={1} className="mx-auto max-w-3xl">
                 <h1 className="mb-6 text-4xl font-bold text-gray-900 md:text-5xl dark:text-white">
                     {title}
                 </h1>
                 <p className="mb-8 text-xl text-gray-600 dark:text-gray-300">{description}</p>
-            </Reveal>
+            </Enter>
 
             {actions && (
-                <Reveal
-                    variants={slideUpItem}
-                    className="flex flex-wrap items-center justify-center gap-4"
-                >
+                <Enter step={2} className="flex flex-wrap items-center justify-center gap-4">
                     {actions}
-                </Reveal>
+                </Enter>
             )}
 
             {showDivider && (
-                <Reveal
-                    variants={growLine}
+                <Enter
+                    animation="line"
                     className="mx-auto mt-8 h-1 w-16 bg-indigo-600 dark:bg-indigo-400"
                 />
             )}
-        </Reveal>
+        </section>
     );
 }

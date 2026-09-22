@@ -44,3 +44,93 @@ body {
         scroll-behavior: auto !important;
     }
 }
+
+/**
+ * Mount entrance animations, in CSS rather than JavaScript.
+ *
+ * Framer Motion cannot start until React has hydrated. Measured on a throttled
+ * phone that left above-the-fold copy painted but parked in its `hidden`
+ * offset — the home headline 50px off to the side for 1630ms, the interior
+ * page headings 24px low for 1.6-2.0s — before anything moved. The content was
+ * readable the whole time, so it read as "text loads, then animates", which is
+ * exactly backwards.
+ *
+ * A CSS animation starts when the element is first styled, which with
+ * `inlineCss` is the first paint. The movement therefore happens *while* the
+ * page appears rather than seconds afterwards, and needs no client JavaScript
+ * at all, so these heroes stay server components.
+ *
+ * Transform only, never opacity: an element at `opacity: 0` is not eligible to
+ * be the Largest Contentful Paint (see `slideInFrom` in @/lib/animations).
+ *
+ * `backwards` fill holds the opening frame through the delay and then hands
+ * the element back to its own styles, leaving no lingering composited
+ * transform. The reduced-motion block above neutralises both duration and
+ * delay, so these collapse to "already in place" for visitors who ask for it.
+ */
+@keyframes enter-rise {
+    from {
+        transform: translateY(24px);
+    }
+}
+@keyframes enter-from-left {
+    from {
+        transform: translateX(-50px);
+    }
+}
+@keyframes enter-from-right {
+    from {
+        transform: translateX(50px);
+    }
+}
+@keyframes enter-line {
+    from {
+        transform: scaleX(0);
+    }
+}
+
+.enter-rise,
+.enter-from-left,
+.enter-from-right,
+.enter-line {
+    animation-duration: 0.5s;
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    animation-fill-mode: backwards;
+    animation-delay: var(--enter-delay, 0ms);
+}
+
+.enter-rise {
+    animation-name: enter-rise;
+}
+
+.enter-from-left {
+    animation-name: enter-from-left;
+    animation-duration: 0.8s;
+}
+
+.enter-from-right {
+    animation-name: enter-from-right;
+    animation-duration: 0.8s;
+}
+
+.enter-line {
+    animation-name: enter-line;
+    animation-duration: 0.8s;
+    /* Slight overshoot, standing in for the spring the JS version used. */
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --enter-delay: 800ms;
+}
+
+/* Stagger steps: the JS container used delayChildren 0.05 + staggerChildren 0.08. */
+.enter-d1 {
+    --enter-delay: 50ms;
+}
+.enter-d2 {
+    --enter-delay: 130ms;
+}
+.enter-d3 {
+    --enter-delay: 210ms;
+}
+.enter-d4 {
+    --enter-delay: 290ms;
+}

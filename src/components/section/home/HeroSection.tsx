@@ -3,25 +3,20 @@ import Link from "next/link";
 
 import profileImage from "../../../../public/image/my-profile.webp";
 
-import Reveal from "@/components/ui/Reveal";
+import Enter from "@/components/ui/Enter";
 import ScrollCue from "@/components/ui/ScrollCue";
-import { slideInFrom } from "@/lib/animations";
 import { SITE } from "@/lib/content/site";
 
 /**
- * Server component — only the animated wrappers and the scroll cue are client
- * side, so the headline and copy ship as HTML.
+ * Server component. Only the scroll cue is client side; the entrance
+ * animation is CSS, so it runs from first paint instead of waiting for
+ * hydration — see @/components/ui/Enter.
  */
 export default function HeroSection() {
     return (
         <section className="relative flex min-h-[calc(100svh-4rem)] items-center justify-center px-4 py-24 sm:px-6 md:min-h-screen md:py-0 lg:px-8">
             <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 items-center gap-8 md:grid-cols-2 md:gap-12">
-                <Reveal
-                    as="div"
-                    trigger="mount"
-                    variants={slideInFrom(-50)}
-                    className="order-2 md:order-1"
-                >
+                <Enter animation="from-left" className="order-2 md:order-1">
                     <h1 className="mb-4 text-center text-4xl font-bold sm:text-5xl md:text-start lg:text-6xl dark:text-white">
                         {SITE.name} —{" "}
                         <span className="text-blue-600 dark:text-blue-400">Full Stack</span> Developer
@@ -39,14 +34,9 @@ export default function HeroSection() {
                             View Portfolio
                         </Link>
                     </div>
-                </Reveal>
+                </Enter>
 
-                <Reveal
-                    as="div"
-                    trigger="mount"
-                    variants={slideInFrom(50)}
-                    className="order-1 flex justify-center md:order-2"
-                >
+                <Enter animation="from-right" className="order-1 flex justify-center md:order-2">
                     <div className="relative h-64 w-64 overflow-hidden rounded-full border-4 border-white shadow-md sm:h-80 sm:w-80 dark:border-gray-800 dark:shadow-gray-800/20">
                         {/*
                           One source, not two. The previous markup rendered a
@@ -68,7 +58,7 @@ export default function HeroSection() {
                             fetchPriority="high"
                         />
                     </div>
-                </Reveal>
+                </Enter>
             </div>
 
             <ScrollCue targetId="projects" />
