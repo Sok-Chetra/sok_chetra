@@ -1,7 +1,4 @@
-'use client'
-
 import { Project } from '@/lib/content/projects'
-import { m } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -17,11 +14,11 @@ type ProjectCardProps = {
 }
 
 export default function ProjectCard({ project, priority = false }: ProjectCardProps) {
+    // Hover lift is CSS. This was `m.div whileHover={{ y: -10 }}`, which made
+    // every card a client component and shipped Framer Motion to hydrate a
+    // hover effect the compositor does for free.
     return (
-        <m.div
-            whileHover={{ y: -10 }}
-            className="bg-white dark:bg-gray-700 rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl dark:hover:shadow-gray-900/50 flex flex-col h-full"
-        >
+        <div className="flex h-full flex-col overflow-hidden rounded-xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-2.5 hover:shadow-xl dark:bg-gray-700 dark:hover:shadow-gray-900/50">
             {/* Image container with fixed aspect ratio */}
             <div className="relative h-48 w-full shrink-0">
                 <Image
@@ -72,6 +69,6 @@ export default function ProjectCard({ project, priority = false }: ProjectCardPr
                     </div>
                 )}
             </div>
-        </m.div>
+        </div>
     )
 }

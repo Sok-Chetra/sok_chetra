@@ -86,15 +86,12 @@ export default function ProjectsSection({
 
                 <ul className="grid grid-cols-1 items-stretch gap-8 sm:grid-cols-2 lg:grid-cols-3">
                     {visibleProjects.map((project, index) => (
-                        <li
-                            key={project.id}
-                            className="enter-card h-full"
-                            // On /portfolio the first card lands inside the
-                            // opening view, so its entrance must not wait for
-                            // hydration. Re-runs when a new page of cards
-                            // mounts, which is what the reveal did too.
-                            style={{ "--enter-delay": `${index * 80}ms` } as React.CSSProperties}
-                        >
+                        // Not animated: on /portfolio the first card lands in
+                        // the opening view, where a hydration-gated reveal left
+                        // it blank and a first-paint animation janked — four
+                        // image-bearing layers compositing while the page is
+                        // still loading.
+                        <li key={project.id} className="h-full">
                             <ProjectCard
                                 project={project}
                                 priority={prioritizeFirstImage && index === 0}

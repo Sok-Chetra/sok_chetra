@@ -3,30 +3,26 @@ import type { ReactNode } from "react";
 /**
  * Mount entrance animation — the CSS counterpart to {@link Reveal}.
  *
- * Use this for anything above the fold on load. `Reveal` is a client component
- * because Framer Motion is, which means its animation cannot begin until React
- * has hydrated; for content that is already on screen that produced a long
- * window of visibly mis-placed text (see the `enter-*` block in globals.css).
- * This renders a plain element with a class, so it stays a server component and
- * the animation runs from first paint.
+ * Use this for content that is on screen at first paint. `Reveal` is a client
+ * component because Framer Motion is, so its animation cannot begin until
+ * React has hydrated; for content already in view that left copy visibly
+ * mis-placed for 1.6-2.0s on a throttled phone.
  *
- * `Reveal` remains the right tool for scroll-triggered sections: the visitor
- * has to scroll to reach them, by which time hydration is long finished.
+ * Keep the count low. Every animating element needs its own compositor layer,
+ * rasterised while the page is still parsing JavaScript, hydrating and
+ * decoding images. Animating a hero's children individually janked on a real
+ * handset; animating the hero as one block does not. Anything heavy — cards
+ * carrying shadows or images — is better left unanimated.
+ *
+ * `Reveal` remains right for scroll-triggered sections further down: the
+ * visitor has to scroll to reach them, by which time the main thread is idle.
  */
-type EnterTag = "div" | "section" | "h1" | "h2" | "p" | "ul" | "li";
-
-/** Directions match the Framer variants these replaced, so motion is unchanged. */
-type EnterAnimation = "rise" | "from-left" | "from-right" | "line" | "card";
+type EnterAnimation = "rise" | "from-left" | "from-right";
 
 type EnterProps = {
     children?: ReactNode;
-    /** Element to render. Defaults to a plain div. */
-    as?: EnterTag;
+    /** Directions match the Framer variants these replaced, so motion is unchanged. */
     animation?: EnterAnimation;
-    /** Stagger position. Maps to a fixed delay step shared with siblings. */
-    step?: 1 | 2 | 3 | 4;
-    /** Explicit delay, for list items whose count is not known up front. */
-    delayMs?: number;
     className?: string;
     id?: string;
     role?: string;
@@ -36,27 +32,15 @@ type EnterProps = {
 
 export default function Enter({
     children,
-    as: Tag = "div",
     animation = "rise",
-    step,
-    delayMs,
     className,
     ...rest
 }: EnterProps) {
-    const classes = [`enter-${animation}`, step && `enter-d${step}`, className]
-        .filter(Boolean)
-        .join(" ");
-
-    // The reduced-motion block in globals.css sets `animation-delay` with
-    // `!important`, which outranks this inline custom property.
-    const style =
-        delayMs === undefined
-            ? undefined
-            : ({ "--enter-delay": `${delayMs}ms` } as React.CSSProperties);
+    const classes = [`enter-${animation}`, className].filter(Boolean).join(" ");
 
     return (
-        <Tag className={classes} style={style} {...rest}>
+        <div className={classes} {...rest}>
             {children}
-        </Tag>
+        </div>
     );
 }

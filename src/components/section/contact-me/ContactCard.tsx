@@ -1,7 +1,6 @@
 import type { IconType } from "react-icons";
 import { FaLinkedin, FaPhone, FaTelegramPlane, FaWhatsapp } from "react-icons/fa";
 
-import Enter from "@/components/ui/Enter";
 import type { ContactChannel, ContactIcon } from "@/lib/content/contact";
 
 /** Maps the content layer's icon key to a component, keeping content JSX-free. */
@@ -13,28 +12,16 @@ const ICONS: Record<ContactIcon, IconType> = {
 };
 
 /**
- * Entrance is CSS, not Framer Motion. The first card sits ~730px down a 844px
- * phone screen — inside the first view — and a Framer reveal writes its
- * `opacity: 0` into the SSR HTML, so it stayed blank until hydration. A CSS
- * fade starts at first paint instead, which keeps the same look without the
- * wait, and lets this stay a server component.
+ * Not animated. The first card sits ~730px down a 844px phone screen, inside
+ * the first view, so any hydration-gated reveal left it blank and any
+ * first-paint animation put four shadowed layers into the load's busiest
+ * moment. Rendering it plainly avoids both.
  */
-export default function ContactCard({
-    channel,
-    index = 0,
-}: {
-    channel: ContactChannel;
-    index?: number;
-}) {
+export default function ContactCard({ channel }: { channel: ContactChannel }) {
     const Icon = ICONS[channel.icon];
 
     return (
-        <Enter
-            as="li"
-            animation="card"
-            delayMs={index * 80}
-            className="overflow-hidden rounded-xl bg-white shadow-lg transition-shadow duration-300 hover:shadow-xl dark:bg-gray-800"
-        >
+        <li className="overflow-hidden rounded-xl bg-white shadow-lg transition-shadow duration-300 hover:shadow-xl dark:bg-gray-800">
             <div className="p-6">
                 <div className="mb-4 flex items-center justify-center">
                     <span className="rounded-full bg-indigo-100 p-3 text-indigo-600 dark:bg-indigo-900 dark:text-indigo-200">
@@ -60,6 +47,6 @@ export default function ContactCard({
                     </a>
                 </div>
             </div>
-        </Enter>
+        </li>
     );
 }

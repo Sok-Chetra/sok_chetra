@@ -56,17 +56,26 @@ body {
  * exactly backwards.
  *
  * A CSS animation starts when the element is first styled, which with
- * `inlineCss` is the first paint. The movement therefore happens *while* the
- * page appears rather than seconds afterwards, and needs no client JavaScript
- * at all, so these heroes stay server components.
+ * `inlineCss` is the first paint. The movement happens *while* the page
+ * appears, and needs no client JavaScript, so these heroes stay server
+ * components.
+ *
+ * Use these sparingly. First paint is also when the phone is parsing
+ * JavaScript, hydrating and decoding images, and every animating element wants
+ * its own compositor layer rasterised right then. Animating a hero's children
+ * individually, plus the cards and chips at the fold, put 7-12 layers into
+ * that moment and janked visibly on a real handset while testing fine in
+ * emulation. One block per hero is smooth. Heavy elements — cards carrying
+ * shadows or images — are better not animated at all.
  *
  * Transform only, never opacity: an element at `opacity: 0` is not eligible to
- * be the Largest Contentful Paint (see `slideInFrom` in @/lib/animations).
+ * be the Largest Contentful Paint, and the LCP element is a hero portrait on
+ * the home page and a project card image on /portfolio.
  *
- * `backwards` fill holds the opening frame through the delay and then hands
- * the element back to its own styles, leaving no lingering composited
- * transform. The reduced-motion block above neutralises both duration and
- * delay, so these collapse to "already in place" for visitors who ask for it.
+ * `backwards` fill holds the opening frame until the animation starts and then
+ * hands the element back to its own styles, leaving no lingering composited
+ * transform. The reduced-motion block above neutralises duration and delay, so
+ * these collapse to "already in place" for visitors who ask for it.
  */
 @keyframes enter-rise {
     from {
@@ -83,31 +92,13 @@ body {
         transform: translateX(50px);
     }
 }
-@keyframes enter-line {
-    from {
-        transform: scaleX(0);
-    }
-}
-/* Deliberately transform-only, like the rest. The Framer `cardRise` variant
-   this replaced also faded, but the project card image is the measured LCP
-   element on /portfolio, and an element at `opacity: 0` is not eligible to be
-   the Largest Contentful Paint. A longer travel with a little overshoot keeps
-   the entrance obvious without touching opacity. */
-@keyframes enter-card {
-    from {
-        transform: translateY(60px);
-    }
-}
 
 .enter-rise,
 .enter-from-left,
-.enter-from-right,
-.enter-line,
-.enter-card {
+.enter-from-right {
     animation-duration: 0.5s;
     animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
     animation-fill-mode: backwards;
-    animation-delay: var(--enter-delay, 0ms);
 }
 
 .enter-rise {
@@ -122,32 +113,4 @@ body {
 .enter-from-right {
     animation-name: enter-from-right;
     animation-duration: 0.8s;
-}
-
-.enter-card {
-    animation-name: enter-card;
-    animation-duration: 0.7s;
-    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.enter-line {
-    animation-name: enter-line;
-    animation-duration: 0.8s;
-    /* Slight overshoot, standing in for the spring the JS version used. */
-    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
-    --enter-delay: 800ms;
-}
-
-/* Stagger steps: the JS container used delayChildren 0.05 + staggerChildren 0.08. */
-.enter-d1 {
-    --enter-delay: 50ms;
-}
-.enter-d2 {
-    --enter-delay: 130ms;
-}
-.enter-d3 {
-    --enter-delay: 210ms;
-}
-.enter-d4 {
-    --enter-delay: 290ms;
 }
