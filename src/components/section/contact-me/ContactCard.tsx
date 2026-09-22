@@ -1,5 +1,5 @@
 import type { IconType } from "react-icons";
-import { FaLinkedin, FaPhone, FaTelegramPlane, FaWhatsapp } from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaPhone, FaTelegramPlane, FaWhatsapp } from "react-icons/fa";
 
 import Enter from "@/components/ui/Enter";
 import type { ContactChannel, ContactIcon } from "@/lib/content/contact";
@@ -7,6 +7,7 @@ import type { ContactChannel, ContactIcon } from "@/lib/content/contact";
 /** Maps the content layer's icon key to a component, keeping content JSX-free. */
 const ICONS: Record<ContactIcon, IconType> = {
     linkedin: FaLinkedin,
+    github: FaGithub,
     telegram: FaTelegramPlane,
     whatsapp: FaWhatsapp,
     phone: FaPhone,

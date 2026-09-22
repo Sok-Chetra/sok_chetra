@@ -1,5 +1,5 @@
 /** Icon is referenced by key so this stays a pure-data module (no JSX). */
-export type ContactIcon = "linkedin" | "telegram" | "whatsapp" | "phone";
+export type ContactIcon = "linkedin" | "github" | "telegram" | "whatsapp" | "phone";
 
 export type ContactChannel = {
     id: string;
@@ -21,6 +21,19 @@ export const CONTACT_CHANNELS: ContactChannel[] = [
         href: "https://www.linkedin.com/in/sok-chetra/",
         label: "Sok Chetra",
         icon: "linkedin",
+        external: true,
+    },
+    {
+        /**
+         * Also the strongest identity signal for a developer: `sameAs` below is
+         * built from the external channels here, and that is how Google links
+         * this site to the same person elsewhere on the web.
+         */
+        id: "github",
+        title: "GitHub",
+        href: "https://github.com/Sok-Chetra",
+        label: "Sok-Chetra",
+        icon: "github",
         external: true,
     },
     {
