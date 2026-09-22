@@ -113,6 +113,20 @@ body {
     animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
     animation-fill-mode: backwards;
     animation-delay: var(--enter-delay, 0ms);
+
+    /*
+     * Promote to a GPU layer so the slide is composited rather than re-drawn
+     * on the main thread each frame.
+     *
+     * These used to fade as well, and animating opacity forces this promotion
+     * implicitly — which is why dropping the fade for the LCP's sake made the
+     * slide read as janky on a real handset when it had been smooth before.
+     * Asking for the layer directly keeps the smoothness without paying the
+     * LCP cost an opacity animation carries. A `translate3d` in the keyframes
+     * was tried as a second promotion hint and is pointless here — the CSS
+     * minifier rewrites it straight back to `translateY`.
+     */
+    will-change: transform;
 }
 
 /*
