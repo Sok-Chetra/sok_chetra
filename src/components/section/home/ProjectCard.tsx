@@ -1,17 +1,26 @@
-import { Project } from '@/lib/content/projects'
-import Image from 'next/image'
-import Link from 'next/link'
+import Image from "next/image";
+import type { IconType } from "react-icons";
+import { FaApple, FaGlobe, FaGooglePlay } from "react-icons/fa";
+
+import type { Project, ProjectLinkKind } from "@/lib/content/projects";
 
 type ProjectCardProps = {
-    project: Project
+    project: Project;
     /**
      * Set for the first card on /portfolio, where it sits in the opening view
      * and is the measured LCP element. next/image lazy-loads by default, which
      * delayed that fetch until after layout. Left off on the home page, where
      * this section is below the fold and the hero portrait is the LCP.
      */
-    priority?: boolean
-}
+    priority?: boolean;
+};
+
+/** Keeps the content layer JSX-free, the same way ContactCard maps its icons. */
+const LINK_KINDS: Record<ProjectLinkKind, { name: string; Icon: IconType }> = {
+    website: { name: "Website", Icon: FaGlobe },
+    "app-store": { name: "App Store", Icon: FaApple },
+    "play-store": { name: "Google Play", Icon: FaGooglePlay },
+};
 
 export default function ProjectCard({ project, priority = false }: ProjectCardProps) {
     // Hover lift is CSS. This was `m.div whileHover={{ y: -10 }}`, which made
@@ -33,42 +42,63 @@ export default function ProjectCard({ project, priority = false }: ProjectCardPr
             </div>
 
             {/* Content area that grows to fill remaining space */}
-            <div className="p-6 flex flex-col grow">
-                <h3 className="text-xl font-semibold mb-2 dark:text-white line-clamp-2">
+            <div className="flex grow flex-col p-6">
+                <h3 className="mb-2 line-clamp-2 text-xl font-semibold dark:text-white">
                     {project.title}
                 </h3>
 
                 {/* Tags container with scroll if needed */}
-                <div className="flex flex-wrap gap-1 mb-4 max-h-20 overflow-y-auto">
+                <div className="mb-4 flex max-h-20 flex-wrap gap-1 overflow-y-auto">
                     {project.tags.map((tag) => (
                         <span
                             key={tag}
-                            className="px-3 py-1 bg-blue-100 text-blue-800 dark:bg-gray-600 dark:text-gray-100 text-xs font-medium rounded-full whitespace-nowrap"
+                            className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium whitespace-nowrap text-blue-800 dark:bg-gray-600 dark:text-gray-100"
                         >
                             {tag}
                         </span>
                     ))}
                 </div>
+
                 {project.description && (
-                    <div>
-                        <p>{project.description}</p>
-                    </div>
+                    <p className="mb-4 text-sm text-gray-600 dark:text-gray-300">
+                        {project.description}
+                    </p>
                 )}
 
-
-                {/* Link pushed to bottom */}
-                {project.link && (
-                    <div className="mt-auto">
-                        <Link
-                            href={project.link}
-                            className="inline-block text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-semibold transition-colors"
-                            aria-label='Link to Project Detail'
-                        >
-                            View Project →
-                        </Link>
-                    </div>
+                {/*
+                  One button per destination, so a project that ships as a site
+                  and two store listings stays a single card. The card itself is
+                  deliberately not a link: these are the only hit targets, which
+                  keeps each one unambiguous and avoids nesting links inside a
+                  larger one.
+                */}
+                {project.links && project.links.length > 0 && (
+                    <ul className="mt-auto flex flex-wrap gap-2">
+                        {project.links.map((link) => {
+                            const { name, Icon } = LINK_KINDS[link.kind];
+                            const text = link.label ?? name;
+                            return (
+                                <li key={link.href}>
+                                    <a
+                                        href={link.href}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        // Visible text is a substring of this,
+                                        // so the spoken and seen labels agree.
+                                        aria-label={`${project.title} — ${text}${
+                                            link.label ? ` on ${name}` : ""
+                                        } (opens in a new tab)`}
+                                        className="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 transition-colors hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:border-gray-500 dark:text-gray-200 dark:hover:border-blue-400 dark:hover:bg-gray-600 dark:hover:text-blue-300"
+                                    >
+                                        <Icon size={14} aria-hidden />
+                                        {text}
+                                    </a>
+                                </li>
+                            );
+                        })}
+                    </ul>
                 )}
             </div>
         </div>
-    )
+    );
 }
