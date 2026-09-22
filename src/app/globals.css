@@ -115,7 +115,7 @@ body {
 .enter-from-left,
 .enter-from-right,
 .enter-line {
-    animation-duration: 0.6s;
+    animation-duration: 0.45s;
     animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
     animation-fill-mode: backwards;
     animation-delay: var(--enter-delay, 0ms);
@@ -132,7 +132,7 @@ body {
  */
 .enter-rise {
     animation-name: enter-fade, enter-rise;
-    animation-duration: 0.35s, 0.6s;
+    animation-duration: 0.3s, 0.45s;
 }
 
 /* Rise with no fade — for anything that may itself be the LCP element, which
@@ -160,14 +160,14 @@ body {
    elements — cutting to one element per page did not fix it, removing those
    transitions did. */
 .enter-d1 {
-    --enter-delay: 90ms;
+    --enter-delay: 50ms;
 }
 .enter-d2 {
-    --enter-delay: 180ms;
+    --enter-delay: 100ms;
 }
 .enter-d3 {
-    --enter-delay: 270ms;
+    --enter-delay: 150ms;
 }
 .enter-d4 {
-    --enter-delay: 360ms;
+    --enter-delay: 200ms;
 }
