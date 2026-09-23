@@ -1,6 +1,7 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { IconType } from "react-icons";
-import { FaApple, FaGlobe, FaGooglePlay } from "react-icons/fa";
+import { FaApple, FaArrowRight, FaGlobe, FaGooglePlay } from "react-icons/fa";
 
 import type { Project, ProjectLinkKind } from "@/lib/content/projects";
 
@@ -59,11 +60,9 @@ export default function ProjectCard({ project, priority = false }: ProjectCardPr
                     ))}
                 </div>
 
-                {project.description && (
-                    <p className="mb-4 text-sm text-gray-600 dark:text-gray-300">
-                        {project.description}
-                    </p>
-                )}
+                <p className="mb-4 line-clamp-3 text-sm text-gray-600 dark:text-gray-300">
+                    {project.summary}
+                </p>
 
                 {/*
                   One button per destination, so a project that ships as a site
@@ -72,32 +71,40 @@ export default function ProjectCard({ project, priority = false }: ProjectCardPr
                   keeps each one unambiguous and avoids nesting links inside a
                   larger one.
                 */}
-                {project.links && project.links.length > 0 && (
-                    <ul className="mt-auto flex flex-wrap gap-2">
-                        {project.links.map((link) => {
-                            const { name, Icon } = LINK_KINDS[link.kind];
-                            const text = link.label ?? name;
-                            return (
-                                <li key={link.href}>
-                                    <a
-                                        href={link.href}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        // Visible text is a substring of this,
-                                        // so the spoken and seen labels agree.
-                                        aria-label={`${project.title} — ${text}${
-                                            link.label ? ` on ${name}` : ""
-                                        } (opens in a new tab)`}
-                                        className="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 transition-colors hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:border-gray-500 dark:text-gray-200 dark:hover:border-blue-400 dark:hover:bg-gray-600 dark:hover:text-blue-300"
-                                    >
-                                        <Icon size={14} aria-hidden />
-                                        {text}
-                                    </a>
-                                </li>
-                            );
-                        })}
-                    </ul>
-                )}
+                <ul className="mt-auto flex flex-wrap gap-2">
+                    <li>
+                        <Link
+                            href={`/portfolio/${project.slug}`}
+                            aria-label={`${project.title} — read more`}
+                            className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:bg-blue-700 dark:hover:bg-blue-600"
+                        >
+                            Details
+                            <FaArrowRight size={11} aria-hidden />
+                        </Link>
+                    </li>
+                    {(project.links ?? []).map((link) => {
+                        const { name, Icon } = LINK_KINDS[link.kind];
+                        const text = link.label ?? name;
+                        return (
+                            <li key={link.href}>
+                                <a
+                                    href={link.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    // Visible text is a substring of this,
+                                    // so the spoken and seen labels agree.
+                                    aria-label={`${project.title} — ${text}${
+                                        link.label ? ` on ${name}` : ""
+                                    } (opens in a new tab)`}
+                                    className="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 transition-colors hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:border-gray-500 dark:text-gray-200 dark:hover:border-blue-400 dark:hover:bg-gray-600 dark:hover:text-blue-300"
+                                >
+                                    <Icon size={14} aria-hidden />
+                                    {text}
+                                </a>
+                            </li>
+                        );
+                    })}
+                </ul>
             </div>
         </div>
     );

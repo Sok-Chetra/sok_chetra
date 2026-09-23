@@ -1,4 +1,5 @@
 import { CONTACT_CHANNELS } from "@/lib/content/contact";
+import type { Project } from "@/lib/content/projects";
 import { EDUCATION } from "@/lib/content/education";
 import { EXPERIENCE } from "@/lib/content/experience";
 import { SITE } from "@/lib/content/site";
@@ -85,5 +86,65 @@ export function buildWebSiteSchema() {
         url: SITE.url,
         description: SITE.description,
         author: { "@type": "Person", name: SITE.name, url: SITE.url },
+    };
+}
+
+/**
+ * Describes one project. Apps use SoftwareApplication, which carries the
+ * platform and store URL; the web-only projects use CreativeWork.
+ *
+ * No rating or price is claimed. Both are optional in schema.org and inventing
+ * them to chase a rich result would be a fabrication about someone's product.
+ */
+export function buildProjectSchema(project: Project) {
+    const storeLinks = (project.links ?? []).filter((link) => link.kind !== "website");
+    const website = (project.links ?? []).find((link) => link.kind === "website");
+    const platforms = storeLinks.map((link) => (link.kind === "app-store" ? "iOS" : "Android"));
+
+    const base = {
+        "@context": "https://schema.org",
+        name: project.title,
+        description: project.summary,
+        url: `${SITE.url}/portfolio/${project.slug}`,
+        image: `${SITE.url}${project.image.src}`,
+        keywords: project.tags.join(", "),
+        author: { "@type": "Person", name: SITE.name, url: SITE.url },
+    };
+
+    if (platforms.length) {
+        return {
+            ...base,
+            "@type": "SoftwareApplication",
+            applicationCategory: "MobileApplication",
+            operatingSystem: [...new Set(platforms)].join(", "),
+            ...(storeLinks[0] ? { installUrl: storeLinks[0].href } : {}),
+            ...(website ? { sameAs: website.href } : {}),
+        };
+    }
+
+    return {
+        ...base,
+        "@type": "CreativeWork",
+        ...(website ? { sameAs: website.href } : {}),
+    };
+}
+
+/** Breadcrumb trail for a project page, so search results show the hierarchy. */
+export function buildBreadcrumbSchema(project: Project) {
+    const crumbs = [
+        { name: "Home", url: SITE.url },
+        { name: "Portfolio", url: `${SITE.url}/portfolio` },
+        { name: project.title, url: `${SITE.url}/portfolio/${project.slug}` },
+    ];
+
+    return {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: crumbs.map((crumb, index) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            name: crumb.name,
+            item: crumb.url,
+        })),
     };
 }
