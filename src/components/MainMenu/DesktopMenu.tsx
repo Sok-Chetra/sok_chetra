@@ -10,6 +10,7 @@ type DesktopMenuProps = {
     highlightStyle: { left: number; width: number };
     hasMounted: boolean;
     pathname: string;
+    activeId: NavItemId | null;
     itemRefs: React.RefObject<Record<NavItemId, HTMLAnchorElement | null>>;
     onItemClick: () => void;
 };
@@ -21,6 +22,7 @@ export const DesktopMenu = ({
     highlightStyle,
     hasMounted,
     pathname,
+    activeId,
     itemRefs,
     onItemClick,
 }: DesktopMenuProps) => (
@@ -42,6 +44,7 @@ export const DesktopMenu = ({
                         <MenuLink
                             item={item}
                             pathname={pathname}
+                            activeId={activeId}
                             onClick={onItemClick}
                             setRef={(element) => {
                                 itemRefs.current[item.id] = element;

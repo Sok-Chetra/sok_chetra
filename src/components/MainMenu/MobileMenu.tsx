@@ -3,16 +3,23 @@
 import { AnimatePresence, m } from "framer-motion";
 
 import { MenuLink } from "./MenuLink";
-import { NAV_ITEMS } from "@/lib/content/navigation";
+import { NAV_ITEMS, type NavItemId } from "@/lib/content/navigation";
 
 type MobileMenuProps = {
     id: string;
     isOpen: boolean;
     pathname: string;
+    activeId: NavItemId | null;
     onItemClick: () => void;
 };
 
-export const MobileMenu = ({ id, isOpen, pathname, onItemClick }: MobileMenuProps) => (
+export const MobileMenu = ({
+    id,
+    isOpen,
+    pathname,
+    activeId,
+    onItemClick,
+}: MobileMenuProps) => (
     <AnimatePresence>
         {isOpen && (
             <m.nav
@@ -30,6 +37,7 @@ export const MobileMenu = ({ id, isOpen, pathname, onItemClick }: MobileMenuProp
                             <MenuLink
                                 item={item}
                                 pathname={pathname}
+                                activeId={activeId}
                                 onClick={onItemClick}
                                 isMobile
                                 className="block w-full rounded-md px-4 py-2.5 text-left text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"

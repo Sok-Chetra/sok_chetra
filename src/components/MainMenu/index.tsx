@@ -110,6 +110,7 @@ export const MainMenu = () => {
                 highlightStyle={highlightStyle}
                 hasMounted={hasMounted}
                 pathname={pathname}
+                activeId={activeId}
                 itemRefs={itemRefs}
                 onItemClick={closeMobileMenu}
             />
@@ -137,6 +138,7 @@ export const MainMenu = () => {
                         id={MOBILE_MENU_ID}
                         isOpen={isMobileMenuOpen}
                         pathname={pathname}
+                        activeId={activeId}
                         onItemClick={closeMobileMenu}
                     />
                 </div>
