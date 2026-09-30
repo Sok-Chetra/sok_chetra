@@ -60,7 +60,8 @@ export const PROJECTS: Project[] = [
         // a csrf-token meta tag, Bootstrap and jQuery, PHP 8 behind Cloudflare.
         // Tags name only what he worked on: PHP is the backend language and is
         // not his, so it is gone; Cloudflare is, because he deployed through
-        // it. Flutter for the apps is confirmed by the site owner.
+        // it. The app tags stand — he built both front ends and shipped both
+        // store releases.
         tags: ["Laravel", "Bootstrap", "Cloudflare", "Flutter", "iOS", "Android"],
         metaTitle: "CCFKH Hospital Website & Mobile App",
         summary:
@@ -70,7 +71,7 @@ export const PROJECTS: Project[] = [
             "The website presents the hospital's departments and services, opening hours and contact details in Khmer, English and Chinese, and lets patients request an appointment online rather than by phone.",
             "A second app, CCFKH Transportation, handles patient transport separately from the main patient app.",
         ],
-        role: "I built the website's front end, working to the supplied UX/UI designs, and handled deployment through Cloudflare.",
+        role: "I built the website's front end to the supplied UX/UI designs and deployed it through Cloudflare. I did the front end on both apps as well, working with the backend developers to integrate the APIs and settle the logic between us, then shipped the releases myself — the App Store through Xcode, Google Play through the Play Console.",
         highlights: [
             "Online appointment requests, with the booking also available in the app",
             "Department and service directory covering the hospital's specialities",
