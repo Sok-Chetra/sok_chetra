@@ -116,6 +116,7 @@ export const PROJECTS: Project[] = [
             "In-app messaging with the hospital",
             "Appointment detail with patient name, contact, age and insurance",
         ],
+        role: "I built the app in Flutter, working to the supplied UX/UI designs, and handled the Google Play release.",
         links: [
             {
                 kind: "play-store",
@@ -128,7 +129,7 @@ export const PROJECTS: Project[] = [
         slug: "briquet",
         title: "Briquet App",
         image: briquetImage,
-        tags: ["Flutter", "iOS", "Android", "Mobile Order", "Loyalty Card", "Store Locator"],
+        tags: ["Flutter", "GetX", "iOS", "Android", "Mobile Order", "Loyalty Card", "Store Locator"],
         metaTitle: "Briquet — Flutter Cafe App for iOS & Android",
         summary:
             "iOS and Android app for Briquet, a Japanese cafe chain — digital membership card, mobile ordering and a store locator.",
@@ -144,6 +145,7 @@ export const PROJECTS: Project[] = [
             "Branch pages with opening hours, facilities and reviews",
             "Daily login bonus and collectable stamps",
         ],
+        role: "I built the app in Flutter to the supplied UX/UI designs, using GetX for state management, and worked with the backend developers to integrate the APIs and agree the logic between us. I shipped both releases — the App Store through Xcode, and Google Play.",
         links: [
             {
                 kind: "app-store",
@@ -160,7 +162,7 @@ export const PROJECTS: Project[] = [
         slug: "privili-club",
         title: "Privili Club",
         image: priviliClubImage,
-        tags: ["WordPress", "WooCommerce", "Polylang"],
+        tags: ["WordPress", "WooCommerce", "Stripe", "Polylang"],
         metaTitle: "Privili Club — WooCommerce Storefront",
         summary:
             "Multilingual WooCommerce storefront for Privili Club, selling courses and member products to a Traditional Chinese audience.",
@@ -174,7 +176,9 @@ export const PROJECTS: Project[] = [
             "New, best-selling and most-popular product views",
             "Member accounts with order history and wishlist",
             "Multilingual via Polylang, running in Traditional Chinese",
+            "Card payments through Stripe",
         ],
+        role: "I built the site on WordPress, selecting and configuring the plugins the brief called for — WooCommerce for the shop, Stripe for payments, Polylang for the multilingual setup.",
         links: [{ kind: "website", href: "https://priviliclub.com/" }],
     },
 ];
