@@ -40,6 +40,12 @@ export type Project = {
     summary: string;
     /** Body copy for the detail page, one string per paragraph. */
     overview: string[];
+    /**
+     * What the site owner did on it, in their own account. Kept separate from
+     * `overview`, which describes the product: a visitor wants to know which
+     * parts are his, and only he can say.
+     */
+    role?: string;
     /** What the product does, taken from the live site or store listing. */
     highlights: string[];
 };
@@ -52,8 +58,10 @@ export const PROJECTS: Project[] = [
         image: ccfkhImage,
         // Web stack read off the live site: Laravel session and CSRF cookies,
         // a csrf-token meta tag, Bootstrap and jQuery, PHP 8 behind Cloudflare.
-        // Flutter for the apps is confirmed by the site owner, who built them.
-        tags: ["Laravel", "PHP", "Bootstrap", "Flutter", "iOS", "Android"],
+        // Tags name only what he worked on: PHP is the backend language and is
+        // not his, so it is gone; Cloudflare is, because he deployed through
+        // it. Flutter for the apps is confirmed by the site owner.
+        tags: ["Laravel", "Bootstrap", "Cloudflare", "Flutter", "iOS", "Android"],
         metaTitle: "CCFKH Hospital Website & Mobile App",
         summary:
             "Website and companion mobile apps for Cambodia-China Friendship Preah Kossamak Hospital in Phnom Penh, with online appointment booking.",
@@ -62,6 +70,7 @@ export const PROJECTS: Project[] = [
             "The website presents the hospital's departments and services, opening hours and contact details in Khmer, English and Chinese, and lets patients request an appointment online rather than by phone.",
             "A second app, CCFKH Transportation, handles patient transport separately from the main patient app.",
         ],
+        role: "I built the website's front end, working to the supplied UX/UI designs, and handled deployment through Cloudflare.",
         highlights: [
             "Online appointment requests, with the booking also available in the app",
             "Department and service directory covering the hospital's specialities",

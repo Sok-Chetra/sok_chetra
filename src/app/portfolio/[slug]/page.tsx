@@ -126,6 +126,15 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                     />
                 </Enter>
 
+                {project.role && (
+                    <section className="mb-10 rounded-2xl border-l-4 border-indigo-500 bg-white/70 p-6 dark:bg-gray-800/60">
+                        <h2 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">
+                            My role
+                        </h2>
+                        <p className="text-lg text-gray-700 dark:text-gray-300">{project.role}</p>
+                    </section>
+                )}
+
                 <section className="mb-10">
                     <h2 className="mb-4 text-2xl font-bold text-gray-900 dark:text-white">
                         About this project
