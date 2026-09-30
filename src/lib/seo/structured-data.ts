@@ -1,4 +1,4 @@
-import { CONTACT_CHANNELS } from "@/lib/content/contact";
+import { CONTACT_CHANNELS, PHONE_NUMBER } from "@/lib/content/contact";
 import type { Project } from "@/lib/content/projects";
 import { EDUCATION } from "@/lib/content/education";
 import { EXPERIENCE } from "@/lib/content/experience";
@@ -41,6 +41,14 @@ export function buildPersonSchema() {
         description: SITE.description,
         image: `${SITE.url}/image/my-profile.webp`,
         knowsAbout: [...SKILLS],
+
+        /**
+         * The P of the name/address/phone triple the `address` block below
+         * starts. Local ranking leans on those three matching character for
+         * character everywhere they appear, so this reuses the same constant
+         * the contact page renders rather than restating the number.
+         */
+        telephone: PHONE_NUMBER,
 
         /**
          * Location signals. Without these the site says what this person does
