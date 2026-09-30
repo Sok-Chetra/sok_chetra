@@ -1,6 +1,6 @@
 "use client";
 
-import { m } from "framer-motion";
+import { m } from "motion/react";
 
 import { fadeInUp, VIEWPORT_ONCE } from "@/lib/animations";
 import { EDUCATION } from "@/lib/content/education";

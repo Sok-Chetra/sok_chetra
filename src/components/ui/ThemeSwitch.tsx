@@ -1,6 +1,6 @@
 "use client";
 
-import { m, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
 import { useIsHydrated } from "@/lib/hooks/useIsHydrated";

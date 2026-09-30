@@ -1,6 +1,6 @@
 "use client";
 
-import { m } from "framer-motion";
+import { m } from "motion/react";
 
 import { MenuLink } from "./MenuLink";
 import ThemeSwitch from "@/components/ui/ThemeSwitch";

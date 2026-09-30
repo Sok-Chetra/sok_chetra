@@ -1,6 +1,6 @@
 "use client";
 
-import { m } from "framer-motion";
+import { m } from "motion/react";
 
 export const HamburgerIcon = ({ isOpen }: { isOpen: boolean }) => (
     <svg width="20" height="20" viewBox="0 0 20 20">

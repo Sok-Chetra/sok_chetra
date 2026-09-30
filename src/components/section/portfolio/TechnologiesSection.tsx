@@ -1,6 +1,6 @@
 "use client";
 
-import { m } from "framer-motion";
+import { m } from "motion/react";
 
 import { popIn, staggerContainer, VIEWPORT_PARTIAL } from "@/lib/animations";
 import { TECHNOLOGIES } from "@/lib/content/technologies";
