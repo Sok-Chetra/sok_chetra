@@ -11,7 +11,7 @@ export default function HeroSection() {
                     My <span className="text-indigo-600 dark:text-indigo-400">Portfolio</span>
                 </>
             }
-            description="A curated collection of web and mobile projects I've built from Phnom Penh, Cambodia — for local clients and remote teams alike."
+            description="I'm Sok Chetra — these are the web and mobile projects I've built from Phnom Penh, Cambodia, for local clients and remote teams alike."
             actions={
                 <>
                     <Link

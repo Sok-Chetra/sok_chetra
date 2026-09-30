@@ -26,6 +26,16 @@ export function buildPersonSchema() {
         "@context": "https://schema.org",
         "@type": "Person",
         name: SITE.name,
+        /**
+         * Split out as well as given whole. Khmer names put the family name
+         * first, so "Sok Chetra" is family name Sok, given name Chetra — the
+         * reverse of what a western-trained parser assumes. Stating both
+         * removes the guess, and is what lets Google treat "Chetra" and "Sok
+         * Chetra" as the same person rather than two.
+         */
+        givenName: "Chetra",
+        familyName: "Sok",
+        alternateName: ["Chetra Sok", "Chetra"],
         url: SITE.url,
         jobTitle: SITE.role,
         description: SITE.description,

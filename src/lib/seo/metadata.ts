@@ -7,6 +7,12 @@ type OgType = "website" | "profile" | "article";
 export type PageMetaInput = {
     /** Page title without the site suffix — the layout template appends it. */
     title: string;
+    /**
+     * Use `title` verbatim instead of letting the layout append "| Sok Chetra".
+     * For a page that needs to rank on the person's name, leading with it beats
+     * trailing it — but only if the suffix does not then repeat it.
+     */
+    titleAbsolute?: boolean;
     description: string;
     /** Route path, e.g. "/about-me". Defaults to the home page. */
     path?: string;
@@ -33,6 +39,7 @@ const DEFAULT_OG_IMAGE = "/image/og-my-profile.jpg";
  */
 export function buildMetadata({
     title,
+    titleAbsolute = false,
     description,
     path = "/",
     keywords = [],
@@ -48,11 +55,12 @@ export function buildMetadata({
     // site its own headline. It now uses what the page passes, like every
     // other route.
     const fullTitle = path === "/" ? `${SITE.name} — ${title}` : `${title} | ${SITE.name}`;
+    const useAbsolute = path === "/" || titleAbsolute;
 
     return {
         // Home uses `absolute` so the layout's "%s | Sok Chetra"
         // template does not append the name twice.
-        title: path === "/" ? { absolute: fullTitle } : title,
+        title: useAbsolute ? { absolute: path === "/" ? fullTitle : title } : title,
         description,
         keywords: [...SITE.keywords, ...keywords],
         authors: [{ name: SITE.name }],

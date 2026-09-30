@@ -157,13 +157,13 @@ export default function ContactForm() {
             />
 
             {/* Height reserved so the widget appearing causes no layout shift. */}
-            <div className="relative min-h-[78px]">
+            <div className="relative min-h-19.5">
                 {/* Stand-in for the ~570ms before Google's iframe paints, so the
                     reserved space reads as loading rather than as broken. */}
                 {!captchaReady && (
                     <div
                         aria-hidden
-                        className="flex h-[78px] w-[304px] max-w-full items-center gap-3 rounded border border-gray-200 bg-gray-50 px-4 dark:border-gray-700 dark:bg-gray-800"
+                        className="flex h-19.5 w-76 max-w-full items-center gap-3 rounded border border-gray-200 bg-gray-50 px-4 dark:border-gray-700 dark:bg-gray-800"
                     >
                         <span className="h-7 w-7 animate-pulse rounded-sm bg-gray-200 dark:bg-gray-700" />
                         <span className="text-sm text-gray-400 dark:text-gray-500">
