@@ -1,11 +1,7 @@
-"use client";
-
-import { useRef, useState } from "react";
-
 import ProjectCard from "./ProjectCard";
+import ProjectsPager from "./ProjectsPager";
 import Enter from "@/components/ui/Enter";
 import { PROJECTS } from "@/lib/content/projects";
-import { scrollToElement } from "@/lib/scroll";
 
 /** Widest the CSS grid ever gets (`lg:grid-cols-3`). */
 const MAX_COLUMNS = 3;
@@ -21,14 +17,21 @@ type ProjectsSectionProps = {
     prioritizeFirstImage?: boolean;
 };
 
+/**
+ * A server component, with only the paging handed to ProjectsPager.
+ *
+ * This used to be a client component, for nothing more than the page buttons —
+ * and a client component takes everything it imports into the browser bundle.
+ * That meant ProjectCard, its icons, and the whole PROJECTS list: every
+ * overview paragraph, role and highlight of every project, downloaded by the
+ * home and portfolio pages although they only ever show the card summaries.
+ * Now the cards are rendered here and passed to the pager as finished output.
+ */
 export default function ProjectsSection({
     title = "My Projects",
     rows = 1,
     prioritizeFirstImage = false,
 }: ProjectsSectionProps) {
-    const sectionRef = useRef<HTMLElement>(null);
-    const [page, setPage] = useState(1);
-
     /**
      * Fixed, not derived from the measured column count.
      *
@@ -49,23 +52,33 @@ export default function ProjectsSection({
      * grid already does.
      */
     const pageSize = MAX_COLUMNS * rows;
-    const pageCount = Math.ceil(PROJECTS.length / pageSize);
 
-    // A resize can shrink the page count out from under the current page, so
-    // clamp during render rather than correcting it afterwards in an effect.
-    const currentPage = Math.min(page, pageCount);
-    const visibleProjects = PROJECTS.slice((currentPage - 1) * pageSize, currentPage * pageSize);
-
-    const goToPage = (next: number) => {
-        setPage(next);
-        // Previously `router.push('#projects')`, which pushed a history entry
-        // to perform what is really just a scroll.
-        scrollToElement(sectionRef.current);
-    };
+    const pages = [];
+    for (let start = 0; start < PROJECTS.length; start += pageSize) {
+        const isFirstPage = start === 0;
+        pages.push(
+            PROJECTS.slice(start, start + pageSize).map((project, index) => (
+                // `lift`, not the default `rise`: these must not fade, because
+                // on /portfolio the first card's image is the measured LCP
+                // element.
+                <Enter
+                    as="li"
+                    animation="lift"
+                    key={project.id}
+                    delayMs={90 + index * 90}
+                    className="h-full"
+                >
+                    <ProjectCard
+                        project={project}
+                        priority={prioritizeFirstImage && isFirstPage && index === 0}
+                    />
+                </Enter>
+            ))
+        );
+    }
 
     return (
         <section
-            ref={sectionRef}
             id="projects"
             className="bg-white px-4 py-20 sm:px-6 lg:px-8 dark:bg-gray-800"
             aria-labelledby="projects-heading"
@@ -86,54 +99,7 @@ export default function ProjectsSection({
                     {title}
                 </Enter>
 
-                <ul className="grid grid-cols-1 items-stretch gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                    {visibleProjects.map((project, index) => (
-                        // `lift`, not the default `rise`: these must not fade,
-                        // because on /portfolio the first card's image is the
-                        // measured LCP element.
-                        <Enter
-                            as="li"
-                            animation="lift"
-                            key={project.id}
-                            delayMs={90 + index * 90}
-                            className="h-full"
-                        >
-                            <ProjectCard
-                                project={project}
-                                priority={prioritizeFirstImage && index === 0}
-                            />
-                        </Enter>
-                    ))}
-                </ul>
-
-                {pageCount > 1 && (
-                    <nav className="mt-12 flex justify-center" aria-label="Projects pagination">
-                        <ul className="flex gap-2">
-                            {Array.from({ length: pageCount }, (_, index) => index + 1).map(
-                                (pageNumber) => {
-                                    const isCurrent = pageNumber === currentPage;
-                                    return (
-                                        <li key={pageNumber}>
-                                            <button
-                                                type="button"
-                                                onClick={() => goToPage(pageNumber)}
-                                                aria-current={isCurrent ? "page" : undefined}
-                                                aria-label={`Go to projects page ${pageNumber}`}
-                                                className={`flex h-10 w-10 items-center justify-center rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 ${
-                                                    isCurrent
-                                                        ? "bg-blue-500 text-white"
-                                                        : "bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
-                                                }`}
-                                            >
-                                                {pageNumber}
-                                            </button>
-                                        </li>
-                                    );
-                                }
-                            )}
-                        </ul>
-                    </nav>
-                )}
+                <ProjectsPager pages={pages} />
             </div>
         </section>
     );
