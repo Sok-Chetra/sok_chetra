@@ -1,45 +1,44 @@
-"use client";
+import type { Variants } from "motion/react";
 
-import { m } from "motion/react";
-
-import { popIn, staggerContainer, VIEWPORT_PARTIAL } from "@/lib/animations";
+import Reveal from "@/components/ui/Reveal";
+import { popIn, staggerContainer } from "@/lib/animations";
 import { TECHNOLOGIES } from "@/lib/content/technologies";
+
+const headingIn: Variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+};
 
 export default function TechnologiesSection() {
     return (
-        <m.section
-            className="py-16 bg-white dark:bg-gray-800 px-4 sm:px-6 lg:px-8"
-            initial="hidden"
-            whileInView="visible"
-            viewport={VIEWPORT_PARTIAL}
-        >
+        <section className="py-16 bg-white dark:bg-gray-800 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
-                <m.h2
+                <Reveal
+                    as="h2"
+                    variants={headingIn}
+                    viewport="partial"
                     className="text-3xl font-bold text-center mb-12 dark:text-white"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, ease: "easeOut" }}
-                    viewport={VIEWPORT_PARTIAL}
                 >
                     Technologies I Work With
-                </m.h2>
+                </Reveal>
 
-                <m.ul
-                    className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 md:grid-cols-4 lg:grid-cols-6"
+                <Reveal
+                    as="ul"
                     variants={staggerContainer}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={VIEWPORT_PARTIAL}
+                    viewport="partial"
+                    className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 md:grid-cols-4 lg:grid-cols-6"
                 >
                     {TECHNOLOGIES.map((tech) => (
-                        <m.li
+                        <Reveal
+                            as="li"
+                            trigger="inherit"
                             key={tech}
-                            className="flex flex-col items-center p-4 bg-gray-50 dark:bg-gray-700 rounded-xl hover:shadow-lg transition-shadow duration-300"
                             variants={popIn}
-                            whileHover={{
+                            hover={{
                                 scale: 1.05,
                                 transition: { type: "spring", stiffness: 150, damping: 12 },
                             }}
+                            className="flex flex-col items-center p-4 bg-gray-50 dark:bg-gray-700 rounded-xl hover:shadow-lg transition-shadow duration-300"
                         >
                             <span
                                 aria-hidden
@@ -48,10 +47,10 @@ export default function TechnologiesSection() {
                                 {tech[0]}
                             </span>
                             <span className="min-w-0 text-center font-medium break-words dark:text-white">{tech}</span>
-                        </m.li>
+                        </Reveal>
                     ))}
-                </m.ul>
+                </Reveal>
             </div>
-        </m.section>
+        </section>
     );
 }

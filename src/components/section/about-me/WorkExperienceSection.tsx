@@ -1,17 +1,10 @@
-"use client";
-
-import { m } from "motion/react";
-
-import { fadeInUp, VIEWPORT_ONCE } from "@/lib/animations";
+import Reveal from "@/components/ui/Reveal";
 import { EXPERIENCE } from "@/lib/content/experience";
 
 export default function WorkExperienceSection() {
     return (
-        <m.section
-            initial="hidden"
-            whileInView="visible"
-            viewport={VIEWPORT_ONCE}
-            variants={fadeInUp}
+        <Reveal
+            as="section"
             className="rounded-2xl bg-white p-5 shadow-lg sm:p-6 md:p-8 dark:bg-gray-800"
         >
             <h2 className="text-2xl font-bold mb-6 text-purple-600 dark:text-purple-400">
@@ -20,12 +13,9 @@ export default function WorkExperienceSection() {
 
             <div className="space-y-8">
                 {EXPERIENCE.map((job) => (
-                    <m.article
+                    <Reveal
+                        as="article"
                         key={job.id}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true }}
-                        variants={fadeInUp}
                         className="group relative border-l-2 border-purple-500 pb-2 pl-5 sm:pl-8"
                     >
                         <span
@@ -54,9 +44,9 @@ export default function WorkExperienceSection() {
                                 </li>
                             ))}
                         </ul>
-                    </m.article>
+                    </Reveal>
                 ))}
             </div>
-        </m.section>
+        </Reveal>
     );
 }
