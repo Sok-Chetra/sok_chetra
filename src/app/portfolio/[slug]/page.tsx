@@ -26,6 +26,13 @@ export function generateStaticParams() {
 
 export const dynamicParams = false;
 
+/**
+ * How many sibling projects the footer offers. Held at or above
+ * `PROJECTS.length - 1` while the set is this small, so every project stays one
+ * click from every other and nothing can be reached only by a long way round.
+ */
+const MAX_MORE_PROJECTS = 3;
+
 function findProject(slug: string) {
     return PROJECTS.find((project) => project.slug === slug);
 }
@@ -53,10 +60,26 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
     if (!project) notFound();
 
-    // Neighbours for the footer links, so every project page passes authority
-    // on to another rather than dead-ending at the grid.
+    /*
+     * The rest of the set, rotated to start at the project after this one, so
+     * every project page passes authority on rather than dead-ending at the
+     * grid.
+     *
+     * Rotation is what makes the tour work. The first link always advances by
+     * exactly one, so following it repeatedly walks the whole set in order and
+     * arrives back here — visit all, then loop. This offered only two before,
+     * and two links over four projects traps anyone who keeps clicking the
+     * second: ccfkh and briquet pointed at each other forever, as did ang-duong
+     * and privili, so half the work was unreachable that way.
+     *
+     * Deliberately not shuffled. These links are the internal linking between
+     * project pages, and a crawler should find the same graph on every visit.
+     */
     const index = PROJECTS.findIndex((entry) => entry.slug === project.slug);
-    const others = [...PROJECTS.slice(index + 1), ...PROJECTS.slice(0, index)].slice(0, 2);
+    const others = [...PROJECTS.slice(index + 1), ...PROJECTS.slice(0, index)].slice(
+        0,
+        MAX_MORE_PROJECTS
+    );
 
     return (
         <main className="min-h-screen bg-linear-to-br from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900">
