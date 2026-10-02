@@ -33,8 +33,9 @@ function writeVisited(slugs: string[]) {
 }
 
 /**
- * One suggestion: a project this visitor has not opened, picked at random, and
- * once they have all been read, whichever was read longest ago.
+ * One suggestion, always picked at random: from the projects this visitor has
+ * not opened, or, once they have all been read, from all but the most recently
+ * seen.
  *
  * Listing every remaining project here made the section pointless: three links
  * sitting beside "All projects" is just a worse version of that page. A single
@@ -46,12 +47,12 @@ function writeVisited(slugs: string[]) {
  * each project points at the following one, and the cycle covers the whole set.
  * The shuffle is a client-side nicety layered on afterwards.
  *
- * That second rule is what stops the loop doubling back. Clearing the record
- * once everything had been read made all of them eligible at once, so the
- * fourth page could offer the one seen two steps before — a repeat three steps
- * apart, when reading all four should guarantee four. Ordering by recency
- * instead makes the gap exactly one lap, every lap, because with four projects
- * the least recently seen is the only pick that can.
+ * Holding back the most recent is what stops the loop doubling back. Clearing
+ * the record once everything had been read made all of them eligible at once,
+ * so the fourth page could offer the one seen two steps before. Ranking by
+ * recency and dropping the newest keeps every repeat at least three steps
+ * apart while leaving two projects to choose between, so the order never
+ * settles into one fixed cycle.
  *
  * Kept in sessionStorage, so the tour lasts exactly as long as the tab: it
  * survives moving between projects and reloading, and goes when the tab does,
@@ -86,19 +87,31 @@ export default function NextProjectLink({
         const unseen = candidates.filter((c) => !history.includes(c.slug));
 
         /*
-         * Random while anything is still unread, which is what keeps the first
-         * lap from being the same tour for everyone. Once all of them have been
-         * read the least recently seen is the only choice that holds the gap at
-         * a full lap, so from then on the order follows from the history rather
-         * than from chance — the alternative is the repeat above.
+         * Still something unread: pick from those, at random, so no two
+         * visitors are walked through the work in the same order.
+         *
+         * Everything read: rank by how long ago and drop only the most recent,
+         * then pick at random from the rest. Dropping it is what stops the loop
+         * doubling straight back to the page before last; leaving the others in
+         * is what keeps the order from hardening into one fixed cycle.
+         *
+         * Four projects cannot give both the widest possible gap and a free
+         * choice. Holding the gap at a full lap leaves exactly one candidate —
+         * the other two were seen more recently by construction — so the order
+         * stops varying at all. Giving up one step of that gap leaves two to
+         * choose between, every time, which is the better trade: a repeat three
+         * steps apart is hard to notice, whereas the same fixed loop is not.
          */
-        const pick =
+        const pool =
             unseen.length > 0
-                ? unseen[Math.floor(Math.random() * unseen.length)]
-                : candidates.reduce((oldest, c) =>
-                      history.indexOf(c.slug) < history.indexOf(oldest.slug) ? c : oldest
-                  );
+                ? unseen
+                : [...candidates]
+                      .sort((a, b) => history.indexOf(a.slug) - history.indexOf(b.slug))
+                      .slice(0, -1);
 
+        const pick = (pool.length > 0 ? pool : candidates)[
+            Math.floor(Math.random() * (pool.length > 0 ? pool.length : candidates.length))
+        ];
 
         /*
          * Swapped on the next frame rather than during the effect. The server
