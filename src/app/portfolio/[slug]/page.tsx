@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import type { IconType } from "react-icons";
 import { FaApple, FaGlobe, FaGooglePlay } from "react-icons/fa";
 
+import NextProjectLink from "@/components/section/portfolio/NextProjectLink";
 import JsonLd from "@/components/seo/JsonLd";
 import Enter from "@/components/ui/Enter";
 import { PROJECTS, type ProjectLinkKind } from "@/lib/content/projects";
@@ -26,12 +27,6 @@ export function generateStaticParams() {
 
 export const dynamicParams = false;
 
-/**
- * How many sibling projects the footer offers. Held at or above
- * `PROJECTS.length - 1` while the set is this small, so every project stays one
- * click from every other and nothing can be reached only by a long way round.
- */
-const MAX_MORE_PROJECTS = 3;
 
 function findProject(slug: string) {
     return PROJECTS.find((project) => project.slug === slug);
@@ -61,24 +56,17 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
     if (!project) notFound();
 
     /*
-     * The rest of the set, rotated to start at the project after this one, so
-     * every project page passes authority on rather than dead-ending at the
-     * grid.
+     * The rest of the set, rotated to start at the project after this one.
      *
-     * Rotation is what makes the tour work. The first link always advances by
-     * exactly one, so following it repeatedly walks the whole set in order and
-     * arrives back here — visit all, then loop. This offered only two before,
-     * and two links over four projects traps anyone who keeps clicking the
-     * second: ccfkh and briquet pointed at each other forever, as did ang-duong
-     * and privili, so half the work was unreachable that way.
-     *
-     * Deliberately not shuffled. These links are the internal linking between
-     * project pages, and a crawler should find the same graph on every visit.
+     * Order matters even though only one is shown. The card renders
+     * `candidates[0]` on the server, so the rotation leaves a crawler a chain
+     * in which each project points at the following one and the cycle covers
+     * every project. Which one a *visitor* sees is decided on the client, from
+     * what they have not read yet.
      */
     const index = PROJECTS.findIndex((entry) => entry.slug === project.slug);
-    const others = [...PROJECTS.slice(index + 1), ...PROJECTS.slice(0, index)].slice(
-        0,
-        MAX_MORE_PROJECTS
+    const others = [...PROJECTS.slice(index + 1), ...PROJECTS.slice(0, index)].map(
+        ({ slug, title, image }) => ({ slug, title, image })
     );
 
     return (
@@ -222,26 +210,14 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                     <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
                         More projects
                     </h2>
-                    <ul className="flex flex-wrap gap-4">
-                        {others.map((other) => (
-                            <li key={other.slug}>
-                                <Link
-                                    href={`/portfolio/${other.slug}`}
-                                    className="text-lg font-medium text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300"
-                                >
-                                    {other.title} →
-                                </Link>
-                            </li>
-                        ))}
-                        <li>
-                            <Link
-                                href="/portfolio"
-                                className="text-lg font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-                            >
-                                All projects
-                            </Link>
-                        </li>
-                    </ul>
+                    <NextProjectLink currentSlug={project.slug} candidates={others} />
+
+                    <Link
+                        href="/portfolio"
+                        className="mt-4 inline-block font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                    >
+                        All projects
+                    </Link>
                 </section>
             </article>
         </main>
