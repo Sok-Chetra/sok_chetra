@@ -29,11 +29,33 @@ const EMPTY_FORM = { name: "", email: "", message: "" };
 const IDLE: ContactState = { status: "idle" };
 
 export default function ContactForm() {
+    const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+    /** Changing this remounts the widget, unticked. */
+    const [captchaKey, setCaptchaKey] = useState(0);
+
     /*
      * The submission runs as a Server Action; React owns its pending state and
      * hands back whatever the action returned.
      */
-    const [result, submitAction, isSending] = useActionState(sendContactMessage, IDLE);
+    const [result, submitAction, isSending] = useActionState(
+        async (previous: ContactState, data: FormData) => {
+            const next = await sendContactMessage(previous, data);
+
+            /*
+             * Whatever the answer, the next attempt starts from a fresh tick.
+             * A token can be verified only once, and the action may already
+             * have spent this one: it is checked before the mail goes out, so
+             * a send that failed afterwards used to leave a tick on screen
+             * that could never pass again — every retry came back "Captcha
+             * verification failed" until a reload.
+             */
+            setCaptchaToken(null);
+            setCaptchaKey((key) => key + 1);
+
+            return next;
+        },
+        IDLE
+    );
 
     /*
      * Action state only ever changes by submitting again, so "Send Another
@@ -50,7 +72,6 @@ export default function ContactForm() {
      * over a mistyped email. Controlled fields hold their values from state.
      */
     const [formData, setFormData] = useState(EMPTY_FORM);
-    const [captchaToken, setCaptchaToken] = useState<string | null>(null);
     const [captchaRequested, setCaptchaRequested] = useState(false);
     const [captchaReady, setCaptchaReady] = useState(false);
 
@@ -91,8 +112,6 @@ export default function ContactForm() {
                 onReset={() => {
                     setDismissed(result);
                     setFormData(EMPTY_FORM);
-                    // The widget remounts unchecked; its old token is spent.
-                    setCaptchaToken(null);
                 }}
             />
         );
@@ -177,6 +196,7 @@ export default function ContactForm() {
                 {captchaRequested && (
                     <div className={captchaReady ? undefined : "absolute inset-0 opacity-0"}>
                         <ReCAPTCHA
+                            key={captchaKey}
                             sitekey={SITE_KEY}
                             onChange={setCaptchaToken}
                             size="normal"
