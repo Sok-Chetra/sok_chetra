@@ -1,7 +1,27 @@
-import { NextResponse } from "next/server";
+"use server";
 
 import { sendMail } from "@/lib/mail/mailer";
 import { TEST_SECRET_KEY, useTestKeys } from "@/lib/recaptcha";
+
+/**
+ * The contact form's submission, as a Server Action.
+ *
+ * It replaces a Route Handler at /api/send that the form reached with a
+ * hand-written fetch. As an action the form calls it directly and React tracks
+ * the pending and error states, and Next checks that each request's Origin
+ * matches the Host before it runs — a cross-site check the Route Handler never
+ * had. That is no substitute for the checks below, though: an action is still
+ * a public POST endpoint, so every field is validated and the CAPTCHA verified
+ * here, on the server, regardless of what the form already enforced.
+ *
+ * There is deliberately no sign-in check. A contact form is meant to be open
+ * to anyone; the CAPTCHA is what stands between it and abuse.
+ */
+
+export type ContactState =
+    | { status: "idle" }
+    | { status: "success" }
+    | { status: "error"; message: string };
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_LENGTHS = { name: 100, email: 254, message: 5000 } as const;
@@ -64,24 +84,26 @@ async function verifyCaptcha(token: string): Promise<boolean> {
     }
 }
 
-function badRequest(error: string) {
-    return NextResponse.json({ success: false, error }, { status: 400 });
-}
+const fail = (message: string): ContactState => ({ status: "error", message });
 
-export async function POST(request: Request) {
+export async function sendContactMessage(
+    _previous: ContactState,
+    formData: FormData
+): Promise<ContactState> {
     try {
-        const { name, email, message, captcha } = await request.json();
+        // FormData values are strings or Files; anything that is not a string
+        // did not come from this form's fields.
+        const name = formData.get("name");
+        const email = formData.get("email");
+        const message = formData.get("message");
+        const captcha = formData.get("captcha");
 
         if (!name || !email || !message) {
-            return badRequest("All fields are required");
+            return fail("All fields are required");
         }
 
-        if (
-            typeof name !== "string" ||
-            typeof email !== "string" ||
-            typeof message !== "string"
-        ) {
-            return badRequest("Invalid field types");
+        if (typeof name !== "string" || typeof email !== "string" || typeof message !== "string") {
+            return fail("Invalid field types");
         }
 
         if (
@@ -89,19 +111,19 @@ export async function POST(request: Request) {
             email.length > MAX_LENGTHS.email ||
             message.length > MAX_LENGTHS.message
         ) {
-            return badRequest("One or more fields exceed the maximum length");
+            return fail("One or more fields exceed the maximum length");
         }
 
         if (!EMAIL_PATTERN.test(email)) {
-            return badRequest("Invalid email format");
+            return fail("Invalid email format");
         }
 
         if (!captcha || typeof captcha !== "string") {
-            return badRequest("Captcha token is required");
+            return fail("Please complete the CAPTCHA.");
         }
 
         if (!(await verifyCaptcha(captcha))) {
-            return badRequest("Captcha verification failed");
+            return fail("Captcha verification failed");
         }
 
         const html = `
@@ -122,18 +144,12 @@ export async function POST(request: Request) {
 
         if (!result.success) {
             console.error("Email sending failed:", result.error);
-            return NextResponse.json(
-                { success: false, error: "Failed to send email" },
-                { status: 500 }
-            );
+            return fail("Failed to send message. Please try again.");
         }
 
-        return NextResponse.json({ success: true });
+        return { status: "success" };
     } catch (error) {
-        console.error("Error in contact API:", error);
-        return NextResponse.json(
-            { success: false, error: "Internal server error" },
-            { status: 500 }
-        );
+        console.error("Error in contact action:", error);
+        return fail("Failed to send message. Please try again.");
     }
 }

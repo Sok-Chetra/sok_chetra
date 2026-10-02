@@ -1,10 +1,10 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useRef, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 
 import FormField from "./FormField";
-import { sendContactForm } from "@/lib/api/sendContactForm";
+import { sendContactMessage, type ContactState } from "@/lib/actions/contact";
 import { getRecaptchaSiteKey } from "@/lib/recaptcha";
 
 /**
@@ -26,16 +26,31 @@ const SITE_KEY = getRecaptchaSiteKey();
 
 const EMPTY_FORM = { name: "", email: "", message: "" };
 
-type SubmitState =
-    | { status: "idle" }
-    | { status: "sending" }
-    | { status: "success" }
-    | { status: "error"; message: string };
+const IDLE: ContactState = { status: "idle" };
 
 export default function ContactForm() {
+    /*
+     * The submission runs as a Server Action; React owns its pending state and
+     * hands back whatever the action returned.
+     */
+    const [result, submitAction, isSending] = useActionState(sendContactMessage, IDLE);
+
+    /*
+     * Action state only ever changes by submitting again, so "Send Another
+     * Message" cannot set it back to idle. Instead the panel records which
+     * result it has dismissed. Each submission returns a new object, so the
+     * next success is a different object and shows the panel again.
+     */
+    const [dismissed, setDismissed] = useState<ContactState | null>(null);
+
+    /*
+     * Fields stay controlled on purpose. After an action React resets the
+     * form's uncontrolled fields — including after one that returned an error,
+     * since returning a value is not failing — which would wipe a long message
+     * over a mistyped email. Controlled fields hold their values from state.
+     */
     const [formData, setFormData] = useState(EMPTY_FORM);
     const [captchaToken, setCaptchaToken] = useState<string | null>(null);
-    const [submit, setSubmit] = useState<SubmitState>({ status: "idle" });
     const [captchaRequested, setCaptchaRequested] = useState(false);
     const [captchaReady, setCaptchaReady] = useState(false);
 
@@ -70,39 +85,23 @@ export default function ContactForm() {
         setFormData((previous) => ({ ...previous, [name]: value }));
     };
 
-    const handleSubmit = async (event: React.FormEvent) => {
-        event.preventDefault();
-
-        if (!captchaToken) {
-            setSubmit({ status: "error", message: "Please complete the CAPTCHA." });
-            return;
-        }
-
-        setSubmit({ status: "sending" });
-
-        try {
-            await sendContactForm({ ...formData, captcha: captchaToken });
-            setSubmit({ status: "success" });
-            setFormData(EMPTY_FORM);
-            setCaptchaToken(null);
-        } catch (error) {
-            setSubmit({
-                status: "error",
-                message: error instanceof Error ? error.message : "Failed to send message",
-            });
-        }
-    };
-
-    if (submit.status === "success") {
-        return <SuccessPanel onReset={() => setSubmit({ status: "idle" })} />;
+    if (result.status === "success" && result !== dismissed) {
+        return (
+            <SuccessPanel
+                onReset={() => {
+                    setDismissed(result);
+                    setFormData(EMPTY_FORM);
+                    // The widget remounts unchecked; its old token is spent.
+                    setCaptchaToken(null);
+                }}
+            />
+        );
     }
-
-    const isSending = submit.status === "sending";
 
     return (
         <form
             ref={formRef}
-            onSubmit={handleSubmit}
+            action={submitAction}
             /**
              * Any engagement with the form is the cue to fetch the CAPTCHA.
              * Focus alone is not enough: a visitor can focus a field before
@@ -116,9 +115,9 @@ export default function ContactForm() {
         >
             {/* Announced to screen readers the moment a submission fails. */}
             <div role="status" aria-live="polite">
-                {submit.status === "error" && (
+                {result.status === "error" && (
                     <p className="rounded-lg bg-red-50 p-3 text-sm text-red-600 dark:bg-red-900/30 dark:text-red-400">
-                        {submit.message}
+                        {result.message}
                     </p>
                 )}
             </div>
@@ -155,6 +154,9 @@ export default function ContactForm() {
                 onChange={handleChange}
                 required
             />
+
+            {/* Travels with the fields in the action's FormData. */}
+            <input type="hidden" name="captcha" value={captchaToken ?? ""} />
 
             {/* Height reserved so the widget appearing causes no layout shift. */}
             <div className="relative min-h-19.5">
