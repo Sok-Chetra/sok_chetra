@@ -49,8 +49,18 @@ export const DesktopMenu = ({
                             setRef={(element) => {
                                 itemRefs.current[item.id] = element;
                             }}
-                            className="relative block px-4 py-2 font-medium transition-colors duration-200 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                            activeClassName="text-white"
+                            // Only the text colour transitions, so the
+                            // background below hands over to the pill in a
+                            // single frame instead of fading on top of it.
+                            className="relative block px-4 py-2 font-medium transition-[color] duration-200 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                            // The pill is placed by measuring the links, which
+                            // waits for hydration; until then it is 0px wide
+                            // and this white text sat on the white bar,
+                            // invisible. The link wears the pill's blue
+                            // itself until the pill arrives.
+                            activeClassName={
+                                highlightStyle.width > 0 ? "text-white" : "bg-blue-500/90 text-white"
+                            }
                             inactiveClassName="text-slate-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
                         />
                     </li>
