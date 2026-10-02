@@ -49,7 +49,14 @@ export default function RootLayout({
     return (
         <html
             lang="en"
-            className="scroll-smooth"
+            // `scroll-pt-*` keeps an anchor target clear of the fixed menu.
+            // Measured: the menu's lowest edge is 54px under `md` (the floating
+            // hamburger) and 74px at `md` and up (the nav pill), so a jump to
+            // #projects or the skip link's #main-content otherwise lands with
+            // the heading hidden behind it. The padding is each of those plus
+            // breathing room. Scroll padding applies to the scroll container,
+            // which is the root element, so it belongs here and not on <body>.
+            className="scroll-pt-20 scroll-smooth md:scroll-pt-24"
             // Next 16 no longer overrides scroll-behavior on navigation unless
             // this is present; without it every route change smooth-scrolls.
             data-scroll-behavior="smooth"
