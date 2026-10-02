@@ -38,8 +38,26 @@ export default function ContactForm() {
      * hands back whatever the action returned.
      */
     const [result, submitAction, isSending] = useActionState(
-        async (previous: ContactState, data: FormData) => {
-            const next = await sendContactMessage(previous, data);
+        async (previous: ContactState, data: FormData): Promise<ContactState> => {
+            let next: ContactState;
+            try {
+                next = await sendContactMessage(previous, data);
+            } catch (error) {
+                /*
+                 * No answer came back — usually because the visitor is
+                 * offline. Left to throw, this reached the error page, which
+                 * replaced the form and threw the typed message away. The
+                 * token most likely never reached Google either, so the tick
+                 * is kept and Send works again straight away once online.
+                 */
+                console.warn("Contact form request failed:", error);
+                return {
+                    status: "error",
+                    message: navigator.onLine
+                        ? "Couldn't reach the server. Your message is still here — please try again."
+                        : "You appear to be offline. Your message is still here — send it again once you're connected.",
+                };
+            }
 
             /*
              * Whatever the answer, the next attempt starts from a fresh tick.
