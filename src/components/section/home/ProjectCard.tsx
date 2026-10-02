@@ -13,7 +13,7 @@ type ProjectCardProps = {
      * delayed that fetch until after layout. Left off on the home page, where
      * this section is below the fold and the hero portrait is the LCP.
      */
-    priority?: boolean;
+    prioritize?: boolean;
 };
 
 /** Keeps the content layer JSX-free, the same way ContactCard maps its icons. */
@@ -23,7 +23,7 @@ const LINK_KINDS: Record<ProjectLinkKind, { name: string; Icon: IconType }> = {
     "play-store": { name: "Google Play", Icon: FaGooglePlay },
 };
 
-export default function ProjectCard({ project, priority = false }: ProjectCardProps) {
+export default function ProjectCard({ project, prioritize = false }: ProjectCardProps) {
     // Hover lift is CSS. This was `m.div whileHover={{ y: -10 }}`, which made
     // every card a client component and shipped Framer Motion to hydrate a
     // hover effect the compositor does for free.
@@ -36,9 +36,16 @@ export default function ProjectCard({ project, priority = false }: ProjectCardPr
                     alt={project.title}
                     fill
                     className="object-cover object-top"
-                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    // The grid stops growing at max-w-7xl, so from xl up a
+                    // card is never wider than (1280 - 2 × 32px gap) / 3 =
+                    // 405px. Left at 33vw, a Retina laptop asked for the full
+                    // 1050px screenshot to fill it.
+                    sizes="(min-width: 1280px) 406px, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                     placeholder="blur"
-                    priority={priority}
+                    // Loaded the same way as the hero portrait, for the same
+                    // reasons — see HeroSection.
+                    loading={prioritize ? "eager" : undefined}
+                    fetchPriority={prioritize ? "high" : undefined}
                 />
             </div>
 

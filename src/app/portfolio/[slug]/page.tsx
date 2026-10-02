@@ -124,7 +124,9 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                   `lift`, not `rise`: this image is the largest thing in the
                   opening view and so the likely LCP element, and an element
                   animating opacity is not an LCP candidate until the animation
-                  ends. See the enter-* block in globals.css.
+                  ends. See the enter-* block in globals.css. Being the LCP
+                  element is also why it is fetched eagerly and at high
+                  priority, like the hero portrait — see HeroSection.
                 */}
                 <Enter animation="lift" step={3} className="mb-10">
                     <Image
@@ -133,7 +135,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                         className="w-full rounded-2xl shadow-lg"
                         sizes="(min-width: 896px) 896px, 100vw"
                         placeholder="blur"
-                        priority
+                        loading="eager"
+                        fetchPriority="high"
                     />
                 </Enter>
 

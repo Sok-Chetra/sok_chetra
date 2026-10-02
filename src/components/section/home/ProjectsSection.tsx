@@ -70,7 +70,7 @@ export default function ProjectsSection({
                 >
                     <ProjectCard
                         project={project}
-                        priority={prioritizeFirstImage && isFirstPage && index === 0}
+                        prioritize={prioritizeFirstImage && isFirstPage && index === 0}
                     />
                 </Enter>
             ))

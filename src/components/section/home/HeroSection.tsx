@@ -54,7 +54,16 @@ export default function HeroSection() {
                             // placeholder and knows the intrinsic size — no
                             // layout shift while the real image decodes.
                             placeholder="blur"
-                            priority
+                            // The LCP element. `eager` turns off next/image's
+                            // default lazy loading, and for any <img> that is
+                            // not lazy React's server renderer puts a
+                            // <link rel="preload"> in the <head> by itself —
+                            // which matters here, because the inlined
+                            // stylesheet leaves this tag ~69KB into the HTML.
+                            // `high` stops that preload queueing behind the
+                            // scripts. Replaces `priority`, deprecated in
+                            // Next 16.
+                            loading="eager"
                             fetchPriority="high"
                         />
                     </div>
