@@ -1,10 +1,30 @@
 import type { NextConfig } from "next";
 
-/**
- * Pages only. Static assets are already served `immutable` for a year, and the
- * API route must never be cached.
- */
+/** Pages only. Static assets are already served `immutable` for a year. */
 const PAGE_PATHS = ["/", "/about-me", "/portfolio", "/contact-me"];
+
+/**
+ * Sent with every response.
+ *
+ * Deliberately not a full Content Security Policy. Next writes each page's
+ * data into inline <script> tags, so on static pages a script policy would
+ * have to allow 'unsafe-inline' — which gives up most of what it protects
+ * against — and the nonce alternative makes every page dynamic. These
+ * directives restrict nothing the site itself does:
+ * - frame-ancestors: no other site can show these pages in a frame, which
+ *   is what clickjacking needs.
+ * - object-src: no plugin content (<object>, <embed>).
+ * - base-uri: an injected <base> cannot repoint every relative URL.
+ * - form-action: forms can only submit to this origin.
+ */
+const SECURITY_HEADERS = [
+    {
+        key: "Content-Security-Policy",
+        value: "frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'",
+    },
+    // Stops browsers second-guessing a response's declared Content-Type.
+    { key: "X-Content-Type-Options", value: "nosniff" },
+];
 
 const nextConfig: NextConfig = {
     experimental: {
@@ -38,15 +58,18 @@ const nextConfig: NextConfig = {
      * content-hashed assets, which stay available across deploys.
      */
     async headers() {
-        return PAGE_PATHS.map((source) => ({
-            source,
-            headers: [
-                {
-                    key: "Cache-Control",
-                    value: "public, max-age=60, stale-while-revalidate=86400",
-                },
-            ],
-        }));
+        return [
+            { source: "/:path*", headers: SECURITY_HEADERS },
+            ...PAGE_PATHS.map((source) => ({
+                source,
+                headers: [
+                    {
+                        key: "Cache-Control",
+                        value: "public, max-age=60, stale-while-revalidate=86400",
+                    },
+                ],
+            })),
+        ];
     },
     images: {
         /**
