@@ -13,52 +13,112 @@ export type NextProjectCandidate = {
 
 const STORAGE_KEY = "sokchetra:visited-projects";
 
+/**
+ * Everything the tour needs to remember between page views.
+ *
+ * `lap` is the status: the projects read since the tour last started over.
+ * `page` and `pick` record the last page view handled and the suggestion it
+ * got, which is what lets that view be recognised if it is processed again.
+ */
+type TourState = { lap: string[]; page: string | null; pick: string | null };
+
+const EMPTY: TourState = { lap: [], page: null, pick: null };
+
+const isSlugList = (v: unknown): v is string[] =>
+    Array.isArray(v) && v.every((s) => typeof s === "string");
+
 /** Storage throws in private mode and wherever site data is blocked. */
-function readVisited(): string[] {
+function readState(): TourState {
     try {
         const raw = sessionStorage.getItem(STORAGE_KEY);
-        const parsed: unknown = raw ? JSON.parse(raw) : [];
-        return Array.isArray(parsed) ? parsed.filter((v): v is string => typeof v === "string") : [];
+        if (!raw) return EMPTY;
+        const parsed: unknown = JSON.parse(raw);
+
+        // Earlier builds stored the bare list; keep its progress rather than
+        // restarting the tour of anyone mid-way through one.
+        if (isSlugList(parsed)) return { lap: parsed, page: null, pick: null };
+
+        if (typeof parsed === "object" && parsed !== null) {
+            const { lap, page, pick } = parsed as Record<string, unknown>;
+            return {
+                lap: isSlugList(lap) ? lap : [],
+                page: typeof page === "string" ? page : null,
+                pick: typeof pick === "string" ? pick : null,
+            };
+        }
+        return EMPTY;
     } catch {
-        return [];
+        return EMPTY;
     }
 }
 
-function writeVisited(slugs: string[]) {
+function writeState(state: TourState) {
     try {
-        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(slugs));
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch {
         /* Storage is a nicety here; the link still works without it. */
     }
 }
 
 /**
- * One suggestion, always picked at random from the projects this visitor has
- * not read yet. When the last of them is reached a new lap begins, minus the
- * page just left, so the order never settles and nothing is offered twice
- * while something else is still waiting.
+ * Advances the tour by one page view. Pure: same state in, same result out,
+ * with the only chance confined to `random`.
  *
- * Listing every remaining project here made the section pointless: three links
- * sitting beside "All projects" is just a worse version of that page. A single
- * card is a suggestion, which is the only reason to put anything here at all.
+ * Each project has a status, read or unread. Landing on a page marks it read,
+ * and the suggestion is a random project still unread. Once every project is
+ * read, all of them go back to unread — the page being read included — and the
+ * next round starts from a clean slate.
  *
- * The first render — server and hydration alike — is always `candidates[0]`,
- * the next project in rotation. That keeps the markup deterministic, so React
- * has nothing to reconcile and a crawler meets the same chain on every visit:
- * each project points at the following one, and the cycle covers the whole set.
- * The shuffle is a client-side nicety layered on afterwards.
+ * Resetting the current page too is what makes a round four page views long.
+ * Seeding the new round with it instead meant the last page of one round also
+ * counted toward the next, so the second round needed only three new pages,
+ * finished a view early, and let a project back in before the fourth had come
+ * round: A B C P, then B A C B.
  *
- * Four projects cannot give both a random order and the widest possible gap
- * between repeats. Holding a repeat a full lap away forces the pick every
- * time — the other two candidates were seen more recently by construction — so
- * the order would stop varying at all. Keeping the choice costs one step of
- * that gap, and a repeat three apart is far less noticeable than every visitor
- * being walked through the same fixed cycle.
+ * At every step the page read just before this one is held back as well.
+ * Within a round it is already read, so this changes nothing; across a reset
+ * it stops the first picks of the new round doubling back to the end of the
+ * old one, which keeps any repeat at least three page views apart.
+ */
+function advance(
+    state: TourState,
+    currentSlug: string,
+    candidates: NextProjectCandidate[],
+    random: () => number
+): { next: TourState; pick: NextProjectCandidate } {
+    const previous = state.page !== currentSlug ? state.page : null;
+    const lap = state.lap.includes(currentSlug) ? state.lap : [...state.lap, currentSlug];
+
+    let nextLap = lap;
+    let unread = candidates.filter((c) => !lap.includes(c.slug));
+
+    if (unread.length === 0) {
+        nextLap = [];
+        unread = candidates;
+    }
+
+    const notBack = unread.filter((c) => c.slug !== previous);
+    const pool = notBack.length > 0 ? notBack : unread;
+
+    const pick = pool[Math.floor(random() * pool.length)];
+    return { next: { lap: nextLap, page: currentSlug, pick: pick.slug }, pick };
+}
+
+/**
+ * One suggestion at the foot of a project page: a random project this visitor
+ * has not read yet, starting over once they have read them all.
  *
- * Kept in sessionStorage, so the tour lasts exactly as long as the tab: it
- * survives moving between projects and reloading, and goes when the tab does,
- * and therefore when the browser does. The queue is capped at the number of
- * projects, so it cannot grow, and nothing has to expire.
+ * Listing every remaining project here made the section pointless — three
+ * links beside "All projects" is a worse version of that page. A single card is
+ * a suggestion, which is the only reason to put anything here at all.
+ *
+ * The first render, on the server and at hydration, is `candidates[0]`, the
+ * next project in rotation. That keeps the markup deterministic, so React has
+ * nothing to reconcile and a crawler meets the same chain on every fetch. The
+ * random pick replaces it on the client one frame later.
+ *
+ * Kept in sessionStorage, so the tour lasts as long as the tab: it survives
+ * moving between projects and reloading, and goes when the tab does.
  */
 export default function NextProjectLink({
     currentSlug,
@@ -72,54 +132,43 @@ export default function NextProjectLink({
     useEffect(() => {
         if (candidates.length === 0) return;
 
-        /*
-         * History is a recency queue, most recent last, rather than a set that
-         * is emptied once everything has been read. Emptying it was the bug:
-         * it made every project eligible at once, so landing on the fourth
-         * could offer the one seen two steps earlier — a repeat after a gap of
-         * three, which is what reading all four is supposed to rule out.
-         */
-        const stored = readVisited();
-
-        // The page read just before this one, taken before the current slug is
-        // added and skipping it, so a reload is not mistaken for the step back.
-        const previous = [...stored].reverse().find((slug) => slug !== currentSlug);
-
-        const lap = stored.includes(currentSlug) ? stored : [...stored, currentSlug];
+        const state = readState();
 
         /*
-         * The record is the current lap, not a rolling window. That distinction
-         * is the whole mechanism: while a lap is in progress the pick is random
-         * among the projects it has not covered, so every project comes up once
-         * before any comes up twice. A rolling window loses that — once it is
-         * full, nothing is ever "unread" again, and a project can be offered
-         * twice while another waits several steps.
+         * A page view already handled — the effect running again for the same
+         * page — gets back the suggestion it was given rather than a new one.
+         *
+         * This is what makes the effect safe to run twice. It reads storage and
+         * then writes it, so without this a second run sees its own write: the
+         * lap has already reset, the page just left is forgotten, and the
+         * reset's one safeguard against doubling back is gone. React runs every
+         * effect twice in development precisely to expose that, which is why it
+         * showed on `next dev` and never in a production build.
+         *
+         * The same check holds the suggestion steady when someone leaves a
+         * project for the grid or the home page and comes straight back to it,
+         * because neither of those pages advances the tour.
          */
-        let pool = candidates.filter((c) => !lap.includes(c.slug));
+        const handled =
+            state.page === currentSlug &&
+            candidates.find((c) => c.slug === state.pick);
 
-        if (pool.length === 0) {
-            /*
-             * Lap complete, so the next one begins, seeded with the page being
-             * read. `previous` is held out of its first pick: a new lap makes
-             * everything eligible again, and offering the page from one click
-             * ago reads as doubling back however the bookkeeping sees it.
-             */
-            writeVisited([currentSlug]);
-            const fresh = candidates.filter((c) => c.slug !== previous);
-            pool = fresh.length > 0 ? fresh : candidates;
+        let pick: NextProjectCandidate;
+        if (handled) {
+            pick = handled;
         } else {
-            writeVisited(lap);
+            const step = advance(state, currentSlug, candidates, Math.random);
+            writeState(step.next);
+            pick = step.pick;
         }
-
-        const pick = pool[Math.floor(Math.random() * pool.length)];
 
         /*
          * Swapped on the next frame rather than during the effect. The server
          * markup gets to paint first, so hydration has nothing to reconcile,
-         * and this card sits at the very foot of the page — the swap has long
-         * since happened by the time anyone scrolls to it. It also keeps the
-         * state update out of the effect body, which cascading-render linting
-         * rightly objects to.
+         * and this card sits at the foot of the page — the swap has long since
+         * happened by the time anyone scrolls to it. It also keeps the state
+         * update out of the effect body, which cascading-render linting rightly
+         * objects to.
          */
         const frame = requestAnimationFrame(() => setChoice(pick));
         return () => cancelAnimationFrame(frame);
