@@ -33,9 +33,10 @@ function writeVisited(slugs: string[]) {
 }
 
 /**
- * One suggestion, always picked at random: from the projects this visitor has
- * not opened, or, once they have all been read, from all but the most recently
- * seen.
+ * One suggestion, always picked at random from the projects this visitor has
+ * not read yet. When the last of them is reached a new lap begins, minus the
+ * page just left, so the order never settles and nothing is offered twice
+ * while something else is still waiting.
  *
  * Listing every remaining project here made the section pointless: three links
  * sitting beside "All projects" is just a worse version of that page. A single
@@ -47,12 +48,12 @@ function writeVisited(slugs: string[]) {
  * each project points at the following one, and the cycle covers the whole set.
  * The shuffle is a client-side nicety layered on afterwards.
  *
- * Holding back the most recent is what stops the loop doubling back. Clearing
- * the record once everything had been read made all of them eligible at once,
- * so the fourth page could offer the one seen two steps before. Ranking by
- * recency and dropping the newest keeps every repeat at least three steps
- * apart while leaving two projects to choose between, so the order never
- * settles into one fixed cycle.
+ * Four projects cannot give both a random order and the widest possible gap
+ * between repeats. Holding a repeat a full lap away forces the pick every
+ * time — the other two candidates were seen more recently by construction — so
+ * the order would stop varying at all. Keeping the choice costs one step of
+ * that gap, and a repeat three apart is far less noticeable than every visitor
+ * being walked through the same fixed cycle.
  *
  * Kept in sessionStorage, so the tour lasts exactly as long as the tab: it
  * survives moving between projects and reloading, and goes when the tab does,
@@ -78,40 +79,39 @@ export default function NextProjectLink({
          * could offer the one seen two steps earlier — a repeat after a gap of
          * three, which is what reading all four is supposed to rule out.
          */
-        const history = readVisited().filter((slug) => slug !== currentSlug);
-        history.push(currentSlug);
+        const stored = readVisited();
 
-        // Bounded by the number of projects, so it cannot grow without limit.
-        writeVisited(history.slice(-(candidates.length + 1)));
+        // The page read just before this one, taken before the current slug is
+        // added and skipping it, so a reload is not mistaken for the step back.
+        const previous = [...stored].reverse().find((slug) => slug !== currentSlug);
 
-        const unseen = candidates.filter((c) => !history.includes(c.slug));
+        const lap = stored.includes(currentSlug) ? stored : [...stored, currentSlug];
 
         /*
-         * Still something unread: pick from those, at random, so no two
-         * visitors are walked through the work in the same order.
-         *
-         * Everything read: rank by how long ago and drop only the most recent,
-         * then pick at random from the rest. Dropping it is what stops the loop
-         * doubling straight back to the page before last; leaving the others in
-         * is what keeps the order from hardening into one fixed cycle.
-         *
-         * Four projects cannot give both the widest possible gap and a free
-         * choice. Holding the gap at a full lap leaves exactly one candidate —
-         * the other two were seen more recently by construction — so the order
-         * stops varying at all. Giving up one step of that gap leaves two to
-         * choose between, every time, which is the better trade: a repeat three
-         * steps apart is hard to notice, whereas the same fixed loop is not.
+         * The record is the current lap, not a rolling window. That distinction
+         * is the whole mechanism: while a lap is in progress the pick is random
+         * among the projects it has not covered, so every project comes up once
+         * before any comes up twice. A rolling window loses that — once it is
+         * full, nothing is ever "unread" again, and a project can be offered
+         * twice while another waits several steps.
          */
-        const pool =
-            unseen.length > 0
-                ? unseen
-                : [...candidates]
-                      .sort((a, b) => history.indexOf(a.slug) - history.indexOf(b.slug))
-                      .slice(0, -1);
+        let pool = candidates.filter((c) => !lap.includes(c.slug));
 
-        const pick = (pool.length > 0 ? pool : candidates)[
-            Math.floor(Math.random() * (pool.length > 0 ? pool.length : candidates.length))
-        ];
+        if (pool.length === 0) {
+            /*
+             * Lap complete, so the next one begins, seeded with the page being
+             * read. `previous` is held out of its first pick: a new lap makes
+             * everything eligible again, and offering the page from one click
+             * ago reads as doubling back however the bookkeeping sees it.
+             */
+            writeVisited([currentSlug]);
+            const fresh = candidates.filter((c) => c.slug !== previous);
+            pool = fresh.length > 0 ? fresh : candidates;
+        } else {
+            writeVisited(lap);
+        }
+
+        const pick = pool[Math.floor(Math.random() * pool.length)];
 
         /*
          * Swapped on the next frame rather than during the effect. The server
