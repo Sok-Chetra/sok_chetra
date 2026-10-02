@@ -10,8 +10,9 @@ import type { ReactNode } from "react";
  * component, which bundles every feature whether or not the app uses it. The
  * heaviest of those are drag and layout projection, and this site uses
  * neither. `domAnimation` still provides animations, variants, exit animations
- * (AnimatePresence) and the hover/tap/focus/inView gestures — which is
- * everything here does use, `whileInView` included.
+ * (AnimatePresence) and the hover/tap/focus/inView gestures — which covers
+ * everything the menu and theme switch use. Scroll reveals no longer go
+ * through Motion; see @/components/ui/Reveal.
  *
  * `strict` makes any remaining `motion.*` throw instead of silently pulling the
  * full bundle back in and undoing the saving. Components must import `m`.

@@ -1,13 +1,5 @@
-import type { Variants } from "motion/react";
-
 import Reveal from "@/components/ui/Reveal";
-import { popIn, staggerContainer } from "@/lib/animations";
 import { TECHNOLOGIES } from "@/lib/content/technologies";
-
-const headingIn: Variants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
-};
 
 export default function TechnologiesSection() {
     return (
@@ -15,7 +7,7 @@ export default function TechnologiesSection() {
             <div className="max-w-7xl mx-auto">
                 <Reveal
                     as="h2"
-                    variants={headingIn}
+                    variant="heading"
                     viewport="partial"
                     className="text-3xl font-bold text-center mb-12 dark:text-white"
                 >
@@ -24,21 +16,21 @@ export default function TechnologiesSection() {
 
                 <Reveal
                     as="ul"
-                    variants={staggerContainer}
+                    variant="none"
                     viewport="partial"
+                    stagger={{ delayMs: 200, stepMs: 80 }}
                     className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 md:grid-cols-4 lg:grid-cols-6"
                 >
-                    {TECHNOLOGIES.map((tech) => (
+                    {TECHNOLOGIES.map((tech, index) => (
                         <Reveal
                             as="li"
                             trigger="inherit"
+                            variant="pop"
+                            order={index}
                             key={tech}
-                            variants={popIn}
-                            hover={{
-                                scale: 1.05,
-                                transition: { type: "spring", stiffness: 150, damping: 12 },
-                            }}
-                            className="flex flex-col items-center p-4 bg-gray-50 dark:bg-gray-700 rounded-xl hover:shadow-lg transition-shadow duration-300"
+                            // The hover was a Framer spring; this easing
+                            // overshoots the same way, without JavaScript.
+                            className="flex flex-col items-center p-4 bg-gray-50 dark:bg-gray-700 rounded-xl transition-[scale,box-shadow] duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 hover:shadow-lg"
                         >
                             <span
                                 aria-hidden

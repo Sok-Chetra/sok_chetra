@@ -163,3 +163,80 @@ body {
 .enter-d4 {
     --enter-delay: 200ms;
 }
+
+/**
+ * Scroll reveals, triggered by @/components/ui/Reveal.
+ *
+ * The component only sets `data-shown` once its IntersectionObserver fires;
+ * everything that moves is here, as CSS animations of opacity and transform,
+ * which the compositor runs without the main thread. These replace Framer
+ * Motion variants that drove the same movement from JavaScript every frame —
+ * the cause of the dropped frames when scrolling on a phone. Distances,
+ * durations and easing match the old presets.
+ *
+ * Opacity is fine here, unlike in the enter-* block: these sections are below
+ * the fold, so none of them is the Largest Contentful Paint. They start hidden
+ * in the server HTML, as the Framer versions did.
+ *
+ * `translate` and `scale` are the individual transform properties, so the
+ * technology tiles' hover `scale` takes over cleanly once the entrance ends.
+ */
+@keyframes reveal-rise-20 {
+    from {
+        opacity: 0;
+        translate: 0 20px;
+    }
+}
+@keyframes reveal-rise-30 {
+    from {
+        opacity: 0;
+        translate: 0 30px;
+    }
+}
+@keyframes reveal-pop {
+    from {
+        opacity: 0;
+        translate: 0 10px;
+        scale: 0.8;
+    }
+}
+
+.reveal-fade-up:not([data-shown]),
+.reveal-heading:not([data-shown]),
+.reveal-item:not([data-shown]),
+.reveal-pop:not([data-shown]) {
+    opacity: 0;
+}
+
+.reveal-fade-up[data-shown],
+.reveal-heading[data-shown],
+.reveal-item[data-shown],
+.reveal-pop[data-shown] {
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    animation-fill-mode: backwards;
+    animation-delay: var(--reveal-delay, 0ms);
+}
+
+/* Was `fadeInUp`. */
+.reveal-fade-up[data-shown] {
+    animation-name: reveal-rise-20;
+    animation-duration: 0.6s;
+}
+
+/* Was the technology heading's `headingIn`. */
+.reveal-heading[data-shown] {
+    animation-name: reveal-rise-20;
+    animation-duration: 0.5s;
+}
+
+/* Was `staggerItem`. */
+.reveal-item[data-shown] {
+    animation-name: reveal-rise-30;
+    animation-duration: 0.6s;
+}
+
+/* Was `popIn`. */
+.reveal-pop[data-shown] {
+    animation-name: reveal-pop;
+    animation-duration: 0.5s;
+}
