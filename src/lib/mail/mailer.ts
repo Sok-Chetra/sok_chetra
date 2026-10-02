@@ -1,3 +1,7 @@
+// Holds the SMTP credentials. Importing this anywhere a client component can
+// reach fails the build instead of quietly emptying the variables.
+import "server-only";
+
 import nodemailer from "nodemailer";
 
 /**

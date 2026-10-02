@@ -1,4 +1,7 @@
-"use client";
+// A hook module, not a component, so it marks no client boundary; this makes
+// importing it from a server component a build error rather than a confusing
+// runtime one.
+import "client-only";
 
 import { useCallback, useSyncExternalStore } from "react";
 
