@@ -43,8 +43,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         description: project.summary,
         path: `/portfolio/${project.slug}`,
         keywords: [project.title, ...project.tags, `${project.title} app`],
-        image: project.image.src,
-        imageAlt: `${project.title} project preview`,
+        // The share card comes from ./opengraph-image.tsx.
+        image: null,
         ogType: "article",
     });
 }

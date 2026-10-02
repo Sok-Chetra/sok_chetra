@@ -18,8 +18,12 @@ export type PageMetaInput = {
     path?: string;
     /** Page-specific keywords, merged with the site-wide set. */
     keywords?: string[];
-    /** Open Graph image path relative to the site root. */
-    image?: string;
+    /**
+     * Open Graph image path relative to the site root. `null` when the route
+     * generates its own with an `opengraph-image` file, which then supplies the
+     * tags — and which X also falls back to when there is no `twitter:image`.
+     */
+    image?: string | null;
     imageAlt?: string;
     ogType?: OgType;
     /** Optional longer blurb for social cards; falls back to `description`. */
@@ -28,6 +32,13 @@ export type PageMetaInput = {
 };
 
 const DEFAULT_OG_IMAGE = "/image/og-my-profile.jpg";
+
+/** `og:image:type`, from the extension — previously anything not .jpg was "png". */
+function imageType(path: string): string {
+    if (/\.jpe?g$/i.test(path)) return "image/jpeg";
+    if (/\.webp$/i.test(path)) return "image/webp";
+    return "image/png";
+}
 
 /**
  * Builds a complete Metadata object from the handful of fields that actually
@@ -74,22 +85,24 @@ export function buildMetadata({
             siteName: `${SITE.name} Portfolio`,
             locale: SITE.locale,
             type: ogType,
-            images: [
-                {
-                    url: image,
-                    width: 1200,
-                    height: 630,
-                    alt: imageAlt ?? `${SITE.name} — ${SITE.role}`,
-                    type: image.endsWith(".jpg") ? "image/jpeg" : "image/png",
-                },
-            ],
+            ...(image && {
+                images: [
+                    {
+                        url: image,
+                        width: 1200,
+                        height: 630,
+                        alt: imageAlt ?? `${SITE.name} — ${SITE.role}`,
+                        type: imageType(image),
+                    },
+                ],
+            }),
         },
         twitter: {
             card: "summary_large_image",
             title: fullTitle,
             description: twitterDescription ?? description,
             creator: SITE.twitterHandle,
-            images: [image],
+            ...(image && { images: [image] }),
         },
     };
 }
