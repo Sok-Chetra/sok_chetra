@@ -33,9 +33,8 @@ function writeVisited(slugs: string[]) {
 }
 
 /**
- * One suggestion, chosen at random from the projects this visitor has not
- * opened yet — and once they have seen them all, the set clears and starts
- * over, so the suggestion never runs dry.
+ * One suggestion: a project this visitor has not opened, picked at random, and
+ * once they have all been read, whichever was read longest ago.
  *
  * Listing every remaining project here made the section pointless: three links
  * sitting beside "All projects" is just a worse version of that page. A single
@@ -47,11 +46,17 @@ function writeVisited(slugs: string[]) {
  * each project points at the following one, and the cycle covers the whole set.
  * The shuffle is a client-side nicety layered on afterwards.
  *
- * Visits are kept in sessionStorage, so the tour lasts exactly as long as the
- * tab: it survives navigating between projects and reloading, and is discarded
- * when the tab closes — and therefore when the browser does. No expiry is
- * needed on top, because the set already empties itself the moment every
- * project has been read, so it can never sit full and stale.
+ * That second rule is what stops the loop doubling back. Clearing the record
+ * once everything had been read made all of them eligible at once, so the
+ * fourth page could offer the one seen two steps before — a repeat three steps
+ * apart, when reading all four should guarantee four. Ordering by recency
+ * instead makes the gap exactly one lap, every lap, because with four projects
+ * the least recently seen is the only pick that can.
+ *
+ * Kept in sessionStorage, so the tour lasts exactly as long as the tab: it
+ * survives moving between projects and reloading, and goes when the tab does,
+ * and therefore when the browser does. The queue is capped at the number of
+ * projects, so it cannot grow, and nothing has to expire.
  */
 export default function NextProjectLink({
     currentSlug,
@@ -65,37 +70,35 @@ export default function NextProjectLink({
     useEffect(() => {
         if (candidates.length === 0) return;
 
-        const visited = readVisited();
+        /*
+         * History is a recency queue, most recent last, rather than a set that
+         * is emptied once everything has been read. Emptying it was the bug:
+         * it made every project eligible at once, so landing on the fourth
+         * could offer the one seen two steps earlier — a repeat after a gap of
+         * three, which is what reading all four is supposed to rule out.
+         */
+        const history = readVisited().filter((slug) => slug !== currentSlug);
+        history.push(currentSlug);
 
-        // The page read immediately before this one. Taken before the current
-        // slug is appended, and skipping the current slug so a reload or a
-        // return to the same page does not count as the step before itself.
-        const previous = [...visited].reverse().find((slug) => slug !== currentSlug);
+        // Bounded by the number of projects, so it cannot grow without limit.
+        writeVisited(history.slice(-(candidates.length + 1)));
 
-        if (!visited.includes(currentSlug)) visited.push(currentSlug);
+        const unseen = candidates.filter((c) => !history.includes(c.slug));
 
-        let pool = candidates.filter((c) => !visited.includes(c.slug));
+        /*
+         * Random while anything is still unread, which is what keeps the first
+         * lap from being the same tour for everyone. Once all of them have been
+         * read the least recently seen is the only choice that holds the gap at
+         * a full lap, so from then on the order follows from the history rather
+         * than from chance — the alternative is the repeat above.
+         */
+        const pick =
+            unseen.length > 0
+                ? unseen[Math.floor(Math.random() * unseen.length)]
+                : candidates.reduce((oldest, c) =>
+                      history.indexOf(c.slug) < history.indexOf(oldest.slug) ? c : oldest
+                  );
 
-        if (pool.length === 0) {
-            /*
-             * Every project has been read, so the tour starts over: only the
-             * page being read is kept, which both stops the next pick being the
-             * one already on screen and restarts the count from here.
-             *
-             * `previous` is held out of the first pick of the new round as well.
-             * Dropping the record makes everything eligible again, and the page
-             * one click back is the most recent thing the visitor saw — offering
-             * it the instant the tour resets reads as a duplicate, whatever the
-             * bookkeeping says. The fallback covers a set too small to spare it.
-             */
-            writeVisited([currentSlug]);
-            const fresh = candidates.filter((c) => c.slug !== previous);
-            pool = fresh.length > 0 ? fresh : candidates;
-        } else {
-            writeVisited(visited);
-        }
-
-        const pick = pool[Math.floor(Math.random() * pool.length)];
 
         /*
          * Swapped on the next frame rather than during the effect. The server
