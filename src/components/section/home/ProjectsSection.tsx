@@ -58,12 +58,8 @@ export default function ProjectsSection({
         const isFirstPage = start === 0;
         pages.push(
             PROJECTS.slice(start, start + pageSize).map((project, index) => (
-                // `lift`, not the default `rise`: these must not fade, because
-                // on /portfolio the first card's image is the measured LCP
-                // element.
                 <Enter
                     as="li"
-                    animation="lift"
                     key={project.id}
                     delayMs={90 + index * 90}
                     className="h-full"

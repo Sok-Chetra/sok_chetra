@@ -68,27 +68,21 @@ body {
  * emulation. One block per hero is smooth. Heavy elements — cards carrying
  * shadows or images — are better not animated at all.
  *
- * Transform only, never opacity: an element at `opacity: 0` is not eligible to
- * be the Largest Contentful Paint, and the LCP element is a hero portrait on
- * the home page and a project card image on /portfolio.
+ * Transform only, never opacity. Chrome will not take an element whose opacity
+ * is animating as the Largest Contentful Paint, and it does not reconsider it
+ * once the fade ends: it waits for something else to repaint the element. The
+ * interior heroes used to fade, and the only repaint they got was the web font
+ * arriving — so their LCP was the font's download time, and on a repeat visit,
+ * font already cached, no LCP was recorded at all. Measured on /about-me under
+ * Slow 4G: 0.97s with the fade against 0.35s without, and nothing against
+ * 0.05s on a repeat visit. (An older note here blamed the end of the fade and
+ * observed that shortening it changed nothing; it was timing the font.)
  *
  * `backwards` fill holds the opening frame until the animation starts and then
  * hands the element back to its own styles, leaving no lingering composited
  * transform. The reduced-motion block above neutralises duration and delay, so
  * these collapse to "already in place" for visitors who ask for it.
  */
-/* Fade and rise together — the original look, and the fade is what actually
-   makes the movement read as an animation on a phone.
-   Safe for the LCP here in a way the Framer version was not: Framer held
-   `opacity: 0` in the SSR HTML until hydration, costing over a second of LCP
-   render delay, whereas this starts climbing off zero on the first styled
-   frame, so an element is LCP-eligible essentially immediately. The two pages
-   whose LCP element is an image (home, /portfolio) do not use this. */
-@keyframes enter-fade {
-    from {
-        opacity: 0;
-    }
-}
 @keyframes enter-rise {
     from {
         transform: translateY(40px);
@@ -111,7 +105,6 @@ body {
 }
 
 .enter-rise,
-.enter-lift,
 .enter-from-left,
 .enter-from-right,
 .enter-line {
@@ -135,31 +128,8 @@ body {
     will-change: transform;
 }
 
-/*
- * Fade and slide, as two animations of different lengths on one element.
- *
- * Kept deliberately, with its cost known. Chrome will not accept an element
- * that animates opacity as a Largest Contentful Paint candidate until the
- * animation ends: the interior heroes measure ~330ms sliding and ~900ms with
- * the fade, which is the difference between 100 and 98 in Lighthouse. The fade
- * is what makes the movement read as an animation rather than a twitch, and
- * that was judged worth two points.
- *
- * Shortening the fade does not help — 948ms at 0.8s against 944ms at 0.4s. It
- * is the presence of the fade that defers the metric, not its length. So the
- * fade is short for looks, and `lift` exists for the elements that must not
- * pay this at all.
- */
+/* Slide only, so any block can be the LCP element — see above. */
 .enter-rise {
-    animation-name: enter-fade, enter-rise;
-    animation-duration: 0.3s, 0.45s;
-}
-
-/*
- * Slide with no fade, for anything that may itself be the LCP element — on
- * /portfolio that is the first project card's image.
- */
-.enter-lift {
     animation-name: enter-rise;
 }
 

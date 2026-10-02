@@ -14,10 +14,10 @@ import type { CSSProperties, ReactNode } from "react";
  *   sections, not from the number of animating elements. Staggering blocks is
  *   fine; a transition that watches layout properties on a full-width section
  *   is not.
- * - A fade defers the Largest Contentful Paint until the animation ends,
- *   because Chrome will not count an element that animates its opacity before
- *   then — ~330ms sliding against ~900ms with a fade. Anything that may itself
- *   be the LCP element should use `lift`, which does not fade.
+ * - None of these fade. Chrome will not count an element whose opacity is
+ *   animating as the Largest Contentful Paint, and does not reconsider it when
+ *   the fade ends — on a repeat visit that left the interior heroes with no
+ *   LCP recorded at all.
  *
  * `Reveal` remains right for scroll-triggered sections further down: the
  * visitor has to scroll to reach them, by which time the main thread is idle.
@@ -25,10 +25,8 @@ import type { CSSProperties, ReactNode } from "react";
 type EnterTag = "div" | "section" | "h1" | "h2" | "p" | "ul" | "li";
 
 type EnterAnimation =
-    /** Fade and slide up. The default, and what the interior heroes use. */
+    /** Slide up. The default. */
     | "rise"
-    /** Slide with no fade — for anything that may be the LCP element. */
-    | "lift"
     | "from-left"
     | "from-right"
     /** The hero divider drawing itself out from the centre. */
