@@ -5,13 +5,19 @@ import { useEffect } from "react";
 /**
  * Route-level error boundary. Without this, an unhandled render error shows
  * Next's default error screen instead of the site's own styling.
+ *
+ * "Try again" calls `retry`, not `reset`. `reset` only re-renders what the
+ * browser already holds, so it cannot recover from the commonest real failure
+ * here — a page payload that never finished arriving over a weak mobile
+ * connection. `retry` fetches the segment again before re-rendering it, and is
+ * what the docs recommend for nearly every case (stable since 16.3).
  */
 export default function Error({
     error,
-    reset,
+    retry,
 }: {
     error: Error & { digest?: string };
-    reset: () => void;
+    retry: () => void;
 }) {
     useEffect(() => {
         console.error("Unhandled route error:", error);
@@ -28,7 +34,7 @@ export default function Error({
 
             <button
                 type="button"
-                onClick={reset}
+                onClick={() => retry()}
                 className="mt-8 rounded-lg bg-blue-600 px-6 py-3 font-medium text-white transition-colors hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:bg-blue-700 dark:hover:bg-blue-600"
             >
                 Try again
