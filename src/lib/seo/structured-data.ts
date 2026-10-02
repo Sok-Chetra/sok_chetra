@@ -20,6 +20,7 @@ export function buildPersonSchema() {
         "@type": "Organization",
         name: job.company,
         ...(job.companyUrl ? { url: job.companyUrl } : {}),
+        ...(job.companyProfiles?.length ? { sameAs: job.companyProfiles } : {}),
     }));
 
     return {

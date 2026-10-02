@@ -3,6 +3,12 @@ export type Job = {
     company: string;
     /** Employer's site. Feeds `worksFor` in the Person schema. */
     companyUrl?: string;
+    /**
+     * Other pages that are the same employer. Feeds `sameAs` on the employer
+     * Organization — an identity claim, so list only a profile confirmed to
+     * belong to the company named above, never a similarly-named one.
+     */
+    companyProfiles?: string[];
     position: string;
     period: string;
     /** Marks the present role, which is the one `worksFor` describes. */
@@ -18,6 +24,7 @@ export const EXPERIENCE: Job[] = [
         id: 2,
         company: "Nulo",
         companyUrl: "https://nulo.co.jp/",
+        companyProfiles: ["https://www.facebook.com/nulolab"],
         position: "Mobile App Developer",
         period: "Jan 2025 - Present",
         current: true,
