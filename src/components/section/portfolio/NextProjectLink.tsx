@@ -66,16 +66,31 @@ export default function NextProjectLink({
         if (candidates.length === 0) return;
 
         const visited = readVisited();
+
+        // The page read immediately before this one. Taken before the current
+        // slug is appended, and skipping the current slug so a reload or a
+        // return to the same page does not count as the step before itself.
+        const previous = [...visited].reverse().find((slug) => slug !== currentSlug);
+
         if (!visited.includes(currentSlug)) visited.push(currentSlug);
 
         let pool = candidates.filter((c) => !visited.includes(c.slug));
 
-        // Every project has been read, so start the tour over. Only the page
-        // being read is kept, both so the next pick is never the one already on
-        // screen and so counting resumes immediately from here.
         if (pool.length === 0) {
+            /*
+             * Every project has been read, so the tour starts over: only the
+             * page being read is kept, which both stops the next pick being the
+             * one already on screen and restarts the count from here.
+             *
+             * `previous` is held out of the first pick of the new round as well.
+             * Dropping the record makes everything eligible again, and the page
+             * one click back is the most recent thing the visitor saw — offering
+             * it the instant the tour resets reads as a duplicate, whatever the
+             * bookkeeping says. The fallback covers a set too small to spare it.
+             */
             writeVisited([currentSlug]);
-            pool = candidates;
+            const fresh = candidates.filter((c) => c.slug !== previous);
+            pool = fresh.length > 0 ? fresh : candidates;
         } else {
             writeVisited(visited);
         }
