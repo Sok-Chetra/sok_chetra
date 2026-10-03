@@ -11,10 +11,17 @@ import { SKILLS } from "@/lib/content/skills";
  * moment of the load, which janked on a real handset. Simply rendering it
  * costs nothing and has neither problem. The sections below it are genuinely
  * off screen and keep their scroll reveals.
+ *
+ * On a phone or tablet nothing below the hero moves, as on the home page, so
+ * there the card is simply in place.
  */
 export default function SkillsSection() {
     return (
-        <Enter as="section" className="rounded-2xl bg-white p-5 shadow-lg sm:p-6 md:p-8 dark:bg-gray-800">
+        <Enter
+            as="section"
+            touch="none"
+            className="rounded-2xl bg-white p-5 shadow-lg sm:p-6 md:p-8 dark:bg-gray-800"
+        >
             <h2 className="mb-6 text-2xl font-bold text-purple-600 dark:text-purple-400">Skills</h2>
 
             <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">

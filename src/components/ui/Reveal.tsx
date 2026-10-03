@@ -36,11 +36,16 @@ type RevealTag = "div" | "section" | "article" | "ul" | "li" | "p" | "h1" | "h2"
 type Stagger = { delayMs: number; stepMs: number };
 
 /*
- * How an "inherit" child learns that its section has been revealed. Context
- * reaches it even though the section passes it in as server-rendered
- * children, which is what lets those sections stay server components.
+ * How an "inherit" child learns that its section has been revealed, and how
+ * every Reveal inside a section learns its `touch` setting. Context reaches
+ * them even though the section passes them in as server-rendered children,
+ * which is what lets those sections stay server components.
  */
-const RevealContext = createContext<{ shown: boolean; stagger?: Stagger } | null>(null);
+const RevealContext = createContext<{
+    shown: boolean;
+    stagger?: Stagger;
+    touch?: "none";
+} | null>(null);
 
 type RevealProps = {
     /** Optional: a Reveal can be a purely decorative element such as a rule. */
@@ -64,6 +69,12 @@ type RevealProps = {
     stagger?: Stagger;
     /** On an "inherit" child: its position in the parent's stagger. */
     order?: number;
+    /**
+     * "none" leaves this in place on a phone or tablet, where nothing below
+     * the hero moves — see the end of globals.css. Every Reveal inside it
+     * follows suit.
+     */
+    touch?: "none";
     /** Landmark and labelling attributes only. */
     id?: string;
     role?: string;
@@ -80,6 +91,7 @@ export default function Reveal({
     viewport = "once",
     stagger,
     order,
+    touch,
     ...rest
 }: RevealProps) {
     const Tag = as as ElementType;
@@ -89,6 +101,7 @@ export default function Reveal({
 
     const inherits = trigger === "inherit";
     const shown = inherits ? (parent?.shown ?? false) : seen;
+    const touchMode = touch ?? parent?.touch;
 
     useEffect(() => {
         const element = ref.current;
@@ -113,10 +126,14 @@ export default function Reveal({
             : undefined;
 
     return (
-        <RevealContext.Provider value={{ shown, stagger }}>
+        <RevealContext.Provider value={{ shown, stagger, touch: touchMode }}>
             <Tag
                 ref={ref}
-                className={[variant !== "none" && `reveal-${variant}`, className]
+                className={[
+                    variant !== "none" && `reveal-${variant}`,
+                    touchMode && `reveal-touch-${touchMode}`,
+                    className,
+                ]
                     .filter(Boolean)
                     .join(" ")}
                 data-shown={shown ? "" : undefined}

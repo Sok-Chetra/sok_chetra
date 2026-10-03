@@ -3,10 +3,10 @@ import type { CSSProperties, ReactNode } from "react";
 /**
  * Mount entrance animation — the CSS counterpart to {@link Reveal}.
  *
- * Use this for content on screen at first paint. `Reveal` is a client
- * component because Framer Motion is, so its animation cannot begin until
- * React has hydrated; for content already in view that left copy visibly
- * mis-placed for 1.6-2.0s on a throttled phone.
+ * Use this for content on screen at first paint. `Reveal` is triggered by an
+ * IntersectionObserver, so nothing moves until React has hydrated; for content
+ * already in view, waiting like that left copy visibly mis-placed for 1.6-2.0s
+ * on a throttled phone.
  *
  * Two things learned the hard way, both recorded in globals.css:
  *
@@ -41,6 +41,13 @@ type EnterProps = {
     step?: 1 | 2 | 3 | 4;
     /** Explicit delay, for lists whose length is not known up front. */
     delayMs?: number;
+    /**
+     * What this block does on a phone or tablet, where every page moves the
+     * way the home page does: hero blocks slide in from alternating sides with
+     * no stagger, and "none" leaves a block in place. Left out, it animates as
+     * on desktop. See the end of globals.css.
+     */
+    touch?: "from-left" | "from-right" | "none";
     className?: string;
     id?: string;
     role?: string;
@@ -54,10 +61,16 @@ export default function Enter({
     animation = "rise",
     step,
     delayMs,
+    touch,
     className,
     ...rest
 }: EnterProps) {
-    const classes = [`enter-${animation}`, step && `enter-d${step}`, className]
+    const classes = [
+        `enter-${animation}`,
+        step && `enter-d${step}`,
+        touch && `enter-touch-${touch}`,
+        className,
+    ]
         .filter(Boolean)
         .join(" ");
 

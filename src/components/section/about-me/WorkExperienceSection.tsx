@@ -5,6 +5,7 @@ export default function WorkExperienceSection() {
     return (
         <Reveal
             as="section"
+            touch="none"
             className="rounded-2xl bg-white p-5 shadow-lg sm:p-6 md:p-8 dark:bg-gray-800"
         >
             <h2 className="text-2xl font-bold mb-6 text-purple-600 dark:text-purple-400">

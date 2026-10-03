@@ -62,6 +62,7 @@ export default function ProjectsSection({
                     as="li"
                     key={project.id}
                     delayMs={90 + index * 90}
+                    touch="none"
                     className="h-full"
                 >
                     <ProjectCard
@@ -84,12 +85,15 @@ export default function ProjectsSection({
                   CSS entrance, not a whileInView reveal. On /portfolio this
                   heading lands ~640px down a 844px phone screen, inside the
                   first view, and a Framer reveal writes opacity:0 into the SSR
-                  HTML — leaving it blank until hydration. The cards below it
-                  are genuinely off screen and still reveal on scroll.
+                  HTML — leaving it blank until hydration.
+
+                  On a phone or tablet the heading and cards stay in place, as
+                  everything below the hero does there.
                 */}
                 <Enter
                     as="h2"
                     id="projects-heading"
+                    touch="none"
                     className="mb-12 text-center text-3xl font-bold sm:text-4xl dark:text-white"
                 >
                     {title}

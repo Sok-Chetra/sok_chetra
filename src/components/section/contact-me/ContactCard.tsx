@@ -17,6 +17,9 @@ const ICONS: Record<ContactIcon, IconType> = {
  * Enters block by block. The first card sits ~730px down a 844px phone screen,
  * inside the first view, so this must be a CSS entrance rather than a
  * hydration-gated reveal, which left it blank until React caught up.
+ *
+ * On a phone or tablet the cards stay in place, as everything below the hero
+ * does there.
  */
 export default function ContactCard({
     channel,
@@ -31,6 +34,7 @@ export default function ContactCard({
         <Enter
             as="li"
             delayMs={90 + index * 90}
+            touch="none"
             className="overflow-hidden rounded-xl bg-white shadow-lg transition-shadow duration-300 hover:shadow-xl dark:bg-gray-800"
         >
             <div className="p-6">

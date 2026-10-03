@@ -70,7 +70,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
     );
 
     return (
-        <main className="min-h-screen bg-linear-to-br from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900">
+        <main className="min-h-screen overflow-hidden bg-linear-to-br from-blue-50 to-purple-50 dark:from-gray-800 dark:to-gray-900">
             <JsonLd schema={buildProjectSchema(project)} />
             <JsonLd schema={buildBreadcrumbSchema(project)} />
 
@@ -98,18 +98,28 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                     </ol>
                 </nav>
 
+                {/*
+                  On a phone or tablet these four slide in from alternating
+                  sides all at once, like the home hero.
+                */}
                 <Enter
                     as="h1"
+                    touch="from-left"
                     className="mb-4 text-4xl font-bold text-gray-900 md:text-5xl dark:text-white"
                 >
                     {project.title}
                 </Enter>
 
-                <Enter as="p" step={1} className="mb-6 text-xl text-gray-600 dark:text-gray-300">
+                <Enter
+                    as="p"
+                    step={1}
+                    touch="from-right"
+                    className="mb-6 text-xl text-gray-600 dark:text-gray-300"
+                >
                     {project.summary}
                 </Enter>
 
-                <Enter step={2} className="mb-8 flex flex-wrap gap-2">
+                <Enter step={2} touch="from-left" className="mb-8 flex flex-wrap gap-2">
                     {project.tags.map((tag) => (
                         <span
                             key={tag}
@@ -125,7 +135,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                   element, which is why it is fetched eagerly and at high
                   priority, like the hero portrait — see HeroSection.
                 */}
-                <Enter step={3} className="mb-10">
+                <Enter step={3} touch="from-right" className="mb-10">
                     <Image
                         src={project.image}
                         alt={`${project.title} project preview`}

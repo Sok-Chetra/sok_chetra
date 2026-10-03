@@ -9,6 +9,7 @@ export default function TechnologiesSection() {
                     as="h2"
                     variant="heading"
                     viewport="partial"
+                    touch="none"
                     className="text-3xl font-bold text-center mb-12 dark:text-white"
                 >
                     Technologies I Work With
@@ -19,6 +20,7 @@ export default function TechnologiesSection() {
                     variant="none"
                     viewport="partial"
                     stagger={{ delayMs: 200, stepMs: 80 }}
+                    touch="none"
                     className="grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6 md:grid-cols-4 lg:grid-cols-6"
                 >
                     {TECHNOLOGIES.map((tech, index) => (

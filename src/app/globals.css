@@ -240,3 +240,55 @@ body {
     animation-name: reveal-pop;
     animation-duration: 0.5s;
 }
+
+/**
+ * Phones and tablets: every page moves the way the home page does.
+ *
+ * Desktop keeps everything above. On a phone or tablet the home page was the
+ * one that felt smooth, and what sets it apart is how little moves: its hero
+ * arrives as two blocks sliding in from opposite sides at once, and nothing
+ * below it moves on the way down — the project cards finish their entrance off
+ * screen during the load. The other pages cascaded their hero in four steps,
+ * animated the cards inside the opening view, and revealed whole sections
+ * while the visitor scrolled; on a throttled phone those reveals alone dropped
+ * a sixth of the frames while scrolling /about-me and /portfolio.
+ *
+ * So here a block either slides in from one side, straight away — the hero
+ * blocks alternate left and right, as the home hero's copy and portrait do —
+ * or it is simply in place. Components choose with the `touch` prop on Enter
+ * and Reveal.
+ *
+ * Narrower than Tailwind's `lg`, or a touchscreen as the main pointer: a
+ * tablet held landscape is wider than `lg` but still a tablet.
+ */
+@media (width < 64rem), (pointer: coarse) {
+    .enter-touch-from-left,
+    .enter-touch-from-right {
+        /* The divider's overshoot easing belongs to its desktop draw. */
+        animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+        animation-delay: 0ms;
+    }
+
+    .enter-touch-from-left {
+        animation-name: enter-from-left;
+    }
+
+    .enter-touch-from-right {
+        animation-name: enter-from-right;
+    }
+
+    /* No animation, and no compositor layer held for one. */
+    .enter-touch-none {
+        animation-name: none;
+        will-change: auto;
+    }
+
+    /* Both states are listed so these match the reveal-* rules' specificity
+       and, coming later, win: not hidden before the scroll, no animation
+       after it. */
+    .reveal-touch-none:not([data-shown]),
+    .reveal-touch-none[data-shown] {
+        opacity: 1;
+        animation-name: none;
+    }
+}
