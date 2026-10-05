@@ -31,7 +31,7 @@ export default function WorkExperienceSection() {
                             </span>
                             <p className="text-gray-600 dark:text-gray-400">{job.position}</p>
                         </div>
-                        <p className="text-sm text-gray-500 dark:text-gray-500 mb-4">{job.period}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{job.period}</p>
 
                         <ul className="space-y-3">
                             {job.responsibilities.map((item) => (
