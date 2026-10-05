@@ -38,11 +38,13 @@ export default function PageHero({
             {/*
               Heading and description are separate blocks so this cascades the
               same four steps as the about-me hero, rather than moving the copy
-              as a single lump. On a phone or tablet they instead slide in from
-              alternating sides all at once, like the home hero.
+              as a single lump. Each block comes from the opposite side to the
+              last, like the home hero's copy and portrait; on a phone or
+              tablet they all move at once.
             */}
             <Enter
                 as="h1"
+                animation="from-left"
                 touch="from-left"
                 className="mx-auto mb-6 max-w-3xl text-4xl font-bold text-gray-900 md:text-5xl dark:text-white"
             >
@@ -51,6 +53,7 @@ export default function PageHero({
 
             <Enter
                 as="p"
+                animation="from-right"
                 step={1}
                 touch="from-right"
                 className="mx-auto mb-8 max-w-3xl text-xl text-gray-600 dark:text-gray-300"
@@ -60,6 +63,7 @@ export default function PageHero({
 
             {actions && (
                 <Enter
+                    animation="from-left"
                     step={2}
                     touch="from-left"
                     className="flex flex-wrap items-center justify-center gap-4"

@@ -99,11 +99,12 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                 </nav>
 
                 {/*
-                  On a phone or tablet these four slide in from alternating
-                  sides all at once, like the home hero.
+                  These four slide in from alternating sides, like the home
+                  hero; on a phone or tablet they all move at once.
                 */}
                 <Enter
                     as="h1"
+                    animation="from-left"
                     touch="from-left"
                     className="mb-4 text-4xl font-bold text-gray-900 md:text-5xl dark:text-white"
                 >
@@ -112,6 +113,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
                 <Enter
                     as="p"
+                    animation="from-right"
                     step={1}
                     touch="from-right"
                     className="mb-6 text-xl text-gray-600 dark:text-gray-300"
@@ -119,7 +121,12 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                     {project.summary}
                 </Enter>
 
-                <Enter step={2} touch="from-left" className="mb-8 flex flex-wrap gap-2">
+                <Enter
+                    animation="from-left"
+                    step={2}
+                    touch="from-left"
+                    className="mb-8 flex flex-wrap gap-2"
+                >
                     {project.tags.map((tag) => (
                         <span
                             key={tag}
@@ -135,7 +142,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                   element, which is why it is fetched eagerly and at high
                   priority, like the hero portrait — see HeroSection.
                 */}
-                <Enter step={3} touch="from-right" className="mb-10">
+                <Enter animation="from-right" step={3} touch="from-right" className="mb-10">
                     <Image
                         src={project.image}
                         alt={`${project.title} project preview`}
