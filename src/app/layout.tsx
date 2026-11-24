@@ -8,6 +8,7 @@ import { SITE } from "@/lib/content/site";
 import { buildPersonSchema, buildWebSiteSchema } from "@/lib/seo/structured-data";
 import { THEME_INIT_SCRIPT } from "@/lib/theme";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 
 import "./globals.css";
 
@@ -79,6 +80,7 @@ export default function RootLayout({
                 <JsonLd schema={buildPersonSchema()} />
                 <JsonLd schema={buildWebSiteSchema()} />
                 {isOnVercel && <SpeedInsights />}
+                {isOnVercel && <Analytics />}
 
                 <MotionProvider>
                     <MainMenu />
